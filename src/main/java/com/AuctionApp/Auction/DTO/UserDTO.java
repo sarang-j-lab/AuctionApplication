@@ -1,6 +1,5 @@
 package com.AuctionApp.Auction.DTO;
 
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,12 +7,13 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.UniqueElements;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "build")
-public class UserRequest {
+public class UserDTO {
 
     @NotNull(message = "Name is required")
     @NotBlank
@@ -37,5 +37,5 @@ public class UserRequest {
     @NotBlank
     private String mobileNo;
 
-
+    private List<Long> auctions;
 }

@@ -2,7 +2,7 @@ package com.AuctionApp.Auction.controllers;
 
 import com.AuctionApp.Auction.advise.CustomException;
 import com.AuctionApp.Auction.entites.User;
-import com.AuctionApp.Auction.DTO.UserRequest;
+import com.AuctionApp.Auction.DTO.UserDTO;
 import com.AuctionApp.Auction.Services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +37,12 @@ public class UserController {
     }
 
     @PostMapping("/user-registration")
-    public ResponseEntity<User> createUser(@RequestBody @Valid UserRequest userRequest){
+    public ResponseEntity<User> createUser(@RequestBody @Valid UserDTO userRequest){
         return new ResponseEntity<>(userService.create(userRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("/edit-profile/{userId}")
-    public ResponseEntity<User> updateUser(@RequestBody @Valid UserRequest user,@PathVariable long userId){
+    public ResponseEntity<User> updateUser(@RequestBody @Valid UserDTO user, @PathVariable long userId){
         return new ResponseEntity<>(userService.update(userId,user),HttpStatus.ACCEPTED);
     }
 
@@ -52,9 +52,9 @@ public class UserController {
     }
 
     @PostMapping("/change-password/{userId}")
-        public ResponseEntity<String> changeUserPassword(@PathVariable long userId,@RequestBody Map<String, String> obj){
-            String oldPassword =  obj.get("oldPassword");
-            String newPassword =   obj.get("newPassword");
+        public ResponseEntity<String> changeUserPassword(@PathVariable long userId,@RequestBody Map<String, String> payload){
+            String oldPassword =  payload.get("oldPassword");
+            String newPassword =   payload.get("newPassword");
             if(oldPassword.equals(newPassword)){
                 throw new CustomException("Same passwords",HttpStatus.BAD_REQUEST,"Both new and old password is same");
             }

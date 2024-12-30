@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "user_tbl")
 @Data
@@ -31,4 +34,8 @@ public class User {
 
     private String mobileNo;
 
+    @ElementCollection
+    @CollectionTable(name = "auctions", joinColumns = @JoinColumn(name = "auction_owner"))
+    @Column(name = "auction_id")
+    private List<Long> auctions;
 }
