@@ -9,9 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 
@@ -39,8 +36,8 @@ public class AuctionDTO {
 
 
     @NotNull
-    @JsonFormat(pattern = "hh:mm:ss")
-    private Time auctionTime;
+    @NotBlank
+    private String auctionTime;
 
     @NotNull
     @Positive

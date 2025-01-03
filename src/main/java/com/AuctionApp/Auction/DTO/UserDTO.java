@@ -20,6 +20,7 @@ public class UserDTO {
     private String name;
 
     @NotNull(message = "Email is required")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",message = "Email should match this patter : name@example.com")
     @Email(message = "Invalid email")
     @NotBlank
     private String email;

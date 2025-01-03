@@ -1,6 +1,6 @@
 package com.AuctionApp.Auction.controllers;
 
-import com.AuctionApp.Auction.advise.CustomException;
+import com.AuctionApp.Auction.ExceptionHandling.CustomException;
 import com.AuctionApp.Auction.entites.User;
 import com.AuctionApp.Auction.DTO.UserDTO;
 import com.AuctionApp.Auction.Services.UserService;
@@ -51,10 +51,13 @@ public class UserController {
         return new ResponseEntity<>(userService.delete(userId),HttpStatus.OK);
     }
 
-    @PostMapping("/change-password/{userId}")
+    @PutMapping("/change-password/{userId}")
         public ResponseEntity<String> changeUserPassword(@PathVariable long userId,@RequestBody Map<String, String> payload){
             String oldPassword =  payload.get("oldPassword");
             String newPassword =   payload.get("newPassword");
+            if(oldPassword == null || newPassword == null){
+                throw new CustomException("provide valid passwords",HttpStatus.BAD_REQUEST,"Old and new Password is required");
+            }
             if(oldPassword.equals(newPassword)){
                 throw new CustomException("Same passwords",HttpStatus.BAD_REQUEST,"Both new and old password is same");
             }

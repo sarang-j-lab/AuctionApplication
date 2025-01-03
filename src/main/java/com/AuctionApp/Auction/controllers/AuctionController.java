@@ -19,10 +19,6 @@ public class AuctionController {
     @Autowired
     private AuctionService auctionService;
 
-    @PostMapping("/new-auction")
-    public ResponseEntity<Auction> createNewAuction(@RequestBody @Valid AuctionDTO auction){
-        return new ResponseEntity<>(auctionService.create(auction), HttpStatus.CREATED);
-    }
 
     @GetMapping("/my-auction/{userId}")
     public ResponseEntity<List<Auction>> getAllAuctionOfUser(@PathVariable long userId){
@@ -34,15 +30,21 @@ public class AuctionController {
         return ResponseEntity.ok(auctionService.getAuction(auctionId));
    }
 
-   @PutMapping("/edit-auction/{auctionId}")
+    @PostMapping("/new-auction")
+    public ResponseEntity<Auction> createNewAuction(@RequestBody @Valid AuctionDTO auction){
+        return new ResponseEntity<>(auctionService.create(auction), HttpStatus.CREATED);
+    }
+
+
+    @PutMapping("/edit-auction/{auctionId}")
     public ResponseEntity<String> updateAuction(@PathVariable long auctionId,@RequestBody @Valid AuctionDTO auctionRequest)  {
         auctionService.updateAuction(auctionId,auctionRequest);
-        return new ResponseEntity<>("User edited successfully",HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Auction edited successfully",HttpStatus.ACCEPTED);
    }
 
-   @DeleteMapping("/delete-auction/{auctionId}/{userId}")
-    public ResponseEntity<String> deleteAuction(@PathVariable long auctionId,@PathVariable long userId){
-       auctionService.deleteAuction(auctionId,userId);
-        return new ResponseEntity<>("User deleted successfully",HttpStatus.OK);
+   @DeleteMapping("/delete-auction/{auctionId}")
+    public ResponseEntity<String> deleteAuction(@PathVariable long auctionId){
+       auctionService.deleteAuction(auctionId);
+        return new ResponseEntity<>("Auction deleted successfully",HttpStatus.OK);
    }
 }

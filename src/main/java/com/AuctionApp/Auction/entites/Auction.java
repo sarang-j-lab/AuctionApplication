@@ -5,9 +5,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.sql.Time;
+import java.util.List;
 
 
 @Entity
@@ -27,11 +29,12 @@ public class Auction {
 
     private int season;
 
-    @JsonFormat(pattern = "dd-mm-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date auctionDate;
 
-    @JsonFormat(pattern = "HH:mm:ss")
-    private Time auctionTime;
+
+    private String auctionTime;
 
     private long pointsPerTeam;
 
@@ -44,7 +47,10 @@ public class Auction {
     private int minPlayerPerTeam;
 
     @ManyToOne
-    @JoinColumn(name = "auction_owner",nullable = false)
+    @JoinColumn(name = "auction_owner",nullable = true)
     private User auctionCreateBy;
+
+    @OneToMany(mappedBy = "playerId")
+    private List<Player> players;
 
 }

@@ -1,7 +1,7 @@
 package com.AuctionApp.Auction.Services;
 
 import com.AuctionApp.Auction.DTO.UserDTO;
-import com.AuctionApp.Auction.advise.CustomException;
+import com.AuctionApp.Auction.ExceptionHandling.CustomException;
 import com.AuctionApp.Auction.entites.User;
 import com.AuctionApp.Auction.repositories.UserRepository;
 import jakarta.validation.UnexpectedTypeException;
@@ -43,7 +43,7 @@ public class UserService {
 
 
     public User getById(long userId) {
-        User user =userRepository.findByUserId(userId);
+        User user = userRepository.findByUserId(userId);
         if(user != null){
             return user;
         }
@@ -60,6 +60,7 @@ public class UserService {
             dbUser.setName(user.getName());
             dbUser.setEmail(user.getEmail());
             dbUser.setMobileNo(user.getMobileNo());
+            dbUser.setCity(user.getCity());
             return userRepository.save(dbUser);
         }else{
             throw new UsernameNotFoundException("User not found with this id");
@@ -73,7 +74,7 @@ public class UserService {
 
     public String changePassword(long userId,String oldPassword,String newPassword){
         User user = userRepository.findByUserId(userId);
-        if(user.equals(null)){
+        if(user == null){
             throw new UsernameNotFoundException("User not found");
         }
         if(user.getPassword().equals(oldPassword)){

@@ -1,15 +1,12 @@
-package com.AuctionApp.Auction.advise;
+package com.AuctionApp.Auction.ExceptionHandling;
 
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data
-
 public class CustomException extends RuntimeException{
     private String message;
     private HttpStatus errorCode;

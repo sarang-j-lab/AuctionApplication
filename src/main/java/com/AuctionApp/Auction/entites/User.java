@@ -32,6 +32,7 @@ public class User {
 
     private String city;
 
+    @Column(unique = true)
     private String mobileNo;
 
     @ElementCollection
