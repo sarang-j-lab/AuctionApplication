@@ -1,5 +1,6 @@
 package com.AuctionApp.Auction.entites;
 
+import com.AuctionApp.Auction.Component.AdditinalIncrements;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,8 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.sql.Time;
 import java.util.List;
 
 
@@ -42,15 +43,46 @@ public class Auction {
 
     private long bidIncreaseBy;
 
-    private int maxPlayerPerTeam;
+    @ElementCollection
+    @CollectionTable(name = "additionalIncrements", joinColumns = @JoinColumn(name = "auction_id"))
+    private List<AdditinalIncrements> additionalIncrements = new ArrayList<>();
 
-    private int minPlayerPerTeam;
 
-    @ManyToOne
-    @JoinColumn(name = "auction_owner",nullable = true)
-    private User auctionCreateBy;
+    @OneToMany(targetEntity = Category.class,cascade = CascadeType.ALL)
+    @JoinColumn(name = "AC_FK",referencedColumnName = "auctionId")
+    private List<Category> categories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "playerId")
-    private List<Player> players;
+    private long maxPlayerPerTeam;
 
+    private long minPlayerPerTeam;
+
+    private long reserve;
+
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinTable(name = "AUCTION_PLAYER_TBL",
+            joinColumns = {
+                    @JoinColumn(name = "auctionId",referencedColumnName = "auctionId")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "player_id", referencedColumnName = "playerId")
+            })
+    private List<Player> auctionPlayers;
+
+    @OneToMany(targetEntity = Team.class,cascade = CascadeType.ALL)
+    @JoinColumn(name = "AT_fk",referencedColumnName = "auctionId")
+    private List<Team> teams;
+
+    public Auction(long auctionId, String auctionName, int season, Date auctionDate, String auctionTime, long pointsPerTeam, long baseBid, long bidIncreaseBy, int maxPlayerPerTeam, int minPlayerPerTeam,long reserve) {
+        this.auctionId = auctionId;
+        this.auctionName = auctionName;
+        this.season = season;
+        this.auctionDate = auctionDate;
+        this.auctionTime = auctionTime;
+        this.pointsPerTeam = pointsPerTeam;
+        this.baseBid = baseBid;
+        this.bidIncreaseBy = bidIncreaseBy;
+        this.maxPlayerPerTeam = maxPlayerPerTeam;
+        this.minPlayerPerTeam = minPlayerPerTeam;
+        this.reserve = reserve;
+    }
 }

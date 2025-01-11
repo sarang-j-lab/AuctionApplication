@@ -23,16 +23,16 @@ public class PlayerController {
                 return ResponseEntity.ok(playerService.show(auctionId));
         }
 
-        @PostMapping("/join-auction")
-        public ResponseEntity<Player> joinAuction(@RequestBody @Valid PlayerDTO playerRequest){
-            return new ResponseEntity<>(playerService.join(playerRequest), HttpStatus.CREATED);
+        @PostMapping("/join-auction/{auctionId}")
+        public ResponseEntity<Player> joinAuction(@RequestBody @Valid PlayerDTO playerRequest,@PathVariable long auctionId){
+            return new ResponseEntity<>(playerService.join(playerRequest,auctionId), HttpStatus.CREATED);
         }
 
 
         @PutMapping("/edit-auction-player/{playerId}")
         public ResponseEntity<String> editPlayer(@PathVariable long playerId,  @RequestBody @Valid PlayerDTO playerRequest){
                  playerService.edit(playerRequest, playerId);
-                 return new ResponseEntity<>("User modified successfully",HttpStatus.OK);
+                 return new ResponseEntity<>("Player modified successfully",HttpStatus.OK);
         }
 
         @DeleteMapping("delete-player/{playerId}")

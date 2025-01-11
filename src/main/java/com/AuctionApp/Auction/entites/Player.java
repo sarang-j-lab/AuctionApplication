@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "player_tbl",  uniqueConstraints = @UniqueConstraint(columnNames = "mobileNo"))
 @Data
@@ -41,10 +43,5 @@ public class Player {
 
     private String details;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "auctionId")
-    private Auction auction;
-
-//    private String teamId;
 }
 

@@ -64,7 +64,6 @@ public class AuctionDTO {
     private int minPlayerPerTeam;
 
 
-    private User auctionCreateBy;
 
 
 }

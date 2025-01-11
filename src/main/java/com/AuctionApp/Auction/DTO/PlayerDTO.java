@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -56,8 +58,7 @@ public class PlayerDTO {
     @NotBlank
     private String details;
 
-    @NotNull
-    @NotBlank
-    private long auctionId;
+    private UUID categoryId;
+
 
 }

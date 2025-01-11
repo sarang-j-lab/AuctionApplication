@@ -24,8 +24,7 @@ public class UserService {
         if(validateWithMobileNo != null){
             throw new UnexpectedTypeException("User with this mobile number is already exists");
         }
-        User user = User.
-                build(0,userRequest.getName(),userRequest.getEmail(),
+        User user = new User(0,userRequest.getName(),userRequest.getEmail(),
                         userRequest.getPassword(), userRequest.getCity(),userRequest.getMobileNo(),new ArrayList<>());
         return userRepository.save(user);
     }

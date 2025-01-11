@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "user_tbl")
 @Data
 @ToString
-@AllArgsConstructor(staticName = "build")
+@AllArgsConstructor()
 @NoArgsConstructor
 public class User {
     @Id
@@ -35,8 +35,8 @@ public class User {
     @Column(unique = true)
     private String mobileNo;
 
-    @ElementCollection
-    @CollectionTable(name = "auctions", joinColumns = @JoinColumn(name = "auction_owner"))
-    @Column(name = "auction_id")
-    private List<Long> auctions;
+
+    @OneToMany(targetEntity = Auction.class,cascade = CascadeType.ALL)
+    @JoinColumn(name = "ua_fk",referencedColumnName = "userId")
+    private List<Auction> auctions;
 }

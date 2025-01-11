@@ -1,5 +1,6 @@
 package com.AuctionApp.Auction.controllers;
 
+import com.AuctionApp.Auction.Component.AdditinalIncrements;
 import com.AuctionApp.Auction.DTO.AuctionDTO;
 import com.AuctionApp.Auction.Services.AuctionService;
 import com.AuctionApp.Auction.entites.Auction;
@@ -9,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/auction")
@@ -30,9 +31,9 @@ public class AuctionController {
         return ResponseEntity.ok(auctionService.getAuction(auctionId));
    }
 
-    @PostMapping("/new-auction")
-    public ResponseEntity<Auction> createNewAuction(@RequestBody @Valid AuctionDTO auction){
-        return new ResponseEntity<>(auctionService.create(auction), HttpStatus.CREATED);
+    @PostMapping("/new-auction/{userId}")
+    public ResponseEntity<Auction> createNewAuction(@RequestBody @Valid AuctionDTO auction,@PathVariable long userId){
+        return new ResponseEntity<>(auctionService.create(auction,userId), HttpStatus.CREATED);
     }
 
 
@@ -46,5 +47,15 @@ public class AuctionController {
     public ResponseEntity<String> deleteAuction(@PathVariable long auctionId){
        auctionService.deleteAuction(auctionId);
         return new ResponseEntity<>("Auction deleted successfully",HttpStatus.OK);
+   }
+
+   @PostMapping("/add-increments/{auctionId}")
+    public ResponseEntity<String> additionalIncrements(@RequestBody @Valid AdditinalIncrements increments , @PathVariable long auctionId){
+       return new ResponseEntity<>(auctionService.addIncrements(increments,auctionId),HttpStatus.CREATED);
+   }
+
+   @DeleteMapping("delete-increment/{auctionId}/{incrementId}")
+    public ResponseEntity<String> deleteIncrement(@PathVariable long auctionId,@PathVariable UUID incrementId){
+        return new ResponseEntity<>(auctionService.deleteIncrement(auctionId,incrementId),HttpStatus.OK);
    }
 }

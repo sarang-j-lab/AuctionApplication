@@ -32,6 +32,6 @@ public interface PlayerRepository extends JpaRepository<Player,Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM player_tbl WHERE player_id = :playerId",nativeQuery = true )
-    void deletePlayerByPlayerId(@Param("playerId") long playerId);
+    @Query(value = "DELETE FROM auction_player_tbl WHERE player_id = :playerId",nativeQuery = true )
+    void deletePlayerFromAuction(@Param("playerId") long playerId);
 }

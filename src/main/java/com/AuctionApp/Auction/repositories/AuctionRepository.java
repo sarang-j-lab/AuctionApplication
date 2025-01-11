@@ -1,6 +1,7 @@
 package com.AuctionApp.Auction.repositories;
 
 import com.AuctionApp.Auction.entites.Auction;
+import com.AuctionApp.Auction.entites.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,14 +26,8 @@ public interface AuctionRepository extends JpaRepository<Auction,Long> {
                       @Param("baseBid")Long baseBid, @Param("bidIncreaseBy")Long bidIncreaseBy, @Param("maxPlayerPerTeam")Integer maxPlayerPerTeam,
                       @Param("minPlayerPerTeam") Integer minPlayerPerTeam);
 
-    @Modifying
-    @Transactional
-    @Query(value = "DELETE FROM auctions WHERE auction_id = :auctionId",nativeQuery = true)
-    void deleteAuctionfromUser(@Param("auctionId") long auctionId);
 
-    @Modifying
-    @Transactional
-    @Query(value = "DELETE FROM auction_tbl WHERE auction_id = :auctionId",nativeQuery = true)
-    void deleteByAuctionId(@Param("auctionId") long auctionId);
+
+
 
 }
