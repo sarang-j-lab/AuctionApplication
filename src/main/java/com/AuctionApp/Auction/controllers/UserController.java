@@ -22,7 +22,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/my-profile/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable long userId){
+    public ResponseEntity<User> getUserById(@PathVariable String userId){
         return ResponseEntity.ok(userService.getById(userId));
     }
 
@@ -32,34 +32,34 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody User userCred){
+    public ResponseEntity<String> loginUser(@RequestBody User userCred){
         return new ResponseEntity<>(userService.login(userCred),HttpStatus.OK);
     }
 
     @PostMapping("/user-registration")
-    public ResponseEntity<User> createUser(@RequestBody @Valid UserDTO userRequest){
+    public ResponseEntity<String> createUser(@RequestBody @Valid UserDTO userRequest){
         return new ResponseEntity<>(userService.create(userRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("/edit-profile/{userId}")
-    public ResponseEntity<User> updateUser(@RequestBody @Valid UserDTO user, @PathVariable long userId){
+    public ResponseEntity<User> updateUser(@RequestBody @Valid UserDTO user, @PathVariable String userId){
         return new ResponseEntity<>(userService.update(userId,user),HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/delete-user/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable long userId){
+    public ResponseEntity<String> deleteUser(@PathVariable String userId){
         return new ResponseEntity<>(userService.delete(userId),HttpStatus.OK);
     }
 
     @PutMapping("/change-password/{userId}")
-        public ResponseEntity<String> changeUserPassword(@PathVariable long userId,@RequestBody Map<String, String> payload){
+        public ResponseEntity<String> changeUserPassword(@PathVariable String userId,@RequestBody Map<String, String> payload){
             String oldPassword =  payload.get("oldPassword");
             String newPassword =   payload.get("newPassword");
             if(oldPassword == null || newPassword == null){
                 throw new CustomException("provide valid passwords",HttpStatus.BAD_REQUEST,"Old and new Password is required");
             }
             if(oldPassword.equals(newPassword)){
-                throw new CustomException("Same passwords",HttpStatus.BAD_REQUEST,"Both new and old password is same");
+                throw new CustomException("Same passwords",HttpStatus.BAD_REQUEST,"Both new and old password are same");
             }
           return new ResponseEntity<>(userService.changePassword(userId,oldPassword,newPassword),HttpStatus.OK);
     }

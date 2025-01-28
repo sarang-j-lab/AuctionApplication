@@ -10,18 +10,15 @@ import com.AuctionApp.Auction.repositories.AuctionRepository;
 import com.AuctionApp.Auction.repositories.PlayerRepository;
 import com.AuctionApp.Auction.repositories.UserRepository;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AuctionService {
@@ -35,23 +32,34 @@ public class AuctionService {
     @Autowired
     private PlayerRepository playerRepository;
 
+    private final Random random = new Random();
+    private String generateId() {
+        // Generate a random 7-digit number for the first part
+        long firstPart = 1000000 + random.nextInt(9000000); // Ensures it's always 7 digits
+        long secondPart = 1000 + random.nextInt(9000); // Ensures it's always 7 digits
+
+        return firstPart+"-"+secondPart;
+    }
 
     private void timeValidation(String time){
-        String timeRegex = "^(0[1-9]|1[0-2]):[0-5]\\d\\s?(AM|PM)$";
+        String timeRegex = "^([01]\\d|2[0-3]):[0-5]\\d$";
         Pattern pattern = Pattern.compile(timeRegex);
 
         Matcher matcher = pattern.matcher(time);
          if(!matcher.matches()){
-             throw new CustomException("Provide valid time patter : hh:mm AM/PM",HttpStatus.BAD_REQUEST,"Provided time pattern did'nt matched");
+             throw new CustomException("Provide valid time patter : hh:mm",HttpStatus.BAD_REQUEST,"Provided time pattern did'nt matched");
          }
     }
 
 
 
     @Transactional
-    public Auction create(AuctionDTO auctionRequest,long userId){
+    public Auction create(AuctionDTO auctionRequest,String userId){
         Optional<User> user = userRepository.findById(userId);
 
+        if(auctionRequest.getMinPlayerPerTeam() > auctionRequest.getMaxPlayerPerTeam()){
+            throw new ValidationException("Min player per team should be less than max player per team");
+        }
 
         if(user.isPresent()){
             this.timeValidation(auctionRequest.getAuctionTime());
@@ -61,9 +69,9 @@ public class AuctionService {
                 auctionRequest.setBaseBid(auctionRequest.getPointsPerTeam() / auctionRequest.getMaxPlayerPerTeam());
             }
 
-            Auction auction = new Auction(0,auctionRequest.getAuctionName(),auctionRequest.getSeason(),auctionRequest.getAuctionDate(),
+            Auction auction = new Auction(generateId(),auctionRequest.getAuctionName(),auctionRequest.getSeason(),auctionRequest.getAuctionDate(),
                     auctionRequest.getAuctionTime(),auctionRequest.getPointsPerTeam(),auctionRequest.getBaseBid(),auctionRequest.getBidIncreaseBy(),
-                    auctionRequest.getMaxPlayerPerTeam(),auctionRequest.getMinPlayerPerTeam(), (auctionRequest.getMinPlayerPerTeam() - 1) * auctionRequest.getBaseBid());
+                    auctionRequest.getMaxPlayerPerTeam(),auctionRequest.getMinPlayerPerTeam(), (auctionRequest.getMaxPlayerPerTeam() - 1) * auctionRequest.getBaseBid());
 
             Auction newAuction = auctionRepository.save(auction);
             user.get().getAuctions().add(newAuction);
@@ -75,15 +83,15 @@ public class AuctionService {
 
     }
 
-    public List<Auction> getAll(long userId){
-        User user = userRepository.findByUserId(userId);
-        if(user == null){
-            throw new CustomException("User not found", HttpStatus.NOT_FOUND,"User not fount");
+    public List<Auction> getAll(String userId){
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isPresent()){
+            return user.get().getAuctions();
         }
-        return user.getAuctions();
+            throw new CustomException("User not found", HttpStatus.NOT_FOUND,"User not fount");
     }
 
-    public Auction getAuction(long auctionId){
+    public Auction getAuction(String auctionId){
         Optional<Auction> auction = auctionRepository.findById(auctionId);
         if(auction.isPresent()){
             return auction.get();
@@ -91,7 +99,7 @@ public class AuctionService {
         throw new CustomException("Auction not found",HttpStatus.NOT_FOUND,"Auction with this auctionId is not present");
     }
 
-    public void updateAuction(long auctionId,AuctionDTO auctionDTO) {
+    public Auction updateAuction(String auctionId,AuctionDTO auctionDTO) {
         this.timeValidation(auctionDTO.getAuctionTime());
 
         //if baseBid * maxPlayerPerTeam is greather than pointsPerTeam then we have change with point / maxPlayerPerTeam
@@ -109,39 +117,53 @@ public class AuctionService {
                 auctionDTO.getBidIncreaseBy(),
                 auctionDTO.getMaxPlayerPerTeam(),
                 auctionDTO.getMinPlayerPerTeam());
+
+        Optional<Auction> auction = auctionRepository.findById(auctionId);
+        if(auction.isPresent()){
+            return auction.get();
+        }
+        throw new CustomException("Auction not found",HttpStatus.BAD_REQUEST,"Auction not found");
     }
 
 
-    public void deleteAuction(long auctionId){
+    public void deleteAuction(String auctionId){
         auctionRepository.deleteById(auctionId);
     }
 
 
-    public String addIncrements(AdditinalIncrements newIncrements, long auctionId) {
+    public Auction addIncrements(AdditinalIncrements newIncrements, String auctionId) {
         Optional<Auction> auction = auctionRepository.findById(auctionId);
         if(auction.isPresent()){
-            newIncrements.setId(UUID.randomUUID());
+            newIncrements.setId(generateId());
             auction.get().getAdditionalIncrements().add(newIncrements);
-            auctionRepository.save(auction.get());
-            return "Increment added successfully";
+            return auctionRepository.save(auction.get());
         }else{
             throw new CustomException("Auction not found",HttpStatus.BAD_REQUEST,"Auction not found with this id");
         }
     }
 
-    public String deleteIncrement(long auctionId,UUID incrementId){
+    public Auction deleteIncrement(String auctionId,String incrementId){
         Optional<Auction> auction = auctionRepository.findById(auctionId);
         if(auction.isPresent()){
             for(AdditinalIncrements increments : auction.get().getAdditionalIncrements()){
                 if(increments.getId().equals(incrementId)){
                     auction.get().getAdditionalIncrements().remove(increments);
                     auctionRepository.save(auction.get());
-                    return "Increment deleted successfully";
+                    return auction.get();
                 }
             }
-                return "Increment deleted successfully";
         } else{
             throw new CustomException("Auction not found",HttpStatus.BAD_REQUEST,"Auction not found with this id");
         }
+        return auction.get();
+
+    }
+
+    public List<AdditinalIncrements> getIncrements(String auctionId) {
+        Optional<Auction> auction = auctionRepository.findById(auctionId);
+        if(auction.isPresent()){
+            return auction.get().getAdditionalIncrements();
+        }
+        throw new CustomException("Auction Not found",HttpStatus.BAD_REQUEST,"Auction not found with this id");
     }
 }

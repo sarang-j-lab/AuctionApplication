@@ -1,6 +1,7 @@
 package com.AuctionApp.Auction.entites;
 
 import com.AuctionApp.Auction.Component.CategoryAdditionalIncrements;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +19,8 @@ import java.util.UUID;
 public class Category {
 
     @Id
-    private UUID categoryId;
+    private String categoryId;
+
 
     private String categoryName;
 
@@ -34,11 +36,11 @@ public class Category {
     @CollectionTable(name = "category_increments",joinColumns = @JoinColumn(name = "category_id"))
     private List<CategoryAdditionalIncrements> categoryAdditionalIncrements = new ArrayList<>();
 
-    @OneToMany(targetEntity = Player.class)
-    @JoinColumn(name = "CP_FK",referencedColumnName = "categoryId")
+    @OneToMany(mappedBy = "categoryId", orphanRemoval = true)
+    @JsonIgnore
     private List<Player> players;
 
-    public Category( UUID categoryId,String categoryName, long maxPlayerPerTeam, long minPlayerPerTeam, long baseBid, long increment) {
+    public Category( String categoryId,String categoryName, long maxPlayerPerTeam, long minPlayerPerTeam, long baseBid, long increment) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.maxPlayerPerTeam = maxPlayerPerTeam;

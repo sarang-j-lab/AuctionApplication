@@ -1,14 +1,10 @@
 package com.AuctionApp.Auction.DTO;
-
-import com.AuctionApp.Auction.entites.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
 import java.util.Date;
 
 
@@ -27,7 +23,7 @@ public class AuctionDTO {
 
     @NotNull
     @FutureOrPresent
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date auctionDate;
 
     @NotNull

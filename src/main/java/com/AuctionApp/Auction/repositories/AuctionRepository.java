@@ -10,23 +10,22 @@ import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.stylesheets.LinkStyle;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
-public interface AuctionRepository extends JpaRepository<Auction,Long> {
+public interface AuctionRepository extends JpaRepository<Auction,String> {
 
     List<Auction> findByAuctionIdIn(List<Long> auctionIds);
 
     @Modifying
     @Transactional
     @Query("UPDATE Auction a SET a.auctionName = :auctionName,  a.season = :season,a.auctionTime = :auctionTime,a.auctionDate = :auctionDate, a.pointsPerTeam = :pointsPerTeam,a.baseBid = :baseBid,a.bidIncreaseBy = :bidIncreaseBy,a.maxPlayerPerTeam = :maxPlayerPerTeam, a.minPlayerPerTeam = :minPlayerPerTeam WHERE a.auctionId = :auctionId")
-    int updateAuction(@Param("auctionId") Long auctionId, @Param("auctionName") String auctionName, @Param("season") Integer season,
+    int updateAuction(@Param("auctionId") String auctionId, @Param("auctionName") String auctionName, @Param("season") Integer season,
                       @Param("auctionTime") String auctionTime, @Param("auctionDate") Date auctionDate, @Param("pointsPerTeam") Long pointsPerTeam,
                       @Param("baseBid")Long baseBid, @Param("bidIncreaseBy")Long bidIncreaseBy, @Param("maxPlayerPerTeam")Integer maxPlayerPerTeam,
                       @Param("minPlayerPerTeam") Integer minPlayerPerTeam);
-
-
 
 
 

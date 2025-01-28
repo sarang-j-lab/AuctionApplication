@@ -38,5 +38,5 @@ public class UserDTO {
     @NotBlank
     private String mobileNo;
 
-    private List<Long> auctions;
+
 }

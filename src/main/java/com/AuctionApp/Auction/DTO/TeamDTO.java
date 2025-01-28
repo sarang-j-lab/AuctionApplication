@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,9 +24,10 @@ public class TeamDTO {
     private String shortName;
 
     @NotNull
-    @NotBlank
     private String shortcutKey;
 
     @NotNull
     private long auction;
+
+
 }

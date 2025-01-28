@@ -7,6 +7,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface TeamRepository extends JpaRepository<Team,Long> {
+public interface TeamRepository extends JpaRepository<Team,String> {
+
+    @Query(value = "SELECT * FROM team_tbl WHERE at_fk = :auctionId",nativeQuery = true)
+    List<Team> findTeams(@Param("auctionId") String auctionId);
 
 }

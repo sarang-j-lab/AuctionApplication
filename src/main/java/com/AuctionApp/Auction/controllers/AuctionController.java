@@ -15,6 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/auction")
+@CrossOrigin
 public class AuctionController {
 
     @Autowired
@@ -22,40 +23,45 @@ public class AuctionController {
 
 
     @GetMapping("/my-auction/{userId}")
-    public ResponseEntity<List<Auction>> getAllAuctionOfUser(@PathVariable long userId){
+    public ResponseEntity<List<Auction>> getAllAuctionOfUser(@PathVariable String userId){
         return new ResponseEntity<>(auctionService.getAll(userId),HttpStatus.OK);
     }
 
    @GetMapping("/auction-details/{auctionId}")
-    public ResponseEntity<Auction> getAuction(@PathVariable long auctionId){
+    public ResponseEntity<Auction> getAuction(@PathVariable String auctionId){
         return ResponseEntity.ok(auctionService.getAuction(auctionId));
    }
 
     @PostMapping("/new-auction/{userId}")
-    public ResponseEntity<Auction> createNewAuction(@RequestBody @Valid AuctionDTO auction,@PathVariable long userId){
+    public ResponseEntity<Auction> createNewAuction(@RequestBody @Valid AuctionDTO auction,@PathVariable String userId){
         return new ResponseEntity<>(auctionService.create(auction,userId), HttpStatus.CREATED);
     }
 
 
     @PutMapping("/edit-auction/{auctionId}")
-    public ResponseEntity<String> updateAuction(@PathVariable long auctionId,@RequestBody @Valid AuctionDTO auctionRequest)  {
-        auctionService.updateAuction(auctionId,auctionRequest);
-        return new ResponseEntity<>("Auction edited successfully",HttpStatus.ACCEPTED);
+    public ResponseEntity<Auction> updateAuction(@PathVariable String auctionId,@RequestBody @Valid AuctionDTO auctionRequest)  {
+
+        return new ResponseEntity<>(auctionService.updateAuction(auctionId,auctionRequest),HttpStatus.ACCEPTED);
    }
 
    @DeleteMapping("/delete-auction/{auctionId}")
-    public ResponseEntity<String> deleteAuction(@PathVariable long auctionId){
+    public ResponseEntity<String> deleteAuction(@PathVariable String auctionId){
        auctionService.deleteAuction(auctionId);
         return new ResponseEntity<>("Auction deleted successfully",HttpStatus.OK);
    }
 
+   @GetMapping("/get-increments/{auctionId}")
+   public ResponseEntity<List<AdditinalIncrements>> getAuctionIncrements(@PathVariable String auctionId){
+        return new ResponseEntity<>(auctionService.getIncrements(auctionId),HttpStatus.OK);
+   }
+
    @PostMapping("/add-increments/{auctionId}")
-    public ResponseEntity<String> additionalIncrements(@RequestBody @Valid AdditinalIncrements increments , @PathVariable long auctionId){
+    public ResponseEntity<Auction> additionalIncrements(@RequestBody @Valid AdditinalIncrements increments , @PathVariable String auctionId){
        return new ResponseEntity<>(auctionService.addIncrements(increments,auctionId),HttpStatus.CREATED);
    }
 
-   @DeleteMapping("delete-increment/{auctionId}/{incrementId}")
-    public ResponseEntity<String> deleteIncrement(@PathVariable long auctionId,@PathVariable UUID incrementId){
+   @DeleteMapping("/delete-increment/{auctionId}/{incrementId}")
+    public ResponseEntity<Auction> deleteIncrement(@PathVariable String auctionId,@PathVariable String incrementId){
         return new ResponseEntity<>(auctionService.deleteIncrement(auctionId,incrementId),HttpStatus.OK);
    }
 }

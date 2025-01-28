@@ -2,6 +2,7 @@ package com.AuctionApp.Auction.entites;
 
 import com.AuctionApp.Auction.Component.AdditinalIncrements;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -21,8 +23,7 @@ import java.util.List;
 public class Auction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long auctionId;
+    private String auctionId;
 
 //    private String auctionLogo;
 
@@ -31,7 +32,7 @@ public class Auction {
     private int season;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date auctionDate;
 
 
@@ -66,13 +67,23 @@ public class Auction {
             inverseJoinColumns = {
                     @JoinColumn(name = "player_id", referencedColumnName = "playerId")
             })
+    @JsonIgnore
     private List<Player> auctionPlayers;
 
     @OneToMany(targetEntity = Team.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "AT_fk",referencedColumnName = "auctionId")
+    @JsonIgnore
     private List<Team> teams;
 
-    public Auction(long auctionId, String auctionName, int season, Date auctionDate, String auctionTime, long pointsPerTeam, long baseBid, long bidIncreaseBy, int maxPlayerPerTeam, int minPlayerPerTeam,long reserve) {
+    private ArrayList<String> shortcutKeys = new ArrayList<>(
+            Arrays.asList(
+                    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
+                    "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+            )
+    );
+
+
+    public Auction(String auctionId, String auctionName, int season, Date auctionDate, String auctionTime, long pointsPerTeam, long baseBid, long bidIncreaseBy, int maxPlayerPerTeam, int minPlayerPerTeam,long reserve) {
         this.auctionId = auctionId;
         this.auctionName = auctionName;
         this.season = season;

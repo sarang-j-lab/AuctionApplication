@@ -15,9 +15,10 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class PlayerDTO {
 
+    private String playerId;
 
 //    private String playerPic;
 
@@ -43,9 +44,8 @@ public class PlayerDTO {
     @NotBlank
     private String  jersseyName;
 
-    @NotNull
-    @NotBlank
-    private String t_ShirtSize;
+
+    private String tShirtSize;
 
     @NotNull
     @NotBlank
@@ -54,11 +54,20 @@ public class PlayerDTO {
     @NotNull
     private Style playerStyle;
 
-    @NotNull
-    @NotBlank
-    private String details;
 
-    private UUID categoryId;
+    private String categoryId;
 
 
+    public PlayerDTO(String playerId,String playerName, String mobileNo, int playerAge, int jersseyNumber, String jersseyName, String tShirtSize, String trouserSize, Style playerStyle, String categoryId) {
+        this.playerId = playerId;
+        this.playerName = playerName;
+        this.mobileNo = mobileNo;
+        this.playerAge = playerAge;
+        this.jersseyNumber = jersseyNumber;
+        this.jersseyName = jersseyName;
+        this.tShirtSize = tShirtSize;
+        this.trouserSize = trouserSize;
+        this.playerStyle = playerStyle;
+        this.categoryId = categoryId;
+    }
 }

@@ -15,7 +15,7 @@ import java.util.UUID;
 @Embeddable
 public class CategoryAdditionalIncrements {
 
-    private UUID id;
+    private String id;
 
     @NotNull
     private long increment;

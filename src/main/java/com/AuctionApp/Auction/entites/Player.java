@@ -17,8 +17,7 @@ import java.util.List;
 public class Player {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long playerId;
+    private String playerId;
 
 //    private String playerPic;
 
@@ -41,7 +40,21 @@ public class Player {
 
     private int formNo;
 
-    private String details;
+    @ManyToOne
+    @JoinColumn(name = "category_id",referencedColumnName = "categoryId")
+    private Category categoryId;
 
+    public Player(String playerId, String playerName, String mobileNo, int playerAge, int jersseyNumber, String jersseyName, String tShirtSize, String trouserSize, Style playerStyle, int formNo) {
+        this.playerId = playerId;
+        this.playerName = playerName;
+        this.mobileNo = mobileNo;
+        this.playerAge = playerAge;
+        this.jersseyNumber = jersseyNumber;
+        this.jersseyName = jersseyName;
+        this.tShirtSize = tShirtSize;
+        this.trouserSize = trouserSize;
+        this.playerStyle = playerStyle;
+        this.formNo = formNo;
+    }
 }
 

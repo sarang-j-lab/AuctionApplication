@@ -14,7 +14,7 @@ import java.util.UUID;
 @Embeddable
 public class AdditinalIncrements {
 
-    private UUID id;
+    private String id;
 
     @NotNull
     private long increment;

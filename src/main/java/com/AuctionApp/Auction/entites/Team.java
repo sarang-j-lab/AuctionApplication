@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -16,8 +18,7 @@ public class Team {
 
 //    private String teamLogo;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long teamId;
+    private String teamId;
 
     private String teamName;
 
@@ -37,7 +38,7 @@ public class Team {
             })
     private List<Player> teamPlayers;
 
-    public Team(long teamId, String teamName, String shortcutKey,String shortName) {
+    public Team(String teamId, String teamName, String shortcutKey,String shortName) {
         this.teamId = teamId;
         this.teamName = teamName;
         this.shortcutKey = shortcutKey;

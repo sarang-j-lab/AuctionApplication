@@ -1,6 +1,5 @@
 package com.AuctionApp.Auction.Services;
 
-import com.AuctionApp.Auction.Component.Style;
 import com.AuctionApp.Auction.DTO.PlayerDTO;
 import com.AuctionApp.Auction.ExceptionHandling.CustomException;
 import com.AuctionApp.Auction.entites.*;
@@ -8,15 +7,14 @@ import com.AuctionApp.Auction.repositories.AuctionRepository;
 import com.AuctionApp.Auction.repositories.CategoryRepository;
 import com.AuctionApp.Auction.repositories.PlayerRepository;
 import com.AuctionApp.Auction.repositories.UserRepository;
+import com.AuctionApp.Auction.util.Generate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class PlayerService {
@@ -33,51 +31,55 @@ public class PlayerService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    private void addPlayerCategory(UUID categoryId, Player player){
-        Optional<Category> category = categoryRepository.findById(categoryId);
-        System.out.println(category.get().getCategoryId());
-        System.out.println(player.getPlayerName());
-        if(category.isPresent()){
-            category.get().getPlayers().add(player);
-            categoryRepository.save(category.get());
-        }
+    private final Random random = new Random();
+    private String generateId() {
+        // Generate a random 7-digit number for the first part
+        long firstPart = 1000000 + random.nextInt(9000000); // Ensures it's always 7 digits
+        long secondPart = 1000 + random.nextInt(9000); // Ensures it's always 7 digits
+
+        return firstPart+"-"+secondPart;
     }
 
+    private Category addPlayerCategory(String categoryId, Player player){
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        if(category.isPresent()){
+            category.get().getPlayers().add(player);
+            return categoryRepository.save(category.get());
+        }
+        throw new CustomException("Category not found",HttpStatus.BAD_REQUEST,"Category not found with this id");
+    }
 
-    public Player join(PlayerDTO newPlayer,long auctionId){
+    @Transactional
+    public Player join(PlayerDTO newPlayer,String auctionId){
 
-        //current user will be here after authentication
-        User user = userRepository.findByUserId(15L);
-
-        //The auction id we get from url of frontend
         Optional<Auction> auction = auctionRepository.findById(auctionId);
 
-
         if(auction.isPresent()){
-        Player player = new Player(0,
+        Player player = new Player(Generate.generateId(),
                 newPlayer.getPlayerName(),
                 newPlayer.getMobileNo(),
                 newPlayer.getPlayerAge(),
                 newPlayer.getJersseyNumber(),
                 newPlayer.getJersseyName(),
-                newPlayer.getT_ShirtSize(),
+                newPlayer.getTShirtSize(),
                 newPlayer.getTrouserSize(),
                 newPlayer.getPlayerStyle(),
-                1,
-                newPlayer.getDetails()
+                1
         );
             Player savedPlayer = playerRepository.save(player);
             if(newPlayer.getCategoryId() != null){
-                addPlayerCategory(newPlayer.getCategoryId(), savedPlayer);
+               Category category = addPlayerCategory(newPlayer.getCategoryId(), player);
+               savedPlayer.setCategoryId(category);
+               playerRepository.save(savedPlayer);
             }
             auction.get().getAuctionPlayers().add(savedPlayer);
             auctionRepository.save(auction.get());
-            return savedPlayer;
+            return player;
         }
         throw new CustomException("Invalid auction id", HttpStatus.BAD_REQUEST,"Provide valid auction details");
     }
 
-    public List<Player> show(long auctionId){
+    public List<Player> show(String auctionId){
         Optional<Auction> auction = auctionRepository.findById(auctionId);
         if(auction.isPresent()){
             return auction.get().getAuctionPlayers();
@@ -86,26 +88,32 @@ public class PlayerService {
     }
 
 
-    public void edit(PlayerDTO playerRequest,long playerId){
-        playerRepository.updatePlayerById(playerId,
-                playerRequest.getPlayerAge(),
-                playerRequest.getPlayerName(),
-                playerRequest.getMobileNo(),
-                playerRequest.getPlayerStyle(),
-                playerRequest.getT_ShirtSize(),
-                playerRequest.getJersseyName(),
-                playerRequest.getJersseyNumber(),
-                playerRequest.getTrouserSize(),
-                playerRequest.getDetails()
-        );
-        if(playerRequest.getCategoryId() != null){
-            Optional<Player> player = playerRepository.findById(playerId);
-            System.out.println(player.get().getPlayerName());
-            player.ifPresent(value -> addPlayerCategory(playerRequest.getCategoryId(), value));
+    public void edit(PlayerDTO playerRequest,String playerId){
+        Optional<Player> player = playerRepository.findById(playerId);
+        if(player.isPresent()){
+            player.get().setPlayerAge(playerRequest.getPlayerAge());
+            player.get().setPlayerName(playerRequest.getPlayerName());
+            player.get().setMobileNo(playerRequest.getMobileNo());
+            player.get().setPlayerStyle(playerRequest.getPlayerStyle());
+            player.get().setTShirtSize(playerRequest.getTShirtSize());
+            player.get().setTrouserSize(playerRequest.getTrouserSize());
+            player.get().setJersseyName(playerRequest.getJersseyName());
+            player.get().setJersseyNumber(playerRequest.getJersseyNumber());
+            if(playerRequest.getCategoryId() != null){
+                Category category = addPlayerCategory(playerRequest.getCategoryId(),player.get());
+                player.get().setCategoryId(category);
+                playerRepository.save(player.get());
+            }else{
+                player.get().setCategoryId(null);
+                playerRepository.save(player.get());
+            }
+        }
+        else{
+            throw new CustomException("Player not found",HttpStatus.BAD_REQUEST,"Player not found");
         }
     }
 
-    public void delete(long playerId) {
+    public void delete(String playerId) {
         playerRepository.deletePlayerFromAuction(playerId);
         playerRepository.deleteById(playerId);
     }
