@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.button{
+    transition: 500ms ease-in-out all;
+}

@@ -1,0 +1,51 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const UserProfilePage = () => {
+  // Sample user data (can be fetched from an API or state)
+
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  return (
+    <div className="w-full ">
+      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
+        {/* Profile Header */}
+        <div className="flex flex-col items-center space-y-4">
+          {/* <img
+            src={user.profilePicture}
+            alt="Profile"
+            className="h-32 w-32 rounded-full border-4 border-white shadow-lg"
+          /> */}
+          <h1 className="text-3xl font-bold text-gray-800">{user?.user?.name}</h1>
+        </div>
+
+        {/* User Details */}
+        <div className="mt-8 space-y-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-500">Mobile Number</label>
+            <p className="text-lg text-gray-800">{user?.user?.mobileNo}</p>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-500">Email Address</label>
+            <p className="text-lg text-gray-800">{user?.user?.email}</p>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-500">City</label>
+            <p className="text-lg text-gray-800">{user?.user?.city}</p>
+          </div>
+        </div>
+
+        {/* Edit Profile Button (Optional) */}
+        <div className="mt-8 flex justify-center">
+          <Link to={"/edit-profile"} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
+            Edit Profile
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UserProfilePage;
