@@ -1,4 +1,3 @@
-import React from 'react'
 import { RiAuctionFill } from "react-icons/ri";
 
 const Footer = () => {

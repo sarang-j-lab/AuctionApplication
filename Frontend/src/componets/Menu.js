@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link } from "react-router-dom"
 
 import { RiAuctionFill } from "react-icons/ri"
@@ -13,25 +12,25 @@ const menu = [
     title: "New auction",
     description: "Create new auction and add player, teams.",
     icon: <RiAuctionFill />,
-    path: "/auction-form"
+    path: "/auction/auction-form"
   },
   {
     title: "Join Auction",
     description: "Join auction by auction ID.",
     icon: <MdOutlineJoinInner />,
-    path: "/join-auction"
+    path: "/auction/join-auction"
   },
   {
     title: "Self Auction",
     description: "Checkout your auctions.",
     icon: <BiMaleSign />,
-    path: "/my-auction"
+    path: "/auction/my-auction"
   },
   {
     title: "Auction Panel",
     description: "Join auction by auction ID.",
     icon: <BiDollar />,
-    path: "/auction-panel"
+    path: "/auction/auction-panel"
   }
 ];
 

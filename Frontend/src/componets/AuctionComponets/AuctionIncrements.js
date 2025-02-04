@@ -1,6 +1,5 @@
-import React, { useContext } from 'react'
-import { auctionContext } from '../../context/AuctionContext'
-import axios from 'axios';
+import { useContext } from 'react'
+
 import { messageContext } from '../../context/MessageContext';
 import axiosApi from '../../utils/axiosApi';
 
@@ -14,8 +13,7 @@ const AuctionIncrements = () => {
         try {
             const response = await axiosApi.delete(`/auction/delete-increment/${auction.auctionId}/${value}`)
             setSuccessMessage("Additional Increment deleted successfully!")
-            const updatedAuction = response?.data
-            localStorage.setItem("auction",JSON.stringify({ additionalIncrements: updatedAuction.additionalIncrements,auctionId: updatedAuction.auctionId, auctionName: updatedAuction.auctionName, auctionDate: updatedAuction.auctionDate, auctionTime: updatedAuction.auctionTime, baseBid: updatedAuction.baseBid, bidIncreaseBy: updatedAuction.bidIncreaseBy, maxPlayersPerTeam: updatedAuction.maxPlayersPerTeam, minPlayerPerTeam: updatedAuction.minPlayerPerTeam, pointsPerTeam:updatedAuction.pointsPerTeam,reserve:updatedAuction.reserve ,season:updatedAuction.season }));
+            localStorage.setItem("auction",JSON.stringify(response?.data));
         } catch (e) {
             setErrorMessage(e.response.data.message || "Something went wrong! please try again.");
         }
@@ -23,7 +21,7 @@ const AuctionIncrements = () => {
     
 
     return (
-        <div className='mx-auto w-[25vw] flex justify-center flex-col items-center rounded-lg border-1 shadow-lg py-5 px-6'>
+        <div className='mx-auto xl:w-[25vw] sm:w-full flex justify-center flex-col items-center rounded-lg border-1 shadow-lg py-5 px-6'>
             <h1>Additional increments</h1>
             {auction.additionalIncrements.length > 0 &&
                 auction.additionalIncrements.map(increm => (

@@ -1,10 +1,8 @@
 import axios from "axios";
-import React, { useContext, useLayoutEffect, useState } from "react";
+import React, { useContext,  useState } from "react";
 import { RiAuctionFill } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
-import { userContext } from "../../context/UserContext";
+import {  useNavigate } from "react-router-dom";
 import { messageContext } from "../../context/MessageContext";
-import useAuth from "../../utils/useAuth";
 
 
 const Signin = ({ setSignIn }) => {
@@ -15,9 +13,8 @@ const Signin = ({ setSignIn }) => {
     const navigate = useNavigate();
     const { setSuccessMessage, setErrorMessage } = useContext(messageContext);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log("running")
+    const handleSubmit = async (event) => {
+        event.preventDefault();
         try {
             const response = await axios.post("http://localhost:8080/user/login",
                 { mobileNo, password },
@@ -27,9 +24,9 @@ const Signin = ({ setSignIn }) => {
                     },
                 }
             )
+            // navigate("/auction/auction-menu")
             localStorage.setItem("user",JSON.stringify({user:response?.data?.user,token: response?.data?.token}));
             setSuccessMessage("User logged in successfully!")
-            navigate("/")
         } catch (error) {
             if (error?.response) {
                 let errorMessage = ""

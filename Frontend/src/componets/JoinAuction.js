@@ -1,8 +1,5 @@
-import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { auctionContext } from '../context/AuctionContext';
-import { userContext } from '../context/UserContext';
 import { RouteToprevBtn } from './Button';
 import { messageContext } from '../context/MessageContext';
 import axiosApi from '../utils/axiosApi';
@@ -42,8 +39,11 @@ const JoinAuction = () => {
         try {
             const response = await axiosApi.get(`/auction/auction-details/${code}`)
             const auction = response?.data
-            localStorage.setItem("auction",JSON.stringify({  auctionId:auction.auctionId ,auctionName: auction.auctionName, auctionDate: auction.auctionDate}));
-            navigate("/player-form", { state: {for: "joinForm", player: { playerName: user.user.name, mobileNo: user.user.mobileNo, playerAge: "", jersseyNumber: "", jersseyName: "", tshirtSize: "", trouserSize: "", playerStyle: "",categoryId:null } } })
+
+            //here auction is storing in localStorage with different keys for security reasons because we are using auctionId 
+            // in auction panel if someone redirect to auction-dashboard route for join auction he will able to conduct auction
+            localStorage.setItem("auction",JSON.stringify({  id:auction.auctionId ,name: auction.auctionName,date: auction.auctionDate}));
+            navigate("/auction/player-form", { state: {for: "joinForm", player: { playerName: user.user.name, mobileNo: user.user.mobileNo, playerAge: "", jersseyNumber: "", jersseyName: "", tshirtSize: "", trouserSize: "", playerStyle: "",categoryId:null } } })
         } catch (error) {
             if (error.response) {
                 setErrorMessage("Auction not found with this auction code");

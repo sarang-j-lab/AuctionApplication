@@ -37,17 +37,17 @@ public class AuctionDTO {
 
     @NotNull
     @Positive(message = "Points per team must be grather than 0")
-    private long pointsPerTeam;
+    private int pointsPerTeam;
 
 
     @NotNull
     @PositiveOrZero(message = "Base bid should be positive")
-    private long baseBid;
+    private int baseBid;
 
 
     @NotNull
     @Positive(message = "bid incrementment should be positive")
-    private long bidIncreaseBy;
+    private int bidIncreaseBy;
 
 
     @NotNull

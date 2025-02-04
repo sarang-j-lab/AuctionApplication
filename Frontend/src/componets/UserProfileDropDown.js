@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import  { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const UserProfileDropdown = ({handleLogout}) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +41,7 @@ const UserProfileDropdown = ({handleLogout}) => {
       {isOpen && (
         <div className="absolute  right-0 mt-5 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
           <div className="py-1">
-            <Link to={"/user-profile"} onClick={()=>setIsOpen(!isOpen)}
+            <Link to={"/auction/user-profile"} onClick={()=>setIsOpen(!isOpen)}
           
               className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >

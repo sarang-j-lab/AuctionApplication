@@ -24,13 +24,13 @@ public class Category {
 
     private String categoryName;
 
-    private long maxPlayerPerTeam;
+    private int maxPlayerPerTeam;
 
-    private long minPlayerPerTeam;
+    private int minPlayerPerTeam;
 
-    private long baseBid;
+    private int baseBid;
 
-    private long increment;
+    private int increment;
 
     @ElementCollection
     @CollectionTable(name = "category_increments",joinColumns = @JoinColumn(name = "category_id"))
@@ -40,7 +40,7 @@ public class Category {
     @JsonIgnore
     private List<Player> players;
 
-    public Category( String categoryId,String categoryName, long maxPlayerPerTeam, long minPlayerPerTeam, long baseBid, long increment) {
+    public Category( String categoryId,String categoryName, int maxPlayerPerTeam, int minPlayerPerTeam, int baseBid, int increment) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.maxPlayerPerTeam = maxPlayerPerTeam;

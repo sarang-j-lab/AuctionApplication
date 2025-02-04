@@ -7,8 +7,10 @@ import com.AuctionApp.Auction.ExceptionHandling.CustomException;
 import com.AuctionApp.Auction.entites.Auction;
 import com.AuctionApp.Auction.entites.Category;
 import com.AuctionApp.Auction.entites.Player;
+import com.AuctionApp.Auction.entites.Team;
 import com.AuctionApp.Auction.repositories.AuctionRepository;
 import com.AuctionApp.Auction.repositories.CategoryRepository;
+import com.AuctionApp.Auction.repositories.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,11 @@ public class CategoryService {
 
     @Autowired
     private AuctionRepository auctionRepository;
+
+    @Autowired
+    private TeamService teamService;
+
+    @Autowired TeamRepository teamRepository;
 
     private final Random random = new Random();
     private String generateId() {
@@ -48,13 +55,24 @@ public class CategoryService {
             throw new CustomException("Max player should be greather than min player",HttpStatus.BAD_REQUEST,"Please provide valid max player");
         }
         Optional<Auction> auction = auctionRepository.findById(auctionId);
+
         if(auction.isPresent()){
+        List<Team> teams = teamService.auctionTeams(auctionId);
 
 
 
-        long reserve = auction.get().getReserve() - (auction.get().getBaseBid() * newCategory.getMinPlayerPerTeam()) ;
+        int reserve = auction.get().getReserve() - (auction.get().getBaseBid() * newCategory.getMinPlayerPerTeam()) ;
             reserve = reserve + (newCategory.getBaseBid() * newCategory.getMinPlayerPerTeam());
 
+            if(reserve > auction.get().getPointsPerTeam()){
+                throw new CustomException("The base bid or minimum player requirement for this category does not align with the team's points.",HttpStatus.BAD_REQUEST,"Please enter valid base bid or min player");
+            }
+
+            for(Team team: teams){
+                team.setMaxBid(team.getTotalPoints() - reserve);
+                team.setReserve(reserve);
+                teamRepository.save(team);
+            }
 
             Category category = new Category(generateId(),
                     newCategory.getCategoryName(),
@@ -77,9 +95,7 @@ public class CategoryService {
         if(dbCategory.isPresent()){
             dbCategory.get().setCategoryName(category.getCategoryName());
             dbCategory.get().setIncrement(category.getIncrement());
-            dbCategory.get().setBaseBid(category.getBaseBid());
             dbCategory.get().setMaxPlayerPerTeam(category.getMaxPlayerPerTeam());
-            dbCategory.get().setMinPlayerPerTeam(category.getMinPlayerPerTeam());
             categoryRepository.save(dbCategory.get());
             return "Category edited successfully";
         }
@@ -91,8 +107,19 @@ public class CategoryService {
         Optional<Auction> auction = auctionRepository.findById(auctionId);
         Optional<Category> category = categoryRepository.findById(categoryId);
         if(auction.isPresent() && category.isPresent()){
-            long reserve = auction.get().getReserve() - (category.get().getMinPlayerPerTeam() * category.get().getBaseBid());
+            List<Team> teams = teamService.auctionTeams(auctionId);
+
+
+            int reserve = auction.get().getReserve() - (category.get().getMinPlayerPerTeam() * category.get().getBaseBid());
             reserve = reserve + (auction.get().getBaseBid() * category.get().getMinPlayerPerTeam());
+
+            for(Team team: teams){
+                team.setMaxBid(team.getTotalPoints() - reserve);
+                team.setReserve(reserve);
+                teamRepository.save(team);
+            }
+
+
             auction.get().setReserve(reserve);
             auctionRepository.save(auction.get());
             categoryRepository.deleteById(categoryId);

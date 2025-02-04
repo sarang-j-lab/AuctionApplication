@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import  { useContext, useEffect, useState } from 'react'
 import { RouteToprevBtn } from '../../Button';
 import { useNavigate } from 'react-router-dom';
 import Confirmation from '../../Confirmation';
@@ -33,10 +33,10 @@ const AuctionCategories = () => {
     }
 
     const addCateogry = () => {
-        navigate("/category-form")
+        navigate("/auction/category-form")
     }
     const editCategory = (category) => {
-        navigate("/category-form", { state: category })
+        navigate("/auction/category-form", { state: category })
     }
 
     const deleteConfirmation = (e) => {
@@ -48,13 +48,13 @@ const AuctionCategories = () => {
         try {
             await axiosApi.delete(`/delete-auction-category/${selectedCategoryId}/${auction.auctionId}`);
             setConfirmation(false);
-            setCategories((prev)=> prev.filter(category => category.categoryId != selectedCategoryId));
+            setCategories((prev)=> prev.filter(category => category.categoryId !== selectedCategoryId));
             setSelectedCategoryId(0);
             setSuccessMessage("Category deleted successfully!");
         } catch (e) {
-            if (e.response.data.message == "Cannot delete or update a parent row: a foreign key constraint fails (`auction_db`.`auction_player_tbl`, CONSTRAINT `FKq8hika4e7jaepdlxwih24l13o` FOREIGN KEY (`player_id`) REFERENCES `player_tbl` (`player_id`))") {
+            if (e.response.data.message === "Cannot delete or update a parent row: a foreign key constraint fails (`auction_db`.`auction_player_tbl`, CONSTRAINT `FKq8hika4e7jaepdlxwih24l13o` FOREIGN KEY (`player_id`) REFERENCES `player_tbl` (`player_id`))") {
                 setErrorMessage("First you have to edit player category which belongs to this category!");
-                navigate('/auction-players')
+                navigate('/auction/auction-players')
             } else {
                 setErrorMessage(e.response.data.message || "Something went wrong! please try again.");
             }
@@ -85,7 +85,7 @@ const AuctionCategories = () => {
             {confirmation && <Confirmation setConfirmation={setConfirmation} setId={setSelectedCategoryId} deleteFun={deleteCategory} />}
             
             <div className='xl:w-[65vw] lg:w-[60vw] text-xl md:w-full sm:w-full shadow-lg rounded-xl mx-4  flex space-y-4 justify-center items-center px-4 py-2  flex-col lg:flex-row md:flex-row sm:flex-col '>
-                <h1 className='text-xs text-blue-600 md:text-lg lg:text-2xl sm:text-xs mx-auto'>{auction.auctionName.toUpperCase()}<span className='text-xs ml-3 lg:text-xl sm:text-xs'>Teams</span></h1>
+                <h1 className='text-xs text-blue-600 md:text-lg lg:text-2xl sm:text-xs mx-auto'>{auction.auctionName.toUpperCase()}<span className='text-xs ml-3 lg:text-xl sm:text-xs'>Categories</span></h1>
 
                 <button onClick={addCateogry} className='rounded-md border text-sm p-2 mx-auto hover:bg-blue-600 hover:text-white '>Add Category</button>
             </div>
@@ -136,7 +136,7 @@ const AuctionCategories = () => {
                     </div>
                 )) : <p className="text-xl ml-10 mt-5">There is no category in this auction.</p>}
             </div>
-            <RouteToprevBtn onClick={() => navigate("/auction-details")} />
+            <RouteToprevBtn onClick={() => navigate("/auction/auction-details")} />
         </div>
     )
 }

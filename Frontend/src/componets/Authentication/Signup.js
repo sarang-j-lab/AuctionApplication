@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useContext, useState } from 'react'
+import  { useContext, useState } from 'react'
 import { RiAuctionFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import { messageContext } from '../../context/MessageContext';
@@ -26,8 +26,8 @@ const Signup = ({ setSignIn }) => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async (event) => {
+        event.preventDefault();
         try {
             const response = await axios.post("http://localhost:8080/user/user-registration",
                 formData,
@@ -38,7 +38,7 @@ const Signup = ({ setSignIn }) => {
                 })
             localStorage.setItem("user",JSON.stringify({user:response?.data?.user,token: response?.data?.token}));
             setSuccessMessage("User registered successfully!")
-            navigate("/")
+            // navigate("/auction/auction-menu")
         } catch (error) {
             if (error.response) {
                 let errorMessage = ""
@@ -79,7 +79,7 @@ const Signup = ({ setSignIn }) => {
                     {/* Phone Number Field */}
                     <div>
                         <label htmlFor="mobileNo" className="block text-sm font-medium text-gray-700">Phone Number</label>
-                        <input type="tel" id="mobileNo" name="mobileNo" value={formData.mobileNo} onChange={handleChange} className="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter your phone number" required />
+                        <input type="number" id="mobileNo" name="mobileNo" value={formData.mobileNo} onChange={handleChange} className="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter your phone number" required />
                     </div>
 
                     {/* Email Field */}

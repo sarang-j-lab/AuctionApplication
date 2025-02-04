@@ -54,6 +54,8 @@ public class PlayerService {
 
         Optional<Auction> auction = auctionRepository.findById(auctionId);
         if(auction.isPresent()){
+            auction.get().setCounter(auction.get().getCounter() + 1);
+
         Player player = new Player(Generate.generateId(),
                 newPlayer.getPlayerName(),
                 newPlayer.getMobileNo(),
@@ -63,7 +65,8 @@ public class PlayerService {
                 newPlayer.getTShirtSize(),
                 newPlayer.getTrouserSize(),
                 newPlayer.getPlayerStyle(),
-                1
+                false,
+                auction.get().getCounter()
         );
         player.setIsUser(null);
             Player savedPlayer = playerRepository.save(player);
@@ -87,7 +90,7 @@ public class PlayerService {
             if(user.get().getUserAsPlayerInAuction().contains(auction.get())){
                 throw new CustomException("You have already joined this auction",HttpStatus.BAD_REQUEST,"Cannot join again");
             }
-
+            auction.get().setCounter(auction.get().getCounter() + 1);
             Player player = new Player(Generate.generateId(),
                     userAsPlayerReq.getPlayerName(),
                     userAsPlayerReq.getMobileNo(),
@@ -97,7 +100,8 @@ public class PlayerService {
                     userAsPlayerReq.getTShirtSize(),
                     userAsPlayerReq.getTrouserSize(),
                     userAsPlayerReq.getPlayerStyle(),
-                    1
+                    false,
+                    auction.get().getCounter()
             );
             player.setIsUser(userId);
             Player savedPlayer = playerRepository.save(player);
@@ -157,7 +161,6 @@ public class PlayerService {
         Optional<Player> player = playerRepository.findById(playerId);
         if(player.isPresent()){
             if(player.get().getIsUser() != null){
-                System.out.println("user");
                 Optional<User> user = userRepository.findById(player.get().getIsUser());
                 Optional<Auction> auction = auctionRepository.findById(auctionId);
                 if(user.isPresent() && auction.isPresent()){
@@ -168,8 +171,6 @@ public class PlayerService {
                     throw new RuntimeException("Something went wrong!Please try again.");
                 }
             }else{
-                System.out.println("not user");
-
                 playerRepository.deleteById(playerId);
                 return "Player deleted successfully";
             }

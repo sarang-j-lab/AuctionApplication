@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Signup from '../componets/Authentication/Signup.js'
 import Signin from '../componets/Authentication/SignIn.js'
 import { Navigate } from 'react-router-dom'
+import Navbar from '../componets/Navbar.js'
+import Footer from '../componets/Footer.js'
 
 const Authentication = () => {
 
@@ -10,7 +12,9 @@ const Authentication = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   return (
     <>
+      <Navbar />
       {!user ? signIn ? <Signin setSignIn={setSignIn} /> : <Signup setSignIn={setSignIn} /> : <Navigate to={"/"} />}
+      <Footer />
     </>
   )
 }

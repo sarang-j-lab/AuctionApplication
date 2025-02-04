@@ -1,9 +1,7 @@
 
-import React, { useContext, useState } from 'react'
+import {  useState } from 'react'
 import { RiAuctionFill } from "react-icons/ri";
-import { userContext } from '../context/UserContext';
-import { Link, useNavigate } from 'react-router-dom';
-import { Dropdown } from 'flowbite-react';
+import { Link } from 'react-router-dom';
 import UserProfileDropdown from './UserProfileDropDown';
 
 

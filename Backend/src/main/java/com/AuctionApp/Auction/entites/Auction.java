@@ -38,11 +38,11 @@ public class Auction {
 
     private String auctionTime;
 
-    private long pointsPerTeam;
+    private int pointsPerTeam;
 
-    private long baseBid;
+    private int baseBid;
 
-    private long bidIncreaseBy;
+    private int bidIncreaseBy;
 
     @ElementCollection
     @CollectionTable(name = "additionalIncrements", joinColumns = @JoinColumn(name = "auction_id"))
@@ -51,13 +51,14 @@ public class Auction {
 
     @OneToMany(targetEntity = Category.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "AC_FK",referencedColumnName = "auctionId")
+    @JsonIgnore
     private List<Category> categories = new ArrayList<>();
 
-    private long maxPlayerPerTeam;
+    private int maxPlayerPerTeam;
 
-    private long minPlayerPerTeam;
+    private int minPlayerPerTeam;
 
-    private long reserve;
+    private int reserve;
 
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "ap_fk" ,referencedColumnName = "auctionId")
@@ -70,16 +71,10 @@ public class Auction {
     @JsonIgnore
     private List<Team> teams;
 
-    @JsonIgnore
-    private ArrayList<String> shortcutKeys = new ArrayList<>(
-            Arrays.asList(
-                    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
-                    "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-            )
-    );
+    private  int counter = 0;
 
 
-    public Auction(String auctionId, String auctionName, int season, Date auctionDate, String auctionTime, long pointsPerTeam, long baseBid, long bidIncreaseBy, int maxPlayerPerTeam, int minPlayerPerTeam,long reserve) {
+    public Auction(String auctionId, String auctionName, int season, Date auctionDate, String auctionTime, int pointsPerTeam, int baseBid, int bidIncreaseBy, int maxPlayerPerTeam, int minPlayerPerTeam,int reserve) {
         this.auctionId = auctionId;
         this.auctionName = auctionName;
         this.season = season;

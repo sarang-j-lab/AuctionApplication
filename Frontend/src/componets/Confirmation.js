@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { useState } from 'react';
+
 
 const Confirmation = ({setConfirmation,setId,deleteFun}) => {
 

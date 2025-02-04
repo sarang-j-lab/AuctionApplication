@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -25,6 +26,11 @@ public class AuctionController {
     @GetMapping("/my-auction/{userId}")
     public ResponseEntity<List<Auction>> getAllAuctionOfUser(@PathVariable String userId){
         return new ResponseEntity<>(auctionService.getAll(userId),HttpStatus.OK);
+    }
+
+    @GetMapping("/get-detailed-auction/{auctionId}")
+    public ResponseEntity<Map<String,Object>> getDetailedAuction(@PathVariable String auctionId){
+        return ResponseEntity.ok().body(auctionService.getDetailedAuction(auctionId));
     }
 
    @GetMapping("/auction-details/{auctionId}")

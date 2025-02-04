@@ -23,8 +23,7 @@ public class TeamDTO {
     @NotBlank
     private String shortName;
 
-    @NotNull
-    private String shortcutKey;
+
 
     @NotNull
     private long auction;

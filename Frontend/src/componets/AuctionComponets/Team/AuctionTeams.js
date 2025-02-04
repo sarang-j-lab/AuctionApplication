@@ -1,8 +1,6 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Confirmation from '../../Confirmation';
-import { auctionContext } from '../../../context/AuctionContext';
 import { RouteToprevBtn } from '../../Button';
 import { messageContext } from '../../../context/MessageContext';
 import axiosApi from '../../../utils/axiosApi';
@@ -37,12 +35,12 @@ const AuctionTeams = () => {
 
     // Add a new team
     const addTeam = () => {
-        navigate('/team-form', { state: { newTeamForm: true } });
+        navigate('/auction/team-form', { state: { newTeamForm: true } });
     };
 
     // Edit an existing team
     const editTeam = (team) => {
-        navigate('/team-form', { state: { newTeamForm: false, team } });
+        navigate('/auction/team-form', { state: { newTeamForm: false, team } });
     };
 
     // Confirm team deletion
@@ -54,7 +52,7 @@ const AuctionTeams = () => {
     // Delete a team
     const deleteTeam = async () => {
         try {
-            await axiosApi.delete(`/delete-team/${selectedTeamId}/${auction.auctionId}`);
+            await axiosApi.delete(`/delete-team/${selectedTeamId}`);
             setSuccessMessage('Team deleted successfully!');
             setAuctionTeams((prevTeams) => prevTeams.filter((team) => team.teamId !== selectedTeamId));
         } catch (error) {
@@ -99,9 +97,7 @@ const AuctionTeams = () => {
                                     <p className="text-sm text-blue-500 flex justify-between">
                                         Short name <span className="font-bold text-black">{team.shortName}</span>
                                     </p>
-                                    <p className="text-sm mb-4 text-blue-500 flex justify-between">
-                                        Shortcut key <span className="font-bold text-black">{team.shortcutKey}</span>
-                                    </p>
+                                 
                                     <button onClick={() => editTeam(team)} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out mr-2">
                                         Edit
                                     </button>
@@ -117,7 +113,7 @@ const AuctionTeams = () => {
                 )}
 
                 {/* Navigation Button */}
-                <RouteToprevBtn onClick={() => navigate('/auction-details')} />
+                <RouteToprevBtn onClick={() => navigate('/auction/auction-details')} />
 
 
             </div>

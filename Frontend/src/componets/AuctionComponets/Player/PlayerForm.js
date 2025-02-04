@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation} from "react-router-dom";
 import Form from "./Form";
 import JoinForm from "./JoinForm";
 import { messageContext } from "../../../context/MessageContext";
@@ -19,7 +19,9 @@ function PlayerForm() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axiosApi.get(`/show-auction-category/${auction.auctionId}`);
+                const url = purpose === "joinForm" ? `/show-auction-category/${auction.id}` : `/show-auction-category/${auction.auctionId}`
+
+                const response = await axiosApi.get(url);
                 setCategories(response?.data);
             } catch (e) {
                 setErrorMessage(e?.response?.data?.message || "Failed to load categories! please try again.");

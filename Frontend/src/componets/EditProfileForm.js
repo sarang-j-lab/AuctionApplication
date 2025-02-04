@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import  { useContext, useState } from 'react';
 import axiosApi from '../utils/axiosApi';
 import { messageContext } from '../context/MessageContext';
 import { useNavigate } from 'react-router-dom';
@@ -33,10 +33,10 @@ const EditProfileForm = () => {
       user.user = response?.data
       localStorage.setItem("user", JSON.stringify(user));
       setSuccessMessage("User edited successfully");
-      navigate("/user-profile")
+      navigate("/auction/user-profile")
     } catch (error) {
       setErrorMessage(error?.response?.data?.message || "User editing failed! please try again.")
-      navigate("/user-profile")
+      navigate("/auction/user-profile")
     }
   };
 

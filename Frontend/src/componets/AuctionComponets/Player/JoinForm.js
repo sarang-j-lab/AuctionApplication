@@ -1,4 +1,3 @@
-import axios from "axios";
 import { BlueButton } from "../../Button";
 import { RouteToprevBtn } from "../../Button";
 import { useNavigate } from 'react-router-dom';
@@ -27,9 +26,9 @@ const JoinForm = ({ categories, playerData, setPlayerData, purpose }) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(playerData);
+    
         try {
-                await axiosApi.post(`/join-auction/${auction.auctionId}/${user?.user?.userId}`, playerData, {
+                await axiosApi.post(`/join-auction/${auction.id}/${user?.user?.userId}`, playerData, {
                 headers: {
                     "Content-Type": "application/json",
                 }
@@ -52,9 +51,9 @@ const JoinForm = ({ categories, playerData, setPlayerData, purpose }) => {
     return (
         <>
             {auction && <div className='bg-white shadow-md rounded-lg p-3  w-full mx-4 mb-2'>
-                <h1 className='text-xs text-blue-600 md:text-lg lg:text-2xl sm:text-xs'>{auction.auctionName.toUpperCase()}<span className='text-xs ml-3 lg:text-xl sm:text-xs'>Players</span></h1>
+                <h1 className='text-xs text-blue-600 md:text-lg lg:text-2xl sm:text-xs'>{auction.name.toUpperCase()}<span className='text-xs ml-3 lg:text-xl sm:text-xs'>Players</span></h1>
 
-                <button className='rounded-md p-2 '>{auction.auctionDate}</button>
+                <button className='rounded-md p-2 '>{auction.date}</button>
             </div>}
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-3  w-full mx-4 ">
                 <h2 className="text-base font-bold m-10 mt-5 lg:text-2xl sm:text-base">{purpose}</h2>

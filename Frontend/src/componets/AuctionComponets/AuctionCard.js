@@ -5,9 +5,9 @@ const AuctionCard = ({ userAuctions }) => {
 
 
   const showDetails = async (event) => {
-    const auction = userAuctions.filter((auction) => String(auction.auctionId) == event.target.value)
-    localStorage.setItem("auction", JSON.stringify({ additionalIncrements: auction[0].additionalIncrements, auctionId: auction[0].auctionId, auctionName: auction[0].auctionName, auctionDate: auction[0].auctionDate, auctionTime: auction[0].auctionTime, baseBid: auction[0].baseBid, bidIncreaseBy: auction[0].bidIncreaseBy, maxPlayerPerTeam: auction[0].maxPlayerPerTeam, minPlayerPerTeam: auction[0].minPlayerPerTeam, pointsPerTeam: auction[0].pointsPerTeam, reserve: auction[0].reserve, season: auction[0].season }));
-    navigate("/auction-details")
+    const auction = userAuctions.filter((auction) => String(auction.auctionId) === event.target.value)
+    localStorage.setItem("auction", JSON.stringify(auction[0]));
+    navigate("/auction/auction-details")
   }
 
 

@@ -17,7 +17,6 @@ export function AuctionPlayers() {
     const auction = JSON.parse(localStorage.getItem('auction'));
     const [id, setId] = useState(0);
     const [categories, setCategories] = useState([]);
-    const user =  JSON.parse(localStorage.getItem('user'));
 
     const [confirmation, setConfirmation] = useState(false);
     useEffect(() => {
@@ -65,11 +64,11 @@ export function AuctionPlayers() {
     }
 
     const addPlayer = () => {
-        navigate("/player-form", { state: { for: "newForm"} })
+        navigate("/auction/player-form", { state: { for: "newForm"} })
     }
 
     const editPlayer = (player) => {
-        navigate("/player-form", { state: {for: "editForm", player: player } })
+        navigate("/auction/player-form", { state: {for: "editForm", player: player } })
     }
 
     
@@ -133,7 +132,7 @@ export function AuctionPlayers() {
                     </div>
                 )) : <p className="text-xl ml-10 mt-5">There is no player in this auction.</p>}
             </div>
-            <RouteToprevBtn onClick={() => navigate("/auction-details")} />
+            <RouteToprevBtn onClick={() => navigate("/auction/auction-details")} />
         </div>
     );
 }

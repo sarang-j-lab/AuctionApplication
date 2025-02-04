@@ -24,9 +24,13 @@ public class Team {
     private String teamName;
 
 
-    private String shortcutKey;
-
     private String shortName;
+
+    private int totalPoints;
+
+    private int reserve;
+
+    private  int maxBid;
 
 
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
@@ -34,10 +38,12 @@ public class Team {
     @JsonIgnore
     private List<Player> teamPlayers;
 
-    public Team(String teamId, String teamName, String shortcutKey,String shortName) {
+    public Team(String teamId, String teamName,  String shortName, int totalPoints, int reserve, int maxBid) {
         this.teamId = teamId;
         this.teamName = teamName;
-        this.shortcutKey = shortcutKey;
         this.shortName = shortName;
+        this.totalPoints = totalPoints;
+        this.reserve = reserve;
+        this.maxBid = maxBid;
     }
 }

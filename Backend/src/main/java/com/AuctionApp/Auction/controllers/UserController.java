@@ -33,7 +33,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getById(userId));
     }
 
-    @GetMapping("user-joined-auctions/{userId}")
+    @GetMapping("/user-joined-auctions/{userId}")
     public ResponseEntity<List<Auction>> showJoinedAuction(@PathVariable String userId){
         return  ResponseEntity.ok().body(userService.getById(userId).getUserAsPlayerInAuction());
     }

@@ -42,7 +42,7 @@ const Form = ({ categories, setPlayerData, playerData, purpose }) => {
                     "Content-Type": "application/json",
                 }
             })
-            navigate("/auction-players")
+            navigate("/auction/auction-players")
             setSuccessMessage(isEditForm ? "Player edited successfully" : "Player added successfully!");
         } catch (error) {
             if (error?.response) {
@@ -147,7 +147,7 @@ const Form = ({ categories, setPlayerData, playerData, purpose }) => {
 
             </div>
             <div className="flex flex-row justify-between items-center">
-                <RouteToprevBtn onClick={() => navigate("/auction-players")} />
+                <RouteToprevBtn onClick={() => navigate("/auction/auction-players")} />
                 {purpose === "Add player" ? <BlueButton>Submit</BlueButton> : <BlueButton>Edit</BlueButton>}
             </div>
         </form>

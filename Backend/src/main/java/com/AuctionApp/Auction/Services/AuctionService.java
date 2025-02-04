@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.AuctionApp.Auction.util.Generate;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,14 +33,7 @@ public class AuctionService {
     @Autowired
     private PlayerRepository playerRepository;
 
-    private final Random random = new Random();
-    private String generateId() {
-        // Generate a random 7-digit number for the first part
-        long firstPart = 1000000 + random.nextInt(9000000); // Ensures it's always 7 digits
-        long secondPart = 1000 + random.nextInt(9000); // Ensures it's always 7 digits
 
-        return firstPart+"-"+secondPart;
-    }
 
     private void timeValidation(String time){
         String timeRegex = "^([01]\\d|2[0-3]):[0-5]\\d$";
@@ -65,12 +59,13 @@ public class AuctionService {
             this.timeValidation(auctionRequest.getAuctionTime());
 
             //if baseBid * maxPlayerPerTeam is greather than pointsPerTeam then we have change with point / maxPlayerPerTeam for equal distribution
-            if(auctionRequest.getBaseBid() * auctionRequest.getMaxPlayerPerTeam() > auctionRequest.getPointsPerTeam()){
-                auctionRequest.setBaseBid(auctionRequest.getPointsPerTeam() / (auctionRequest.getMaxPlayerPerTeam() - 1));
+            if(auctionRequest.getBaseBid() * auctionRequest.getMinPlayerPerTeam() > auctionRequest.getPointsPerTeam()){
+//                auctionRequest.setBaseBid(auctionRequest.getPointsPerTeam() / (auctionRequest.getMaxPlayerPerTeam() * 2));
+                throw new CustomException("The Team's points are insufficient to meet the minimum player requirement for this base bid.",HttpStatus.BAD_REQUEST,"Please provide valid details");
             }
-                Auction auction = new Auction(generateId(),auctionRequest.getAuctionName(),auctionRequest.getSeason(),auctionRequest.getAuctionDate(),
+                Auction auction = new Auction(Generate.generateId(),auctionRequest.getAuctionName(),auctionRequest.getSeason(),auctionRequest.getAuctionDate(),
                     auctionRequest.getAuctionTime(),auctionRequest.getPointsPerTeam(),auctionRequest.getBaseBid(),auctionRequest.getBidIncreaseBy(),
-                    auctionRequest.getMaxPlayerPerTeam(),auctionRequest.getMinPlayerPerTeam(), (auctionRequest.getMaxPlayerPerTeam() - 1) * auctionRequest.getBaseBid());
+                    auctionRequest.getMaxPlayerPerTeam(),auctionRequest.getMinPlayerPerTeam(), (auctionRequest.getMinPlayerPerTeam()) * auctionRequest.getBaseBid());
 
             Auction newAuction = auctionRepository.save(auction);
             user.get().getAuctions().add(newAuction);
@@ -101,10 +96,6 @@ public class AuctionService {
     public Auction updateAuction(String auctionId,AuctionDTO auctionDTO) {
         this.timeValidation(auctionDTO.getAuctionTime());
 
-        //if baseBid * maxPlayerPerTeam is greather than pointsPerTeam then we have change with point / maxPlayerPerTeam
-        if((auctionDTO.getBaseBid() * auctionDTO.getMaxPlayerPerTeam()) > auctionDTO.getPointsPerTeam()){
-            auctionDTO.setBaseBid(auctionDTO.getPointsPerTeam() / (auctionDTO.getMaxPlayerPerTeam() - 1));
-        }
 
         auctionRepository.updateAuction(auctionId,
                 auctionDTO.getAuctionName(),
@@ -112,7 +103,7 @@ public class AuctionService {
                 auctionDTO.getAuctionTime(),
                 auctionDTO.getAuctionDate(),
                 auctionDTO.getBidIncreaseBy(),
-                auctionDTO.getMinPlayerPerTeam());
+                auctionDTO.getMaxPlayerPerTeam());
 
         Optional<Auction> auction = auctionRepository.findById(auctionId);
         if(auction.isPresent()){
@@ -130,7 +121,7 @@ public class AuctionService {
     public Auction addIncrements(AdditinalIncrements newIncrements, String auctionId) {
         Optional<Auction> auction = auctionRepository.findById(auctionId);
         if(auction.isPresent()){
-            newIncrements.setId(generateId());
+            newIncrements.setId(Generate.generateId());
             auction.get().getAdditionalIncrements().add(newIncrements);
             return auctionRepository.save(auction.get());
         }else{
@@ -161,5 +152,18 @@ public class AuctionService {
             return auction.get().getAdditionalIncrements();
         }
         throw new CustomException("Auction Not found",HttpStatus.BAD_REQUEST,"Auction not found with this id");
+    }
+
+    public Map<String,Object> getDetailedAuction(String auctionId) {
+        Optional<Auction> auction = auctionRepository.findById(auctionId);
+        if(auction.isPresent()){
+            Map<String, Object> detailedAuction = new HashMap<>();
+            detailedAuction.put("auction",auction.get());
+            detailedAuction.put("auctionTeams",auction.get().getTeams());
+            detailedAuction.put("auctionPlayers",auction.get().getAuctionPlayers());
+            detailedAuction.put("auctionCategories",auction.get().getCategories());
+            return detailedAuction;
+        }
+        throw new CustomException("Auction Not Found!",HttpStatus.BAD_REQUEST,"Auction Not Found");
     }
 }

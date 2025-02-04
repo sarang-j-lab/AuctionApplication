@@ -5,3 +5,14 @@
 .button{
     transition: 500ms ease-in-out all;
 }
+
+@layer utilities {
+    .scrollbar-hide {
+      -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+      scrollbar-width: none;     /* For Firefox */
+    }
+  
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;             /* For Chrome, Safari, and Opera */
+    }
+}

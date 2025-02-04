@@ -1,15 +1,34 @@
-import React, { useContext, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'
+import { useContext, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Authentication from './pages/Authentication'
 import { messageContext } from './context/MessageContext'
 import { ErrorToast, SuccessToast } from './componets/Toast'
-import Footer from './componets/Footer';
-import Navbar from './componets/Navbar'
+
 import ProtectedRoutes from './pages/ProtectedRoutes'
-import AuctionProvider from './context/AuctionContext';
-import UserProvider from './context/UserContext';
-import MessageProvider from './context/MessageContext';
-import CategoryProvider from './context/CategoryContext';
+import UserProfilePage from './componets/UserProfilePage'
+import EditProfileForm from './componets/EditProfileForm'
+import AuctionForm from './componets/AuctionComponets/AuctionForm'
+import MyAuction from './componets/AuctionComponets/MyAuction'
+import AuctionDetail from './componets/AuctionComponets/AuctionDetail'
+import AuctionTeams from './componets/AuctionComponets/Team/AuctionTeams'
+import AuctionPlayers from './componets/AuctionComponets/Player/AuctionPlayers'
+import TeamForm from './componets/AuctionComponets/Team/TeamForm'
+import PlayerForm from './componets/AuctionComponets/Player/PlayerForm'
+import AuctionCategories from './componets/AuctionComponets/Category/AuctionCategories'
+import CategoryForm from './componets/AuctionComponets/Category/CategoryForm'
+import Main from './componets/Main'
+import JoinAuction from './componets/JoinAuction'
+import Panel from './componets/AuctionPanel/Panel'
+import Menu from './componets/Menu'
+import AuctionPanel from './pages/AuctionPanel'
+
+
+
+
+
+
+
+
 const App = () => {
 
   const { successMessage, setSuccessMessage, errorMessage, setErrorMessage } = useContext(messageContext);
@@ -37,14 +56,29 @@ const App = () => {
           onClose={() => setErrorMessage("")}
         />
       )}
- 
-            <Navbar />
-            <Routes>
-              <Route path='/authentication' element={<Authentication />} />
 
-              <Route path='*' element={<ProtectedRoutes />} />
-            </Routes>
-            <Footer />
+      <Routes>
+        <Route path='/authentication' element={<Authentication />} />
+
+        <Route element={<ProtectedRoutes />} >
+            <Route  element={<Main />}>
+                <Route path='/' element={<Menu />} />
+                <Route path='/auction/user-profile' element={<UserProfilePage />} />
+                <Route path='/auction/edit-profile' element={<EditProfileForm />} />
+                <Route path='/auction/auction-form' element={<AuctionForm />} />
+                <Route path='/auction/my-auction' element={<MyAuction />} />
+                <Route path='/auction/auction-details' element={<AuctionDetail />} />
+                <Route path='/auction/auction-teams' element={<AuctionTeams />} />
+                <Route path='/auction/auction-players' element={<AuctionPlayers />} />
+                <Route path='/auction/team-form' element={<TeamForm />} />
+                <Route path='/auction/player-form' element={<PlayerForm />} />
+                <Route path='/auction/join-auction' element={<JoinAuction />} />
+                <Route path='/auction/auction-categories' element={<AuctionCategories />} />
+                <Route path='/auction/category-form' element={<CategoryForm />} />
+            </Route>
+          <Route path="/auction-dashboard/*" element={<AuctionPanel />} />
+        </Route>
+      </Routes>
 
     </Router>
 

@@ -21,11 +21,8 @@ public interface AuctionRepository extends JpaRepository<Auction,String> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Auction a SET a.auctionName = :auctionName,  a.season = :season,a.auctionTime = :auctionTime,a.auctionDate = :auctionDate, a.bidIncreaseBy = :bidIncreaseBy, a.minPlayerPerTeam = :minPlayerPerTeam WHERE a.auctionId = :auctionId")
+    @Query("UPDATE Auction a SET a.auctionName = :auctionName,  a.season = :season,a.auctionTime = :auctionTime,a.auctionDate = :auctionDate, a.bidIncreaseBy = :bidIncreaseBy, a.maxPlayerPerTeam = :maxPlayerPerTeam WHERE a.auctionId = :auctionId")
     int updateAuction(@Param("auctionId") String auctionId, @Param("auctionName") String auctionName, @Param("season") Integer season,
-                      @Param("auctionTime") String auctionTime, @Param("auctionDate") Date auctionDate,  @Param("bidIncreaseBy")Long bidIncreaseBy,
-                      @Param("minPlayerPerTeam") Integer minPlayerPerTeam);
-
-
-
+                      @Param("auctionTime") String auctionTime, @Param("auctionDate") Date auctionDate,  @Param("bidIncreaseBy")int bidIncreaseBy,
+                      @Param("maxPlayerPerTeam") Integer maxPlayerPerTeam);
 }

@@ -22,18 +22,18 @@ public class CategoryDTO {
 
     @NotNull
     @Positive
-    private long maxPlayerPerTeam;
+    private int maxPlayerPerTeam;
 
     @NotNull
     @PositiveOrZero
-    private long minPlayerPerTeam;
+    private int minPlayerPerTeam;
 
     @NotNull
     @Positive
-    private long baseBid;
+    private int baseBid;
 
     @NotNull
     @Positive
-    private long increment;
+    private int increment;
 
 }

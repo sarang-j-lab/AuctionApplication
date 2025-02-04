@@ -38,17 +38,20 @@ public class Player {
 
     private Style playerStyle;
 
+
+
     private int formNo;
 
     private String isUser;
 
+    private boolean isSold;
 
     @ManyToOne
     @JoinColumn(name = "category_id",referencedColumnName = "categoryId")
     private Category categoryId;
 
 
-    public Player(String playerId, String playerName, String mobileNo, int playerAge, int jersseyNumber, String jersseyName, String tShirtSize, String trouserSize, Style playerStyle, int formNo) {
+    public Player(String playerId, String playerName, String mobileNo, int playerAge, int jersseyNumber, String jersseyName, String tShirtSize, String trouserSize, Style playerStyle, boolean isSold ,int formNo) {
         this.playerId = playerId;
         this.playerName = playerName;
         this.mobileNo = mobileNo;
@@ -58,6 +61,7 @@ public class Player {
         this.tShirtSize = tShirtSize;
         this.trouserSize = trouserSize;
         this.playerStyle = playerStyle;
+        this.isSold = isSold;
         this.formNo = formNo;
     }
 }

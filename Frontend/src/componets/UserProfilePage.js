@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 const UserProfilePage = () => {
@@ -7,8 +6,8 @@ const UserProfilePage = () => {
 
   const user = JSON.parse(localStorage.getItem("user"));
   return (
-    <div className="w-full ">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
+    <div className='xl:w-3/4 lg:w-3/4 sm:w-full flex justify-center items-center'>
+      <div className="xl:w-2/4 lg:w-2/4 sm:w-full p-4 bg-white rounded-lg shadow-lg ">
         {/* Profile Header */}
         <div className="flex flex-col items-center space-y-4">
           {/* <img

@@ -1,9 +1,5 @@
-import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { BlueButton, RouteToprevBtn } from "../Button";
-import { auctionContext } from "../../context/AuctionContext";
 import { useLocation, useNavigate } from "react-router-dom";
-import { userContext } from "../../context/UserContext";
 import { messageContext } from "../../context/MessageContext";
 import axiosApi from "../../utils/axiosApi";
 
@@ -66,7 +62,7 @@ const AuctionForm = () => {
     { label: "Season", name: "season", type: "number", placeholder: "Ex. 2", },
     { label: "Auction Time", name: "auctionTime", type: "time", },
     { label: "Bid Increase By", name: "bidIncreaseBy", type: "number", placeholder: "Ex. 1500", },
-    { label: "Min Players Per Team", name: "minPlayerPerTeam", type: "number", placeholder: "Ex. 11", },
+    { label: "Max Players Per Team", name: "maxPlayerPerTeam", type: "number", placeholder: "Ex. 14", },
   ]
 
   const navigate = useNavigate()
@@ -90,7 +86,8 @@ const AuctionForm = () => {
     const { name, value } = event.target;
     setAuction({ ...auction, [name]: value });
   };
-
+  
+  
   // handling form with condition of auction.auctionId if purpose is create auction than auction is undifiend else purpose is edit auction than auction have auctionId
   const handleForm = async (event) => {
     event.preventDefault();
@@ -98,6 +95,11 @@ const AuctionForm = () => {
       setErrorMessage("Max players should be greater than Min players");
       return;
     }
+    if(parseInt(auction.baseBid * auction.minPlayerPerTeam) > parseInt(auction.pointsPerTeam)){
+        setErrorMessage("The Team's points are insufficient to meet the minimum player requirement for this base bid.")
+        return;
+    }
+
     const url = isEditing ? `/auction/edit-auction/${auction.auctionId}` : `/auction/new-auction/${user?.user?.userId}`;
     const method = auction.auctionId ? "put" : "post";
     try {
@@ -112,9 +114,8 @@ const AuctionForm = () => {
         const updatedAuction = response?.data
         localStorage.setItem("auction", JSON.stringify({ additionalIncrements: updatedAuction.additionalIncrements, auctionId: updatedAuction.auctionId, auctionName: updatedAuction.auctionName, auctionDate: updatedAuction.auctionDate, auctionTime: updatedAuction.auctionTime, baseBid: updatedAuction.baseBid, bidIncreaseBy: updatedAuction.bidIncreaseBy, maxPlayerPerTeam: updatedAuction.maxPlayerPerTeam, minPlayerPerTeam: updatedAuction.minPlayerPerTeam, pointsPerTeam: updatedAuction.pointsPerTeam, reserve: updatedAuction.reserve, season: updatedAuction.season }))
         setSuccessMessage("Auction edited successfully!")
-        navigate("/auction-details");
+        navigate("/auction/auction-details");
       } else {
-        setAuction(initialState);
         navigate("/")
         setSuccessMessage("Form submitted successfully!");
       }
@@ -134,38 +135,13 @@ const AuctionForm = () => {
 
 
   return (
-    // <div className="flex flex-col  items-center xl:w-3/4 lg:w-3/4 sm:w-[90vw]  justify-center  ">
-    //   <form
-    //     onSubmit={handleForm}
-    //     className="bg-white shadow-md rounded-lg p-3  w-full mx-4 "
-    //   >
-    //     <h2 className="text-base font-bold m-10 mt-5 lg:text-2xl sm:text-base">Create Auction</h2>
-    //     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    //       {/* Map through fields */}
-    //       {
-    //         auctionFields.map((field, index) => (
-    //           <div key={index}>
-    //             <label htmlFor={field.name} className="block text-sm font-medium text-gray-700">{field.label}</label>
-    //             <input type={field.type} id={field.name} name={field.name} value={auction[field.name]} placeholder={field.placeholder} onChange={handleChange} className="mt-1 p-3 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required /></div>
-    //         ))}
-    //     </div>
-    //     <div className="flex flex-row justify-between items-center">
-
-    //       {!auction.auctionId ? <BlueButton>Submit</BlueButton> : <BlueButton>Edit</BlueButton>}
-
-    //     </div>
-    //   </form>
-    //   <div className="w-full flex flex-row justify-between items-center">
-    //     {!auction.auctionId ? <RouteToprevBtn onClick={() => navigate("/")} /> : <RouteToprevBtn onClick={() => navigate("/auction-details")} />}
-    //   </div>
-    // </div>
     <div className="flex flex-col   rounded-lg border-2 items-center xl:w-3/4 lg:w-3/4 sm:w-[90vw]  justify-center ">
 
       <form onSubmit={handleForm} className="flex flex-col bg-white shadow-md rounded-lg p-3  w-full mx-4 ">
         <h1 className="text-2xl  text-center mb-4"> {auction.auctionId ? "Edit Auction" : "Create Auction"}</h1>
-        {!isEditing && <p className="mb-8 self-center text-xs text-gray-800 sm:text-xs">Carefully fill the details Base bid, Max player, Points cannot be edited again! you have to recreate auction.</p>}
+        {!isEditing && <p className="mb-8 self-center text-xs text-gray-800 sm:text-xs">Carefully fill the details Base bid, Min player, Points cannot be edited again! you have to recreate auction.</p>}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {auctionFields.map(({ label, name, type, placeholder, customDisabled }) => (
+          {auctionFields.map(({ label, name, type, placeholder }) => (
             <div key={name} className="mb-5">
               <label htmlFor={name} className="block mb-2 text-sm font-medium">
                 {label}
@@ -192,7 +168,7 @@ const AuctionForm = () => {
       </form>
 
       <button
-        onClick={() => navigate(auction.auctionId ? "/auction-details" : "/")}
+        onClick={() => navigate(auction.auctionId ? "/auction/auction-details" : "/")}
         className="mt-4 w-full text-blue-700 border border-blue-700 hover:bg-blue-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
       >
         Cancel
