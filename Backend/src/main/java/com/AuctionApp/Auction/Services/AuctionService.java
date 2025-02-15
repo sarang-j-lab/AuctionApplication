@@ -65,7 +65,7 @@ public class AuctionService {
             }
                 Auction auction = new Auction(Generate.generateId(),auctionRequest.getAuctionName(),auctionRequest.getSeason(),auctionRequest.getAuctionDate(),
                     auctionRequest.getAuctionTime(),auctionRequest.getPointsPerTeam(),auctionRequest.getBaseBid(),auctionRequest.getBidIncreaseBy(),
-                    auctionRequest.getMaxPlayerPerTeam(),auctionRequest.getMinPlayerPerTeam(), (auctionRequest.getMinPlayerPerTeam()) * auctionRequest.getBaseBid());
+                    auctionRequest.getMaxPlayerPerTeam(),auctionRequest.getMinPlayerPerTeam(), (auctionRequest.getMinPlayerPerTeam()) * auctionRequest.getBaseBid(),auctionRequest.isPlayerRegistration(),auctionRequest.getMinPlayerPerTeam());
 
             Auction newAuction = auctionRepository.save(auction);
             user.get().getAuctions().add(newAuction);
@@ -103,7 +103,10 @@ public class AuctionService {
                 auctionDTO.getAuctionTime(),
                 auctionDTO.getAuctionDate(),
                 auctionDTO.getBidIncreaseBy(),
-                auctionDTO.getMaxPlayerPerTeam());
+                auctionDTO.getMaxPlayerPerTeam(),
+                auctionDTO.isPlayerRegistration()
+        );
+
 
         Optional<Auction> auction = auctionRepository.findById(auctionId);
         if(auction.isPresent()){
@@ -114,6 +117,7 @@ public class AuctionService {
 
 
     public void deleteAuction(String auctionId){
+        auctionRepository.deleteUserAsAplayer(auctionId);
         auctionRepository.deleteById(auctionId);
     }
 
@@ -159,9 +163,10 @@ public class AuctionService {
         if(auction.isPresent()){
             Map<String, Object> detailedAuction = new HashMap<>();
             detailedAuction.put("auction",auction.get());
+            detailedAuction.put("auctionCategories",auction.get().getCategories());
             detailedAuction.put("auctionTeams",auction.get().getTeams());
             detailedAuction.put("auctionPlayers",auction.get().getAuctionPlayers());
-            detailedAuction.put("auctionCategories",auction.get().getCategories());
+            detailedAuction.put("unsoldPlayers",auction.get().getUnsoldPlayers());
             return detailedAuction;
         }
         throw new CustomException("Auction Not Found!",HttpStatus.BAD_REQUEST,"Auction Not Found");

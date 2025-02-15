@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import AuctionCard from './AuctionCard';
 
 import { useContext } from 'react';
@@ -10,6 +10,8 @@ import { messageContext } from '../../context/MessageContext';
 import LoadingBar from '../LoadingBar';
 
 const MyAuction = () => {
+  window.scrollTo(0, 0);
+
     const [userAuctions, setUserAuctions] = useState([]);
     const [loading, setLaoding] = useState(true);
     const navigate = useNavigate()
@@ -35,7 +37,8 @@ const MyAuction = () => {
 
 
     if (!user) {
-        <Navigate to={"/authentication"} />
+        setErrorMessage("user not found");
+        return <Navigate to={"/authentication"} />
     }
 
 
@@ -43,7 +46,7 @@ const MyAuction = () => {
         <>
             <div className='w-full lg:w-3/4'>
                 {loading && <LoadingBar />}
-                {!loading && userAuctions.length === 0  && <div className='text-xl'>Ooop! you not have any auction </div>}
+                {!loading && userAuctions.length === 0 && <div className='text-xl'>Ooop! you not have any auction </div>}
                 {userAuctions.length > 0 && <AuctionCard userAuctions={userAuctions} />}
                 <RouteToprevBtn onClick={() => navigate('/')} />
             </div>

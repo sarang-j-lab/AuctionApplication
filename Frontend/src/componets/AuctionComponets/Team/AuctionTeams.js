@@ -1,11 +1,13 @@
 import { useEffect, useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import Confirmation from '../../Confirmation';
 import { RouteToprevBtn } from '../../Button';
 import { messageContext } from '../../../context/MessageContext';
 import axiosApi from '../../../utils/axiosApi';
 
 const AuctionTeams = () => {
+    window.scrollTo(0, 0);
+
     // Navigation
     const navigate = useNavigate();
 
@@ -23,13 +25,12 @@ const AuctionTeams = () => {
     useEffect(() => {
         const fetchAuctionTeams = async () => {
             try {
-                const response = await axiosApi.get(`/auction-teams/${auction.auctionId}`);
+                const response = await axiosApi.get(`/auction-teams/${auction?.auctionId}`);
                 setAuctionTeams(response.data);
             } catch (error) {
                 setErrorMessage(error.response?.data?.message || 'Failed to fetch teams. Please try again.');
             }
         };
-
         fetchAuctionTeams();
     }, []);
 
@@ -62,6 +63,10 @@ const AuctionTeams = () => {
             setSelectedTeamId(null);
         }
     };
+
+    if (!auction) {
+        return <Navigate to={"/"}/>
+      }
 
     return (
         <>

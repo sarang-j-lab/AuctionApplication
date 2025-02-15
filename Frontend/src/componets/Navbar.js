@@ -1,8 +1,9 @@
 
-import {  useState } from 'react'
+import {  useContext, useState } from 'react'
 import { RiAuctionFill } from "react-icons/ri";
 import { Link } from 'react-router-dom';
 import UserProfileDropdown from './UserProfileDropDown';
+import { messageContext } from '../context/MessageContext';
 
 
 const Navbar = () => {
@@ -11,15 +12,18 @@ const Navbar = () => {
 
     const navItems = ["Feature", "Contact Us", "About Us", "Pricing"]
 
-
+    const {setErrorMessage} = useContext(messageContext);
     
     const user = JSON.parse(localStorage.getItem("user"));
+    
     const handleLogout = () => {
         localStorage.removeItem("user");
         localStorage.removeItem("auction");
+        setErrorMessage("User logged out successfully!");
         setBlock(!block)
     }
     
+  
 
     return (
         <header className=" bg-white lg:pb-0">

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.math.BigInteger;
 import java.util.UUID;
@@ -14,23 +15,19 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "bid_tbl")
+@ToString
 public class Bid {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private String id;
 
 
-    private String playerId;
+    private String player;
 
+    private String team;
 
-    private String bidderId;
+    private int amount;
 
-    private BigInteger amount;
+    private String category;
 
-    private boolean status;
-
-    public boolean getStatus(){
-        return status;
-    }
 }

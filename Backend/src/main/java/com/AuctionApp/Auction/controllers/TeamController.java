@@ -2,6 +2,7 @@ package com.AuctionApp.Auction.controllers;
 
 import com.AuctionApp.Auction.DTO.TeamDTO;
 import com.AuctionApp.Auction.Services.TeamService;
+import com.AuctionApp.Auction.entites.Player;
 import com.AuctionApp.Auction.entites.Team;
 import com.mysql.cj.x.protobuf.Mysqlx;
 import jakarta.validation.Valid;
@@ -26,6 +27,10 @@ public class TeamController {
         return teamService.auctionTeams(auctionId);
     }
 
+    @GetMapping("/show-team-players/{teamId}")
+    public ResponseEntity<List<Player>> showTeamPlayers(@PathVariable String teamId){
+        return ResponseEntity.ok().body(teamService.showTeamPlayers(teamId));
+    }
 
     @PostMapping("/add-team/{auctionId}")
     public Team addNewTeam(@RequestBody @Valid TeamDTO teamRequest,@PathVariable String auctionId){

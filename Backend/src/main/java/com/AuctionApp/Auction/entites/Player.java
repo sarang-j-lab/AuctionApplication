@@ -1,5 +1,6 @@
 package com.AuctionApp.Auction.entites;
 
+import com.AuctionApp.Auction.Component.Status;
 import com.AuctionApp.Auction.Component.Style;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,20 +39,24 @@ public class Player {
 
     private Style playerStyle;
 
-
-
     private int formNo;
 
     private String isUser;
 
-    private boolean isSold;
+//    private boolean isSold;
+//
+//    private boolean isUnsold;
+
+    private Status status;
 
     @ManyToOne
     @JoinColumn(name = "category_id",referencedColumnName = "categoryId")
     private Category categoryId;
 
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    private Bid bid;
 
-    public Player(String playerId, String playerName, String mobileNo, int playerAge, int jersseyNumber, String jersseyName, String tShirtSize, String trouserSize, Style playerStyle, boolean isSold ,int formNo) {
+    public Player(String playerId, String playerName, String mobileNo, int playerAge, int jersseyNumber, String jersseyName, String tShirtSize, String trouserSize, Style playerStyle, Status status ,int formNo) {
         this.playerId = playerId;
         this.playerName = playerName;
         this.mobileNo = mobileNo;
@@ -61,7 +66,8 @@ public class Player {
         this.tShirtSize = tShirtSize;
         this.trouserSize = trouserSize;
         this.playerStyle = playerStyle;
-        this.isSold = isSold;
+//        this.isSold = isSold;
+        this.status = status;
         this.formNo = formNo;
     }
 }

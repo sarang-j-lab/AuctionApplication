@@ -1,16 +1,23 @@
-import  { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
+import { messageContext } from '../context/MessageContext';
 
-const UserProfileDropdown = ({handleLogout}) => {
+const UserProfileDropdown = ({ handleLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
+  const { setErrorMessage } = useContext(messageContext);
+
 
   const user = JSON.parse(localStorage.getItem("user"));
-  
+
+  if (!user) {
+    setErrorMessage("user not found");
+    return <Navigate to={"/authentication"} />
+  }
 
   return (
     <div className="relative border-2 py-2 px-2 ml-2 rounded-xl">
@@ -41,13 +48,13 @@ const UserProfileDropdown = ({handleLogout}) => {
       {isOpen && (
         <div className="absolute  right-0 mt-5 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
           <div className="py-1">
-            <Link to={"/auction/user-profile"} onClick={()=>setIsOpen(!isOpen)}
-          
+            <Link to={"/auction/user-profile"} onClick={() => setIsOpen(!isOpen)}
+
               className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
               Profile
             </Link>
-            <Link to={"/authentication"} onClick={handleLogout} 
+            <Link to={"/authentication"} onClick={handleLogout}
               className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
               Sign out

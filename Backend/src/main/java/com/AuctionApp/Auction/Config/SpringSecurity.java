@@ -37,7 +37,7 @@ public class SpringSecurity  {
             return  http.csrf(customizer -> customizer.disable())
                     .cors(cors -> cors.configure(http))
                     .authorizeHttpRequests(request ->
-                            request.requestMatchers("/user/login","/user/user-registration").permitAll()
+                            request.requestMatchers("/user/login","/user/user-registration","/ws-auction/**","/auction/get-auction/{auctionId}").permitAll()
                                     .anyRequest().authenticated())
                     .sessionManagement(sessionManage ->
                             sessionManage.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

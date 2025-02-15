@@ -37,4 +37,9 @@ public interface PlayerRepository extends JpaRepository<Player,String> {
 
     @Query(value = "select * from player_tbl where cp_fk = :categoryId",nativeQuery = true)
     List<Player> getPLayerCategoryWise(@Param("categoryId") String categoryId);
+
+    @Query(value = "select * from player_tbl where ap_fk = :auctionId order by form_no asc",nativeQuery = true)
+    List<Player> getSortedPlayersByFormNo(@Param("auctionId") String auctionId);
+
+
 }

@@ -1,5 +1,5 @@
-import { useContext, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react'
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { CiCalendarDate } from "react-icons/ci";
 import { BiCategory } from "react-icons/bi";
 import { TiGroupOutline } from "react-icons/ti";
@@ -15,6 +15,7 @@ import { FaArrowRightToBracket } from "react-icons/fa6";
 
 
 const AuctionDetail = () => {
+  window.scrollTo(0, 0);
 
   // -- constants
   const navigate = useNavigate()
@@ -25,6 +26,9 @@ const AuctionDetail = () => {
   const { setSuccessMessage, setErrorMessage } = useContext(messageContext);
   const [isOpen, setIsOpen] = useState(false);
   const auction = JSON.parse(localStorage.getItem("auction"))
+
+
+
 
 
 
@@ -48,7 +52,8 @@ const AuctionDetail = () => {
 
 
   if (!auction) {
-    return <h1>Something went wrong! please try again</h1>
+    setErrorMessage("Auction not found!")
+    return <Navigate to={"/"} />
   }
 
 
@@ -81,7 +86,7 @@ const AuctionDetail = () => {
                 <span className="text-gray-800 font-semibold">{item.value}</span>
               </div>
             ))}
-                <div className='flex space-x-4 text-sm'>
+            <div className='flex space-x-4 text-sm'>
               <p className='flex items-center font-bold'><CiCalendarDate className='mx-2' />Date: {auction.auctionDate}</p>
               <p className='flex items-center font-bold text-sm '>{auction.auctionTime}</p>
             </div>
@@ -104,7 +109,7 @@ const AuctionDetail = () => {
           </div>
         </div>
         <div className='flex flex-col justify-center '>
-          <button onClick={() => navigate("/auction-dashboard", { state: { auctionId: auction.auctionId } })} value={auction.auctionId} className=" flex justify-center mb-5 items-center space-x-5 w-full xl:w-3/4 self-center lg:w-full  sm:w-full px-6 py-2 text-black border-2 rounded-lg hover:bg-blue-600 hover:text-white">
+          <button onClick={() => navigate("/auction-dashboard", { state: { auctionId: auction.auctionId } })} value={auction.auctionId} className=" flex justify-center mb-5 items-center space-x-5 w-full xl:w-3/4 self-center lg:w-full  sm:w-full px-6 py-2  border-2 rounded-lg bg-blue-600 hover:bg-blue-800 text-white">
             <span className='text-lg'> Conduct Auction</span> <FaArrowRightToBracket size={"22px"} />
           </button>
           {auction.additionalIncrements.length > 0 && <AuctionIncrements />}

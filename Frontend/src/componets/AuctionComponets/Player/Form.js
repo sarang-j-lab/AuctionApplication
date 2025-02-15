@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { BlueButton } from "../../Button";
 import { RouteToprevBtn } from "../../Button";
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { messageContext } from "../../../context/MessageContext";
 import axiosApi from "../../../utils/axiosApi";
 
@@ -15,8 +15,6 @@ const auctionFields = [
 ]
 
 const Form = ({ categories, setPlayerData, playerData, purpose }) => {
-
-
     const navigate = useNavigate();
     const auction = JSON.parse(localStorage.getItem('auction'));
     const { setSuccessMessage, setErrorMessage } = useContext(messageContext);
@@ -29,6 +27,12 @@ const Form = ({ categories, setPlayerData, playerData, purpose }) => {
 
     const handleForm = async (event) => {
         event.preventDefault();
+
+        if(!auction){
+            setErrorMessage('Auction not found!')
+            return;
+        }
+
         const isEditForm = playerData.playerId;
         const url = isEditForm ? `/edit-auction-player/${playerData.playerId}` : `/add-auction/${auction.auctionId}`;
         const method = isEditForm ? "put" : "post";
@@ -42,7 +46,7 @@ const Form = ({ categories, setPlayerData, playerData, purpose }) => {
                     "Content-Type": "application/json",
                 }
             })
-            navigate("/auction/auction-players")
+            // navigate("/auction/auction-players")
             setSuccessMessage(isEditForm ? "Player edited successfully" : "Player added successfully!");
         } catch (error) {
             if (error?.response) {
@@ -57,6 +61,11 @@ const Form = ({ categories, setPlayerData, playerData, purpose }) => {
         }
     }
 
+    if(!auction){
+        setErrorMessage("Auction not found!")
+        return <Navigate to={"/"} />
+    }
+
 
     return (
         <form onSubmit={handleForm} className="bg-white shadow-md rounded-lg p-3  w-full mx-4 ">
@@ -67,7 +76,7 @@ const Form = ({ categories, setPlayerData, playerData, purpose }) => {
                     auctionFields.map((field, index) => (
                         <div key={index}>
                             <label htmlFor={field.name} className="block text-sm font-medium text-gray-700">{field.label}</label>
-                            <input type={field.type} id={field.name} name={field.name} value={playerData[field.name]} placeholder={field.placeholder} onChange={handleChange} className="mt-1 p-3 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required />
+                            <input autoComplete="off" type={field.type} id={field.name} name={field.name} value={playerData[field.name]} placeholder={field.placeholder} onChange={handleChange} className="mt-1 p-3 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required />
                         </div>
                     ))}
             </div>

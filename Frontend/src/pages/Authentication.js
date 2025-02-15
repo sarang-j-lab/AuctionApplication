@@ -12,9 +12,9 @@ const Authentication = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   return (
     <>
-      <Navbar />
+    <Navbar/>
       {!user ? signIn ? <Signin setSignIn={setSignIn} /> : <Signup setSignIn={setSignIn} /> : <Navigate to={"/"} />}
-      <Footer />
+    <Footer />
     </>
   )
 }

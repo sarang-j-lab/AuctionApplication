@@ -1,6 +1,7 @@
 import  {  useContext, useState } from "react";
 import axiosApi from "../../utils/axiosApi";
 import { messageContext } from "../../context/MessageContext";
+import { Navigate } from "react-router-dom";
 
 const PopupForm = ({ purpose, id,setId, setIsOpen,fetchCategories}) => {
 
@@ -75,6 +76,10 @@ const PopupForm = ({ purpose, id,setId, setIsOpen,fetchCategories}) => {
   }
 
 
+    if(!auction){
+      setErrorMessage("Auction not found!")
+      return <Navigate  to={"/"}/>
+    }
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">

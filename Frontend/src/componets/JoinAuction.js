@@ -1,21 +1,27 @@
 import { useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { RouteToprevBtn } from './Button';
 import { messageContext } from '../context/MessageContext';
 import axiosApi from '../utils/axiosApi';
 
 const JoinAuction = () => {
 
+
     const navigate = useNavigate();
-    const [auctions,setAuctions] = useState([])
+    const [auctions, setAuctions] = useState([])
     const [code, setCode] = useState()
-    const {  setErrorMessage } = useContext(messageContext);
+    const { setErrorMessage } = useContext(messageContext);
 
 
     const user = JSON.parse(localStorage.getItem("user"));
 
-    useEffect(()=>{
-        const fetchUserJoinedAuctions=async()=>{
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        const fetchUserJoinedAuctions = async () => {
+            if (!user) {
+                setErrorMessage("User not found!")
+                return;
+            }
             try {
                 const response = await axiosApi.get(`user/user-joined-auctions/${user?.user?.userId}`)
                 setAuctions(response?.data)
@@ -24,26 +30,32 @@ const JoinAuction = () => {
             }
         }
         fetchUserJoinedAuctions()
-    },[])
+    }, [])
 
 
     const searchAuction = async (e) => {
         e.preventDefault();
-        
-        const checkJoined = auctions.filter((auction)=> auction.auctionId === code)
-        if(checkJoined.length){
+
+        const checkJoined = auctions.filter((auction) => auction.auctionId === code)
+        if (checkJoined.length) {
             setErrorMessage("You have already joined this auction");
             return;
         }
 
         try {
             const response = await axiosApi.get(`/auction/auction-details/${code}`)
+
+            if (!response?.data?.playerRegistration) {
+                setErrorMessage("Player registration is not allowed in this auction");
+                return;
+            }
+
             const auction = response?.data
 
             //here auction is storing in localStorage with different keys for security reasons because we are using auctionId 
             // in auction panel if someone redirect to auction-dashboard route for join auction he will able to conduct auction
-            localStorage.setItem("auction",JSON.stringify({  id:auction.auctionId ,name: auction.auctionName,date: auction.auctionDate}));
-            navigate("/auction/player-form", { state: {for: "joinForm", player: { playerName: user.user.name, mobileNo: user.user.mobileNo, playerAge: "", jersseyNumber: "", jersseyName: "", tshirtSize: "", trouserSize: "", playerStyle: "",categoryId:null } } })
+            localStorage.setItem("auction", JSON.stringify({ id: auction.auctionId, name: auction.auctionName, date: auction.auctionDate }));
+            navigate("/auction/player-form", { state: { for: "joinForm", player: { playerName: user.user.name, mobileNo: user.user.mobileNo, playerAge: "", jersseyNumber: "", jersseyName: "", tshirtSize: "", trouserSize: "", playerStyle: "", categoryId: null } } })
         } catch (error) {
             if (error.response) {
                 setErrorMessage("Auction not found with this auction code");
@@ -55,6 +67,12 @@ const JoinAuction = () => {
 
     const handleChange = (e) => {
         setCode(e.target.value.trim());
+    }
+
+
+    if (!user) {
+        setErrorMessage('User not found!')
+        return <Navigate to={"/authentication"} />
     }
 
     return (
@@ -69,15 +87,15 @@ const JoinAuction = () => {
 
                     <button className='rounded-md border px-4  hover:bg-blue-600 mx-auto hover:text-white '>Join</button>
                 </form>
-            </div>  
+            </div>
             <h1 className='font-bold text-lg mt-5 ml-5 mb-3'>Joined Auctions</h1>
-            {auctions.length > 0 && auctions.map((auction)=>(
-                    <div key={auction.auctionId} className='bg-white shadow-md rounded-lg p-3  w-full  mb-2'>
+            {auctions.length > 0 && auctions.map((auction) => (
+                <div key={auction.auctionId} className='bg-white shadow-md rounded-lg p-3  w-full  mb-2'>
                     <h1 className='text-xs text-blue-600 md:text-lg lg:text-2xl sm:text-xs'>{auction.auctionName.toUpperCase()}<span className='text-xs'> Code: {auction.auctionId}</span></h1>
-    
+
                     <button className='rounded-md p-2 '>Auction Date: {auction.auctionDate}</button>
                 </div>
-            )) }
+            ))}
             <RouteToprevBtn onClick={() => navigate("/")} />
         </div>
     )

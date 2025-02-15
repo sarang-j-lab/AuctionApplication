@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 const AuctionCard = ({ userAuctions }) => {
+  window.scrollTo(0, 0);
 
   const navigate = useNavigate();
 
 
   const showDetails = async (event) => {
     const auction = userAuctions.filter((auction) => String(auction.auctionId) === event.target.value)
-    localStorage.setItem("auction", JSON.stringify(auction[0]));
+    localStorage.setItem("auction", JSON.stringify(...auction));
     navigate("/auction/auction-details")
   }
 

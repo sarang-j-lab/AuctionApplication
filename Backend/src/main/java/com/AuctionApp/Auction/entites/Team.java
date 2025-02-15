@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -33,17 +32,31 @@ public class Team {
     private  int maxBid;
 
 
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tp_fk",referencedColumnName = "teamId")
     @JsonIgnore
-    private List<Player> teamPlayers;
+    private List<Player> teamPlayers = new ArrayList<>();
 
-    public Team(String teamId, String teamName,  String shortName, int totalPoints, int reserve, int maxBid) {
+    private int noneCategoryPlayerReserve;
+
+    private int noneCategoryPlayerBought;
+
+
+
+
+    @ElementCollection
+    @CollectionTable(name = "Category_player_requirements",joinColumns = @JoinColumn(name = "team_id"))
+    private List<CategoryRequirements> playerRequirement = new ArrayList<>();
+
+
+    public Team(String teamId, String teamName,  String shortName, int totalPoints, int reserve, int maxBid,int noneCategoryPlayerBought,int noneCategoryPlayerReserve) {
         this.teamId = teamId;
         this.teamName = teamName;
         this.shortName = shortName;
         this.totalPoints = totalPoints;
         this.reserve = reserve;
         this.maxBid = maxBid;
+        this.noneCategoryPlayerBought = noneCategoryPlayerBought;
+        this.noneCategoryPlayerReserve = noneCategoryPlayerReserve;
     }
 }

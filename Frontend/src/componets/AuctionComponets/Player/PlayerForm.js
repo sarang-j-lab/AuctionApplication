@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useLocation} from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import Form from "./Form";
 import JoinForm from "./JoinForm";
 import { messageContext } from "../../../context/MessageContext";
@@ -7,6 +7,7 @@ import axiosApi from "../../../utils/axiosApi";
 
 
 function PlayerForm() {
+
     const initialState = { playerName: "", mobileNo: "", playerAge: "", jersseyNumber: "", jersseyName: "", tshirtSize: "", trouserSize: "", playerStyle: "", categoryId: null }
     const location = useLocation();
     const { setErrorMessage } = useContext(messageContext);
@@ -17,7 +18,14 @@ function PlayerForm() {
 
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+
         const fetchCategories = async () => {
+
+            if (!auction) {
+                setErrorMessage("Auction not found!");
+                return;
+            }
             try {
                 const url = purpose === "joinForm" ? `/show-auction-category/${auction.id}` : `/show-auction-category/${auction.auctionId}`
 
@@ -31,12 +39,16 @@ function PlayerForm() {
     }, [])
 
 
+    if (!auction) {
+        setErrorMessage("Auction not found!")
+        return <Navigate to={"/"} />
+    }
 
     return (
         <div className="flex flex-col items-center xl:w-3/4 sm:w-[90vw]  justify-center  ">
 
-            {purpose === "newForm" && <Form purpose={"Add player"} categories={categories}  playerData={playerData} setPlayerData={setPlayerData} />}
-            {purpose === "editForm" && <Form purpose={"Edit player"} categories={categories}  playerData={playerData} setPlayerData={setPlayerData} />}
+            {purpose === "newForm" && <Form purpose={"Add player"} categories={categories} playerData={playerData} setPlayerData={setPlayerData} />}
+            {purpose === "editForm" && <Form purpose={"Edit player"} categories={categories} playerData={playerData} setPlayerData={setPlayerData} />}
             {purpose === "joinForm" && <JoinForm purpose={"Join auction"} categories={categories} playerData={playerData} setPlayerData={setPlayerData} />}
 
         </div>

@@ -1,5 +1,6 @@
 package com.AuctionApp.Auction.Services;
 
+import com.AuctionApp.Auction.Component.Status;
 import com.AuctionApp.Auction.DTO.PlayerDTO;
 import com.AuctionApp.Auction.ExceptionHandling.CustomException;
 import com.AuctionApp.Auction.entites.*;
@@ -65,7 +66,8 @@ public class PlayerService {
                 newPlayer.getTShirtSize(),
                 newPlayer.getTrouserSize(),
                 newPlayer.getPlayerStyle(),
-                false,
+//                false,
+                Status.PENDING,
                 auction.get().getCounter()
         );
         player.setIsUser(null);
@@ -87,6 +89,9 @@ public class PlayerService {
         Optional<Auction> auction = auctionRepository.findById(auctionId);
         Optional<User> user = userRepository.findById(userId);
         if(auction.isPresent() && user.isPresent()){
+            if(!auction.get().isPlayerRegistration()){
+                throw new CustomException("Player registration is not allowed in this auction",HttpStatus.BAD_REQUEST,"Not Allowed");
+            }
             if(user.get().getUserAsPlayerInAuction().contains(auction.get())){
                 throw new CustomException("You have already joined this auction",HttpStatus.BAD_REQUEST,"Cannot join again");
             }
@@ -100,7 +105,8 @@ public class PlayerService {
                     userAsPlayerReq.getTShirtSize(),
                     userAsPlayerReq.getTrouserSize(),
                     userAsPlayerReq.getPlayerStyle(),
-                    false,
+//                    false,
+                    Status.PENDING,
                     auction.get().getCounter()
             );
             player.setIsUser(userId);
@@ -119,16 +125,23 @@ public class PlayerService {
         throw new CustomException("Something went wrong please try again!",HttpStatus.BAD_REQUEST,"provide valid details");
     }
 
-
-
-
     public List<Player> show(String auctionId){
         Optional<Auction> auction = auctionRepository.findById(auctionId);
         if(auction.isPresent()){
-            return auction.get().getAuctionPlayers();
+            return playerRepository.getSortedPlayersByFormNo(auctionId);
         }
         throw new CustomException("Invalid auctionID",HttpStatus.BAD_REQUEST,"Provide valid auctionID");
     }
+  public List<Player> showAllPlayers(String auctionId){
+        Optional<Auction> auction = auctionRepository.findById(auctionId);
+        if(auction.isPresent()){
+            return playerRepository.getSortedPlayersByFormNo(auctionId);
+        }
+        throw new CustomException("Invalid auctionID",HttpStatus.BAD_REQUEST,"Provide valid auctionID");
+    }
+
+
+
 
 
     public void edit(PlayerDTO playerRequest,String playerId){

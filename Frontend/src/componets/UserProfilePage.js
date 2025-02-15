@@ -1,10 +1,21 @@
-import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { Link, Navigate } from 'react-router-dom';
+import { messageContext } from '../context/MessageContext';
 
 const UserProfilePage = () => {
   // Sample user data (can be fetched from an API or state)
 
 
   const user = JSON.parse(localStorage.getItem("user"));
+
+  const {setErrorMessage} = useContext(messageContext);
+  
+  if (!user) {
+    setErrorMessage("user not found");
+    return <Navigate to={"/authentication"} />
+  }
+
+
   return (
     <div className='xl:w-3/4 lg:w-3/4 sm:w-full flex justify-center items-center'>
       <div className="xl:w-2/4 lg:w-2/4 sm:w-full p-4 bg-white rounded-lg shadow-lg ">

@@ -60,6 +60,15 @@ public class JWTService {
         return (mobileNo.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
+    public  boolean validateToken(String token) {
+        try {
+            Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }

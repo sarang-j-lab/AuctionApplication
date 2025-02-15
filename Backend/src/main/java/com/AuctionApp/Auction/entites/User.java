@@ -35,7 +35,7 @@ public class User {
     @Column(unique = true)
     private String mobileNo;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_as_player_in_auction",
             joinColumns = @JoinColumn(name = "userId"),

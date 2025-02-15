@@ -3,8 +3,8 @@ import axiosApi from '../../../utils/axiosApi';
 import { messageContext } from '../../../context/MessageContext';
 
 const CategoryWisePlayers = ({ setPlayers,categories,fetchData }) => {
-
-    const [categoryId, setCategoryId] = useState("");
+    
+    const [categoryId, setCategoryId] = useState(null);
     const {setErrorMessage} = useContext(messageContext);
 
     const handleCategoryChange = (e) => {

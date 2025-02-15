@@ -1,18 +1,20 @@
-import  { useContext, useEffect, useState } from 'react'
+import { use, useContext, useEffect, useState } from 'react'
 import { RouteToprevBtn } from '../../Button';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import Confirmation from '../../Confirmation';
 import PopupForm from '../PopupForm';
 import { messageContext } from '../../../context/MessageContext';
 import axiosApi from '../../../utils/axiosApi';
+import LoadingBar from '../../LoadingBar';
 
 const AuctionCategories = () => {
+    window.scrollTo(0, 0);
 
     const navigate = useNavigate()
-    const [categories,setCategories] = useState([]);
+    const [categories, setCategories] = useState([]);
     const { setSuccessMessage, setErrorMessage } = useContext(messageContext);
     const auction = JSON.parse(localStorage.getItem("auction"));
-
+    const [loading, setLoading] = useState(false);
 
     const [confirmation, setConfirmation] = useState(false);
     const [selectedCategoryId, setSelectedCategoryId] = useState(0)
@@ -20,12 +22,16 @@ const AuctionCategories = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
-       fetchCategories();
+        fetchCategories();
     }, [])
 
     const fetchCategories = async () => {
+        if (!auction) {
+            setErrorMessage("Auction not found")
+            return;
+        }
         try {
-            const response = await axiosApi.get(`/show-auction-category/${auction.auctionId}`);
+            const response = await axiosApi.get(`/show-auction-category/${auction?.auctionId}`);
             setCategories(response?.data);
         } catch (e) {
             setErrorMessage(e?.response?.data?.message || "Something went wrong! please try again.");
@@ -48,7 +54,7 @@ const AuctionCategories = () => {
         try {
             await axiosApi.delete(`/delete-auction-category/${selectedCategoryId}/${auction.auctionId}`);
             setConfirmation(false);
-            setCategories((prev)=> prev.filter(category => category.categoryId !== selectedCategoryId));
+            setCategories((prev) => prev.filter(category => category.categoryId !== selectedCategoryId));
             setSelectedCategoryId(0);
             setSuccessMessage("Category deleted successfully!");
         } catch (e) {
@@ -69,21 +75,29 @@ const AuctionCategories = () => {
     const deleteCategoryIncrement = async (e) => {
         const { id, value } = e.target
         try {
+            setLoading(true);
             await axiosApi.delete(`/delete-category-increment/${id}/${value}`)
             fetchCategories();
             setSuccessMessage("Increment deleted successfully!")
+            setLoading(false);
         } catch (e) {
+            setLoading(false);
             setErrorMessage(e.response.data.message || "Something went wrong! please try again.")
         }
     }
 
-  
+    if (!auction) {
+        setErrorMessage("Auction not found!")
+        return <Navigate to={"/"} />
+    }
+
     return (
         <div className='xl:w-3/4 lg:w-3/4 sm:w-full'>
 
-            {isOpen && <PopupForm purpose={"categoryIncrement"} id={selectedCategoryId} setId={setSelectedCategoryId} setIsOpen={setIsOpen}  fetchCategories={fetchCategories}/>}
+            {isOpen && <PopupForm purpose={"categoryIncrement"} id={selectedCategoryId} setId={setSelectedCategoryId} setIsOpen={setIsOpen} fetchCategories={fetchCategories} />}
             {confirmation && <Confirmation setConfirmation={setConfirmation} setId={setSelectedCategoryId} deleteFun={deleteCategory} />}
-            
+
+
             <div className='xl:w-[65vw] lg:w-[60vw] text-xl md:w-full sm:w-full shadow-lg rounded-xl mx-4  flex space-y-4 justify-center items-center px-4 py-2  flex-col lg:flex-row md:flex-row sm:flex-col '>
                 <h1 className='text-xs text-blue-600 md:text-lg lg:text-2xl sm:text-xs mx-auto'>{auction.auctionName.toUpperCase()}<span className='text-xs ml-3 lg:text-xl sm:text-xs'>Categories</span></h1>
 
@@ -124,11 +138,13 @@ const AuctionCategories = () => {
                                     <p className='text-sm mr-10'>Additional category increments</p>
                                     {category.categoryAdditionalIncrements.length > 0 &&
                                         category.categoryAdditionalIncrements.map(increm => (
-                                            <div key={increm.id} className='flex flex-row gap-2 justify-evenly items-center text-sm mt-1 '>
-                                                <p>Increment: {increm.increment}</p>
-                                                <p>After: {increm.after}</p>
-                                                <button id={category.categoryId} value={increm.id} onClick={deleteCategoryIncrement} className='border-2 px-1 self-end hover:bg-red-400 hover:border-red-400'>X</button>
-                                            </div>
+                                            <>
+                                                {!loading ? <div key={increm.id} className='flex flex-row gap-2 justify-evenly items-center text-sm mt-1 '>
+                                                    <p>Increment: {increm.increment}</p>
+                                                    <p>After: {increm.after}</p>
+                                                    <button id={category.categoryId} value={increm.id} onClick={deleteCategoryIncrement} className='border-2 px-1 self-end hover:bg-red-400 hover:border-red-400'>X</button>
+                                                </div> : <LoadingBar />}
+                                            </>
                                         ))
                                     }
                                 </>}
@@ -136,6 +152,7 @@ const AuctionCategories = () => {
                     </div>
                 )) : <p className="text-xl ml-10 mt-5">There is no category in this auction.</p>}
             </div>
+
             <RouteToprevBtn onClick={() => navigate("/auction/auction-details")} />
         </div>
     )

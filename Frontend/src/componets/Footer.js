@@ -88,10 +88,6 @@ const Footer = () => {
                             </li>
 
                             <li>
-                                <p  className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Delivery Details </p>
-                            </li>
-
-                            <li>
                                 <p  className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Terms & Conditionsp</p>
                             </li>
 

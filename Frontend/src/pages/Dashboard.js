@@ -15,7 +15,7 @@ import { useEffect } from 'react'
 import axiosApi from '../utils/axiosApi'
 import UserProfilePage from '../componets/UserProfilePage'
 import EditProfileForm from '../componets/EditProfileForm'
-import Panel from '../componets/AuctionPanel/Panel'
+import Panel from '../componets/AuctionPanel/CategoryAuctionPanel'
 import Main from '../componets/Main'
 import Navbar from '../componets/Navbar'
 import Footer from '../componets/Footer'
@@ -25,6 +25,8 @@ import Footer from '../componets/Footer'
 
 
 const Dashboard = () => {
+  window.scrollTo(0, 0);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,14 +42,13 @@ const Dashboard = () => {
     checkServerHealth();
   }, [])
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+
+
 
   return (
 
     <>
-      
+
       <Routes>
         <Route path="/" element={<Main />}>
           <Route path='/' element={<Menu />} />
@@ -65,7 +66,7 @@ const Dashboard = () => {
           <Route path='/auction/category-form' element={<CategoryForm />} />
         </Route>
         <Route path="/auction-dashboard" element={<Panel />} />
-      
+
       </Routes>
 
     </>

@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "category_tbl")
@@ -36,9 +35,9 @@ public class Category {
     @CollectionTable(name = "category_increments",joinColumns = @JoinColumn(name = "category_id"))
     private List<CategoryAdditionalIncrements> categoryAdditionalIncrements = new ArrayList<>();
 
-    @OneToMany(mappedBy = "categoryId", orphanRemoval = true)
+    @OneToMany(mappedBy = "categoryId")
     @JsonIgnore
-    private List<Player> players;
+    private List<Player> players = new ArrayList<>();
 
     public Category( String categoryId,String categoryName, int maxPlayerPerTeam, int minPlayerPerTeam, int baseBid, int increment) {
         this.categoryId = categoryId;

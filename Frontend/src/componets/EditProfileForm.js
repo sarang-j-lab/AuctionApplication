@@ -1,7 +1,7 @@
 import  { useContext, useState } from 'react';
 import axiosApi from '../utils/axiosApi';
 import { messageContext } from '../context/MessageContext';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const EditProfileForm = () => {
 
@@ -24,6 +24,11 @@ const EditProfileForm = () => {
   // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if(!user){
+      setErrorMessage("User not found!")
+      return;
+    }
     try {
       const response = await axiosApi.put(`/user/edit-profile/${user?.user?.userId}`, userData, {
         headers: {
@@ -39,6 +44,12 @@ const EditProfileForm = () => {
       navigate("/auction/user-profile")
     }
   };
+
+
+  if(!user){
+    setErrorMessage('User not found!')
+    return <Navigate to={"/authentication"}/>
+  }
 
   return (
     <div className="w-full">

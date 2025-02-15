@@ -59,6 +59,8 @@ public class AuctionDTO {
     @PositiveOrZero(message = "Min player should be positive")
     private int minPlayerPerTeam;
 
+    @NotNull
+    private boolean playerRegistration;
 
 
 

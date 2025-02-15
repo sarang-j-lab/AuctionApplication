@@ -36,7 +36,7 @@ const menu = [
 
 
 const Menu = () => {
-
+  window.scrollTo(0, 0);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6 rounded-lg p-5 w-full  lg:w-3/4">

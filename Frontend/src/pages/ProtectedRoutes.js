@@ -1,10 +1,10 @@
 import { isTokenExpired } from '../utils/JwtConfig';
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
-import Dashboard from './Dashboard';
-import Panel from '../componets/AuctionPanel/Panel';
+import { Navigate, Outlet} from 'react-router-dom';
+
 
 
 const ProtectedRoutes = () => {
+
 
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -15,7 +15,6 @@ const ProtectedRoutes = () => {
 
     return isAuthenticated ?
         <>
-            {/* <Dashboard /> */}
             <Outlet/>
         </> : <Navigate to={"/authentication"} />
 }

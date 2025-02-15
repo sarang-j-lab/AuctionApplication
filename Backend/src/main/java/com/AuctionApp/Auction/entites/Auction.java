@@ -65,6 +65,8 @@ public class Auction {
     @JsonIgnore
     private List<Player> auctionPlayers;
 
+    @OneToMany
+    private List<Player> unsoldPlayers = new ArrayList<>();
 
     @OneToMany(targetEntity = Team.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "AT_fk",referencedColumnName = "auctionId")
@@ -73,8 +75,11 @@ public class Auction {
 
     private  int counter = 0;
 
+    private boolean playerRegistration;
 
-    public Auction(String auctionId, String auctionName, int season, Date auctionDate, String auctionTime, int pointsPerTeam, int baseBid, int bidIncreaseBy, int maxPlayerPerTeam, int minPlayerPerTeam,int reserve) {
+    private int noneCategoryPlayerRequired;
+
+    public Auction(String auctionId, String auctionName, int season, Date auctionDate, String auctionTime, int pointsPerTeam, int baseBid, int bidIncreaseBy, int maxPlayerPerTeam, int minPlayerPerTeam,int reserve,boolean playerRegistration,int noneCategoryPlayerRequired) {
         this.auctionId = auctionId;
         this.auctionName = auctionName;
         this.season = season;
@@ -86,5 +91,7 @@ public class Auction {
         this.maxPlayerPerTeam = maxPlayerPerTeam;
         this.minPlayerPerTeam = minPlayerPerTeam;
         this.reserve = reserve;
+        this.playerRegistration = playerRegistration;
+        this.noneCategoryPlayerRequired = noneCategoryPlayerRequired;
     }
 }

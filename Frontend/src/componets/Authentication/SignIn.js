@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useContext,  useState } from "react";
 import { RiAuctionFill } from "react-icons/ri";
-import {  useNavigate } from "react-router-dom";
 import { messageContext } from "../../context/MessageContext";
 
 
@@ -10,7 +9,6 @@ const Signin = ({ setSignIn }) => {
     const [mobileNo, setMobileNo] = useState("");
     const [password, setPassword] = useState("");
 
-    const navigate = useNavigate();
     const { setSuccessMessage, setErrorMessage } = useContext(messageContext);
 
     const handleSubmit = async (event) => {

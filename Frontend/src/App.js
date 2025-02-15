@@ -18,9 +18,11 @@ import AuctionCategories from './componets/AuctionComponets/Category/AuctionCate
 import CategoryForm from './componets/AuctionComponets/Category/CategoryForm'
 import Main from './componets/Main'
 import JoinAuction from './componets/JoinAuction'
-import Panel from './componets/AuctionPanel/Panel'
+import Panel from './componets/AuctionPanel/CategoryAuctionPanel'
 import Menu from './componets/Menu'
 import AuctionPanel from './pages/AuctionPanel'
+import NotFound from './componets/NotFound'
+import LiveAuction from './componets/AuctionPanel/LiveAuction'
 
 
 
@@ -38,7 +40,7 @@ const App = () => {
     setTimeout(() => {
       setSuccessMessage("");
       setErrorMessage("")
-    }, 4000);
+    }, 6000);
 
   }, [successMessage, errorMessage])
 
@@ -61,23 +63,25 @@ const App = () => {
         <Route path='/authentication' element={<Authentication />} />
 
         <Route element={<ProtectedRoutes />} >
-            <Route  element={<Main />}>
-                <Route path='/' element={<Menu />} />
-                <Route path='/auction/user-profile' element={<UserProfilePage />} />
-                <Route path='/auction/edit-profile' element={<EditProfileForm />} />
-                <Route path='/auction/auction-form' element={<AuctionForm />} />
-                <Route path='/auction/my-auction' element={<MyAuction />} />
-                <Route path='/auction/auction-details' element={<AuctionDetail />} />
-                <Route path='/auction/auction-teams' element={<AuctionTeams />} />
-                <Route path='/auction/auction-players' element={<AuctionPlayers />} />
-                <Route path='/auction/team-form' element={<TeamForm />} />
-                <Route path='/auction/player-form' element={<PlayerForm />} />
-                <Route path='/auction/join-auction' element={<JoinAuction />} />
-                <Route path='/auction/auction-categories' element={<AuctionCategories />} />
-                <Route path='/auction/category-form' element={<CategoryForm />} />
-            </Route>
+          <Route element={<Main />}>
+            <Route path='/' element={<Menu />} />
+            <Route path='/auction/user-profile' element={<UserProfilePage />} />
+            <Route path='/auction/edit-profile' element={<EditProfileForm />} />
+            <Route path='/auction/auction-form' element={<AuctionForm />} />
+            <Route path='/auction/my-auction' element={<MyAuction />} />
+            <Route path='/auction/auction-details' element={<AuctionDetail />} />
+            <Route path='/auction/auction-teams' element={<AuctionTeams />} />
+            <Route path='/auction/auction-players' element={<AuctionPlayers />} />
+            <Route path='/auction/team-form' element={<TeamForm />} />
+            <Route path='/auction/player-form' element={<PlayerForm />} />
+            <Route path='/auction/join-auction' element={<JoinAuction />} />
+            <Route path='/auction/auction-categories' element={<AuctionCategories />} />
+            <Route path='/auction/category-form' element={<CategoryForm />} />
+          </Route>
           <Route path="/auction-dashboard/*" element={<AuctionPanel />} />
+          <Route path='*' element={<NotFound />} />
         </Route>
+          <Route path="/live/auction/:auctionId" element={<LiveAuction />} />
       </Routes>
 
     </Router>
