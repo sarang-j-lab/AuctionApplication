@@ -36,9 +36,8 @@ const Signup = ({ setSignIn }) => {
                         "Content-Type": "application/json"
                     },
                 })
-            localStorage.setItem("user",JSON.stringify({user:response?.data?.user,token: response?.data?.token}));
+            localStorage.setItem("user",JSON.stringify({user:{ name: response?.data?.user?.name, city: response?.data?.user?.city, email: response?.data?.user?.email, mobileNo: response?.data?.user?.mobileNo,userId:response?.data?.user?.userId },token: response?.data?.token}));
             setSuccessMessage("User registered successfully!")
-            // navigate("/auction/auction-menu")
         } catch (error) {
             if (error.response) {
                 let errorMessage = ""

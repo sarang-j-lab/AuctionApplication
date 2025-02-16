@@ -19,4 +19,6 @@ public class BidService {
     public void deleteBid(String bidId){
         bidRepository.deleteById(bidId);
     }
+
+
 }

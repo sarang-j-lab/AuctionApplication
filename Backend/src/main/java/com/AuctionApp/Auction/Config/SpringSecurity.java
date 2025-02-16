@@ -1,5 +1,6 @@
 package com.AuctionApp.Auction.Config;
 
+import com.AuctionApp.Auction.Component.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.proxy.NoOp;
 import org.springframework.context.annotation.Bean;
@@ -12,12 +13,14 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -34,11 +37,15 @@ public class SpringSecurity  {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-            return  http.csrf(customizer -> customizer.disable())
-                    .cors(cors -> cors.configure(http))
+            return  http.csrf(AbstractHttpConfigurer::disable)
+                    .cors(cors ->  cors.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
                     .authorizeHttpRequests(request ->
-                            request.requestMatchers("/user/login","/user/user-registration","/ws-auction/**","/auction/get-auction/{auctionId}").permitAll()
-                                    .anyRequest().authenticated())
+
+                            request
+                                    .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                                    .requestMatchers("/user/login","/user/user-registration","/ws-auction/**","/auction/get-auction/*").permitAll()
+                                    .anyRequest().authenticated()
+                    )
                     .sessionManagement(sessionManage ->
                             sessionManage.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -62,20 +69,4 @@ public class SpringSecurity  {
     }
 }
 
-/*
-    the flow of authentication
- Client Request:
 
- --A user sends a login request with credentials (e.g., username/mobile number and password).
- --Spring Security intercepts the request through its filters (e.g., UsernamePasswordAuthenticationFilter).
-   AuthenticationManager:
-
- --It receives the authentication request and delegates the actual authentication process to one or more AuthenticationProvider implementations.
-        AuthenticationProvider:
-
- --The AuthenticationProvider checks the credentials (e.g., validates the username/mobile number and password against a database or other data source).
-        If successful, it returns an Authentication object containing user details and roles.
-
-        SecurityContext:
-        Once authenticated, the Authentication object is stored in the SecurityContext, making it accessible throughout the session.*\
- */

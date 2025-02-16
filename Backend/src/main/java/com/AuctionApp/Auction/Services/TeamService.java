@@ -1,6 +1,6 @@
 package com.AuctionApp.Auction.Services;
 
-import com.AuctionApp.Auction.entites.CategoryRequirements;
+import com.AuctionApp.Auction.Component.CategoryRequirements;
 import com.AuctionApp.Auction.DTO.TeamDTO;
 import com.AuctionApp.Auction.ExceptionHandling.CustomException;
 import com.AuctionApp.Auction.entites.Auction;

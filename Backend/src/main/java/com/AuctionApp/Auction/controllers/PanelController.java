@@ -1,5 +1,6 @@
 package com.AuctionApp.Auction.controllers;
 
+import com.AuctionApp.Auction.Component.CategoryRequirements;
 import com.AuctionApp.Auction.Component.Status;
 import com.AuctionApp.Auction.DTO.BidDTO;
 import com.AuctionApp.Auction.Services.BidService;
@@ -19,10 +20,8 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 
 @RestController

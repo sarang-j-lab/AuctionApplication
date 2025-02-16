@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext,  useState } from "react";
+import React, { useContext, useState } from "react";
 import { RiAuctionFill } from "react-icons/ri";
 import { messageContext } from "../../context/MessageContext";
 
@@ -22,14 +22,13 @@ const Signin = ({ setSignIn }) => {
                     },
                 }
             )
-            // navigate("/auction/auction-menu")
-            localStorage.setItem("user",JSON.stringify({user:response?.data?.user,token: response?.data?.token}));
+            localStorage.setItem("user", JSON.stringify({ user: { name: response?.data?.user?.name, city: response?.data?.user?.city, email: response?.data?.user?.email, mobileNo: response?.data?.user?.mobileNo,userId:response?.data?.user?.userId }, token: response?.data?.token }));
             setSuccessMessage("User logged in successfully!")
         } catch (error) {
             if (error?.response) {
                 let errorMessage = ""
                 for (const [key, value] of Object.entries(error?.response?.data)) {
-                    errorMessage =  value
+                    errorMessage = value
                 }
                 setErrorMessage(errorMessage || "Wrong credencials! please provide valid details.")
             } else {

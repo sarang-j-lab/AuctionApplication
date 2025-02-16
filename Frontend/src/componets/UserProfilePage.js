@@ -49,7 +49,7 @@ const UserProfilePage = () => {
 
         {/* Edit Profile Button (Optional) */}
         <div className="mt-8 flex justify-center">
-          <Link to={"/edit-profile"} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
+          <Link to={"/auction/edit-profile"} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
             Edit Profile
           </Link>
         </div>

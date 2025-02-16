@@ -105,7 +105,6 @@ public class PlayerService {
                     userAsPlayerReq.getTShirtSize(),
                     userAsPlayerReq.getTrouserSize(),
                     userAsPlayerReq.getPlayerStyle(),
-//                    false,
                     Status.PENDING,
                     auction.get().getCounter()
             );

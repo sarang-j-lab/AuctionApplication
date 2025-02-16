@@ -77,14 +77,14 @@ public class JWTService {
         return extractClaim(token,Claims::getExpiration);
     }
 
-    public String generateToken(String mobileNo) {
+    public String generateToken(UserDetails userDetails) {
 
         Map<String,Object> claims = new HashMap<>();
-
+        claims.put("role",userDetails.getAuthorities().iterator().next().getAuthority());
         return Jwts.builder()
                 .claims()
                 .add(claims)
-                .subject(mobileNo)
+                .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000))
                 .and()

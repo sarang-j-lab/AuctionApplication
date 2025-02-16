@@ -1,6 +1,7 @@
 package com.AuctionApp.Auction.entites;
 
 
+import com.AuctionApp.Auction.Component.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,8 @@ public class User {
     @Column(unique = true)
     private String mobileNo;
 
+    private Role role;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_as_player_in_auction",
@@ -50,12 +53,13 @@ public class User {
     @JsonIgnore
     private List<Auction> auctions;
 
-    public User(String userId, String name, String email, String password, String city, String mobileNo) {
+    public User(String userId, String name, String email, String password, String city, String mobileNo,Role role) {
         this.userId = userId;
         this.name = name;
         this.email = email;
         this.password = password;
         this.city = city;
         this.mobileNo = mobileNo;
+        this.role = role;
     }
 }

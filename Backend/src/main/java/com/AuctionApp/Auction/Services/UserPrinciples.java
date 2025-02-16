@@ -13,15 +13,17 @@ import java.util.List;
 
 public class UserPrinciples implements UserDetails {
 
-    private User user;
+    private final User user;
+    private final GrantedAuthority authorities;
 
-    public UserPrinciples(User user){
+    public UserPrinciples(User user,GrantedAuthority authorities){
         this.user = user;
+        this.authorities = authorities;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return Collections.singleton(authorities);
     }
 
     @Override

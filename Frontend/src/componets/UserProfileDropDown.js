@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { messageContext } from '../context/MessageContext';
+import { getRole } from '../utils/JwtConfig';
 
 const UserProfileDropdown = ({ handleLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,6 +55,12 @@ const UserProfileDropdown = ({ handleLogout }) => {
             >
               Profile
             </Link>
+            
+           {getRole(user?.token) === "ADMIN" &&  <Link to={"/admin"} 
+              className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Admin panel
+            </Link>}
             <Link to={"/authentication"} onClick={handleLogout}
               className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >

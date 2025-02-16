@@ -65,7 +65,7 @@ public class AuctionService {
             }
                 Auction auction = new Auction(Generate.generateId(),auctionRequest.getAuctionName(),auctionRequest.getSeason(),auctionRequest.getAuctionDate(),
                     auctionRequest.getAuctionTime(),auctionRequest.getPointsPerTeam(),auctionRequest.getBaseBid(),auctionRequest.getBidIncreaseBy(),
-                    auctionRequest.getMaxPlayerPerTeam(),auctionRequest.getMinPlayerPerTeam(), (auctionRequest.getMinPlayerPerTeam()) * auctionRequest.getBaseBid(),auctionRequest.isPlayerRegistration(),auctionRequest.getMinPlayerPerTeam());
+                    auctionRequest.getMaxPlayerPerTeam(),auctionRequest.getMinPlayerPerTeam(), (auctionRequest.getMinPlayerPerTeam()) * auctionRequest.getBaseBid(),auctionRequest.isPlayerRegistration(),auctionRequest.getMinPlayerPerTeam(),2);
 
             Auction newAuction = auctionRepository.save(auction);
             user.get().getAuctions().add(newAuction);

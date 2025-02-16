@@ -44,6 +44,8 @@ public class Auction {
 
     private int bidIncreaseBy;
 
+    private int teamSize;
+
     @ElementCollection
     @CollectionTable(name = "additionalIncrements", joinColumns = @JoinColumn(name = "auction_id"))
     private List<AdditinalIncrements> additionalIncrements = new ArrayList<>();
@@ -79,7 +81,7 @@ public class Auction {
 
     private int noneCategoryPlayerRequired;
 
-    public Auction(String auctionId, String auctionName, int season, Date auctionDate, String auctionTime, int pointsPerTeam, int baseBid, int bidIncreaseBy, int maxPlayerPerTeam, int minPlayerPerTeam,int reserve,boolean playerRegistration,int noneCategoryPlayerRequired) {
+    public Auction(String auctionId, String auctionName, int season, Date auctionDate, String auctionTime, int pointsPerTeam, int baseBid, int bidIncreaseBy, int maxPlayerPerTeam, int minPlayerPerTeam,int reserve,boolean playerRegistration,int noneCategoryPlayerRequired,int teamSize) {
         this.auctionId = auctionId;
         this.auctionName = auctionName;
         this.season = season;
@@ -93,5 +95,6 @@ public class Auction {
         this.reserve = reserve;
         this.playerRegistration = playerRegistration;
         this.noneCategoryPlayerRequired = noneCategoryPlayerRequired;
+        this.teamSize = teamSize;
     }
 }

@@ -6,6 +6,8 @@ import com.AuctionApp.Auction.entites.User;
 import com.AuctionApp.Auction.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,8 +30,8 @@ public class AppUserService implements UserDetailsService {
         if(user == null){
             throw new CustomException("User not found with this mobile no.", HttpStatus.BAD_REQUEST,"Please provide valid details");
         }
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().name());
 
-
-        return new UserPrinciples(user);
+        return new UserPrinciples(user,authority);
     }
 }

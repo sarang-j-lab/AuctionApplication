@@ -1,5 +1,6 @@
 package com.AuctionApp.Auction.Services;
 
+import com.AuctionApp.Auction.Component.Role;
 import com.AuctionApp.Auction.DTO.UserDTO;
 import com.AuctionApp.Auction.ExceptionHandling.CustomException;
 import com.AuctionApp.Auction.entites.User;
@@ -10,6 +11,7 @@ import com.AuctionApp.Auction.Config.AppUserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,12 +51,13 @@ public class UserService {
         }
         userRequest.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         User user = new User(generateId(),userRequest.getName(),userRequest.getEmail(),
-                        userRequest.getPassword(), userRequest.getCity(),userRequest.getMobileNo());
+                        userRequest.getPassword(), userRequest.getCity(),userRequest.getMobileNo(), Role.USER);
          userRepository.save(user);
 
          Map<String,Object> response = new HashMap<>();
 
-         response.put("token",jwtService.generateToken(user.getMobileNo()));
+//         response.put("token",jwtService.generateToken(user.getMobileNo()));
+         response.put("token",jwtService.generateToken(new UserPrinciples(user,new SimpleGrantedAuthority(user.getRole().name()))));
          response.put("user",user);
 
 
@@ -68,7 +71,7 @@ public class UserService {
         Map<String,Object> response = new HashMap<>();
         User dbUser = userRepository.findByMobileNo(user.getMobileNo());
 
-        response.put("token",jwtService.generateToken(user.getMobileNo()));
+        response.put("token",jwtService.generateToken(new UserPrinciples(dbUser,new SimpleGrantedAuthority(dbUser.getRole().name()))));
         response.put("user",dbUser);
 
         if(authentication.isAuthenticated()) return response;

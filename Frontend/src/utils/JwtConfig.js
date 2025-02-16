@@ -7,3 +7,9 @@ export const isTokenExpired = (token)=>{
     const {exp} = jwtDecode(token);
     return Date.now() >= exp * 1000;
 }
+
+export const getRole = (token)=>{
+    if(!token ) return null;
+    const {role} = jwtDecode(token)
+    return role;
+}

@@ -1,5 +1,6 @@
 package com.AuctionApp.Auction.entites;
 
+import com.AuctionApp.Auction.Component.CategoryRequirements;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

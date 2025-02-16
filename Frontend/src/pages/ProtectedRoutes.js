@@ -1,4 +1,4 @@
-import { isTokenExpired } from '../utils/JwtConfig';
+import { getRole, isTokenExpired } from '../utils/JwtConfig';
 import { Navigate, Outlet} from 'react-router-dom';
 
 
@@ -10,13 +10,15 @@ const ProtectedRoutes = () => {
 
 
 
-    const isAuthenticated = user && !isTokenExpired(user.token);
 
+    const isAuthenticated = user && !isTokenExpired(user?.token);
 
-    return isAuthenticated ?
+ 
+
+    return   isAuthenticated   ?
         <>
             <Outlet/>
-        </> : <Navigate to={"/authentication"} />
+        </> : <Navigate to={"/authentication"} /> 
 }
 
 export default ProtectedRoutes

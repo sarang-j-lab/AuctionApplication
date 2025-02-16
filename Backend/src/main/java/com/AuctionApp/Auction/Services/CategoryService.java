@@ -1,7 +1,7 @@
 package com.AuctionApp.Auction.Services;
 
 import com.AuctionApp.Auction.Component.CategoryAdditionalIncrements;
-import com.AuctionApp.Auction.entites.CategoryRequirements;
+import com.AuctionApp.Auction.Component.CategoryRequirements;
 import com.AuctionApp.Auction.DTO.CategoryDTO;
 import com.AuctionApp.Auction.ExceptionHandling.CustomException;
 import com.AuctionApp.Auction.entites.Auction;
@@ -9,7 +9,6 @@ import com.AuctionApp.Auction.entites.Category;
 import com.AuctionApp.Auction.entites.Player;
 import com.AuctionApp.Auction.entites.Team;
 import com.AuctionApp.Auction.repositories.*;
-import com.AuctionApp.Auction.util.Generate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

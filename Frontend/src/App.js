@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Authentication from './pages/Authentication'
 import { messageContext } from './context/MessageContext'
 import { ErrorToast, SuccessToast } from './componets/Toast'
@@ -23,6 +23,8 @@ import Menu from './componets/Menu'
 import AuctionPanel from './pages/AuctionPanel'
 import NotFound from './componets/NotFound'
 import LiveAuction from './componets/AuctionPanel/LiveAuction'
+import { getRole } from './utils/JwtConfig'
+import AdminPage from './pages/AdminPage'
 
 
 
@@ -35,6 +37,7 @@ const App = () => {
 
   const { successMessage, setSuccessMessage, errorMessage, setErrorMessage } = useContext(messageContext);
 
+  const user = JSON.parse(localStorage.getItem("user"))
 
   useEffect(() => {
     setTimeout(() => {
@@ -79,9 +82,12 @@ const App = () => {
             <Route path='/auction/category-form' element={<CategoryForm />} />
           </Route>
           <Route path="/auction-dashboard/*" element={<AuctionPanel />} />
-          <Route path='*' element={<NotFound />} />
         </Route>
-          <Route path="/live/auction/:auctionId" element={<LiveAuction />} />
+
+        <Route path="/live/auction/:auctionId" element={<LiveAuction />} />
+         <Route path='/admin/*' element={<AdminPage />} />
+        <Route path='*' element={<NotFound />} />
+
       </Routes>
 
     </Router>

@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -30,8 +31,9 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private JWTService jwtService;
 
+
     @Autowired
-    ApplicationContext context ;
+    private UserDetailsService userDetailsService;
 
 
     @Override
@@ -51,13 +53,15 @@ public class JwtFilter extends OncePerRequestFilter {
         try{
             mobileNo = jwtService.extractMobileNo(token);
             if(mobileNo != null && SecurityContextHolder.getContext().getAuthentication() == null){
-                UserDetails userDetails = context.getBean(AppUserService.class).loadUserByUsername(mobileNo);
+
+                UserDetails userDetails = userDetailsService.loadUserByUsername(mobileNo);
                 if(jwtService.validateToken(token, userDetails)){
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
+
             }
         }catch (ExpiredJwtException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
