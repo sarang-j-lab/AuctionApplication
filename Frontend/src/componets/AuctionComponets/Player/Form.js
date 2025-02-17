@@ -46,7 +46,7 @@ const Form = ({ categories, setPlayerData, playerData, purpose }) => {
                     "Content-Type": "application/json",
                 }
             })
-            // navigate("/auction/auction-players")
+            navigate("/auction/auction-players")
             setSuccessMessage(isEditForm ? "Player edited successfully" : "Player added successfully!");
         } catch (error) {
             if (error?.response) {

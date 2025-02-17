@@ -36,6 +36,11 @@ const AuctionTeams = () => {
 
     // Add a new team
     const addTeam = () => {
+        if(auction?.teamSize <= auctionTeams.length){
+            setErrorMessage("You have to upgrade your plan!");
+            navigate("/pricing")
+            return;
+        }
         navigate('/auction/team-form', { state: { newTeamForm: true } });
     };
 

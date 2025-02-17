@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.stylesheets.LinkStyle;
 
@@ -30,4 +31,9 @@ public interface AuctionRepository extends JpaRepository<Auction,String> {
     @Transactional
     @Query(value = "delete from user_as_player_in_auction where auction_id = :auctionId", nativeQuery = true)
     void deleteUserAsAplayer(@Param("auctionId") String auctionId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Auction a SET a.teamSize = :teamSize WHERE a.auctionId = :auctionId")
+    void updateTeamSize(@Param("teamSize") int teamSize, @Param("auctionId") String auctionId);
 }

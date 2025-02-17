@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { RouteToprevBtn } from '../Button'
 import axiosApi from '../../utils/axiosApi'
 import { messageContext } from '../../context/MessageContext'
+import Confirmation from '../Confirmation'
 
 const AdminAucitonDetails = () => {
 
@@ -15,26 +16,43 @@ const AdminAucitonDetails = () => {
     const auction = location.state;
     const navigate = useNavigate()
 
-    const [size,setSize] = useState(auction?.teamSize);
-    const {setErrorMessage} = useContext(messageContext);
+    const [confirmation, setConfirmation] = useState(false);
 
-    const handleTeamUpdate = async(event)=>{
+    const [size, setSize] = useState(auction?.teamSize);
+    const { setErrorMessage, setSuccessMessage } = useContext(messageContext);
+
+    const handleTeamUpdate = async (event) => {
         event.preventDefault();
         try {
-            const response = await axiosApi.put(`/admin/update-team-size/${auction?.auctionId}`,{teamSize: size},{headers:{
-                "Content-Type":"application/json"
-            }});
-            console.log(response);
+            const response = await axiosApi.put(`/admin/update-team-size/${auction?.auctionId}`, { teamSize: size }, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            setSuccessMessage(response?.data)
         } catch (error) {
             setErrorMessage(error?.response?.data?.message || "Not able to update team");
         }
     }
 
+    const deleteConfirmation = ()=>{
+        setConfirmation(true);
+    }
+
+    const deleteAuction = async () => {
+        try {
+            await axiosApi.delete(`/admin/delete-auction/${auction?.auctionId}`);
+            setSuccessMessage("Auction deleted successfully!");
+            navigate("/admin");
+        } catch (error) {
+            setErrorMessage(error?.response?.data?.message || "Not able to delete auction please try again!");
+        }
+    }
 
     return (
         <>
             {auction && <div className='w-full h-full  flex flex-col   space-y-5 lg:w-3/4 sm:w-full'>
-
+                {confirmation && <Confirmation setId={()=>{}} setConfirmation={setConfirmation} deleteFun={deleteAuction}/> }
                 <>
                     <h1 className='text-2xl text-blue-400 mx-auto lg:text-4xl sm:text-2xl'>Auction Details</h1>
                     <div className="bg-white shadow-lg rounded-lg lg:max-w-2xl xl:max-w-3xl  w-[70vw] sm:w-[70vw]  mx-auto p-3 space-y-6 md:space-y-4">
@@ -65,18 +83,16 @@ const AdminAucitonDetails = () => {
                         </div>
 
 
-                        <div className="flex items-center justify-between flex-col lg:flex-row sm:flex-col gap-5 ">
+                        <div className="flex  justify-between flex-col lg:flex-row sm:flex-col gap-5 ">
                             <form onSubmit={handleTeamUpdate}>
                                 <label htmlFor='teamsize'>Update Team size</label>
-                                 <input id='teamsize' onChange={(event)=> setSize(event?.target?.value)} value={size} type='number' className='w-20 border-2 ml-4 border-gray-700 px-2' />
-                                 <button className='ml-4 w-20 px-2 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600'>Update</button>
+                                <input id='teamsize' onChange={(event) => setSize(event?.target?.value)} value={size} type='number' className='w-20 border-2 ml-4 border-gray-700 px-2' />
+                                <button className='ml-4 w-20 px-2 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600'>Update</button>
                             </form>
+                            <button onClick={deleteConfirmation} className='ml-4 w-20 px-2 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600'>Delete</button>
                         </div>
                     </div>
-                    <div className='flex flex-col justify-center '>
 
-                        {auction.additionalIncrements.length > 0 && <AuctionIncrements />}
-                    </div>
 
                     <div className=" bg-white shadow-lg rounded-lg w-[70vw] xl:max-w-3xl lg:max-w-2xl  sm:w-[70vw] mx-auto p-6 space-y-6 md:space-y-4">
                         <div className=" flex items-center justify-between flex-col lg:flex-row sm:flex-col gap-5">
@@ -95,7 +111,7 @@ const AdminAucitonDetails = () => {
                         </div>
                     </div>
 
-                    <RouteToprevBtn onClick={() => { navigate("/auction/my-auction") }} />
+                    <RouteToprevBtn onClick={() => { navigate("/admin") }} />
                 </>
 
 

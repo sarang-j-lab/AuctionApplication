@@ -10,7 +10,7 @@ import CategoryWisePlayers from "./CategoryWisePlayers";
 
 
 export function AuctionPlayers() {
-    window.scrollTo(0, 0);
+    
     const navigate = useNavigate()
     const [players, setPlayers] = useState([])
     const { setSuccessMessage, setErrorMessage } = useContext(messageContext);
@@ -21,6 +21,7 @@ export function AuctionPlayers() {
 
     const [confirmation, setConfirmation] = useState(false);
     useEffect(() => {
+        window.scrollTo(0, 0);
         fetchData();
         fetchCategories();
     }, [])
@@ -41,10 +42,10 @@ export function AuctionPlayers() {
         }
         try {
             const response = await axiosApi.get(`/auction-player/${auction?.auctionId}`)
-            const replaceCategoryId = response.data.map((player) => {
+            const replacedCategoryIdPlayers = response.data.map((player) => {
                 return player.categoryId !== null ? { ...player, "categoryId": player.categoryId.categoryId } : { ...player, [player.categoryId]: null }
             });
-            setPlayers(replaceCategoryId);
+            setPlayers(replacedCategoryIdPlayers);
         } catch (err) {
             setErrorMessage(err.response.data.message || "Failed to load players! please try again.")
         }
@@ -114,14 +115,10 @@ export function AuctionPlayers() {
                             <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-gray-900">{player.playerName}</h5>
                             <span className="text-sm text-gray-500 dark:text-gray-400">{player.playerStyle}</span>
                             <div className="mt-4 flex space-x-3 lg:mt-6">
-                                <p
-                                    className="inline-flex items-center shadow-xl rounded-lg px-4 py-2 text-center text-sm font-medium text-black"
-                                >
+                                <p className="inline-flex items-center shadow-xl rounded-lg px-4 py-2 text-center text-sm font-medium text-black">
                                     age: {player.playerAge}
                                 </p>
-                                <p
-                                    className="inline-flex items-center shadow-xl rounded-lg px-4 py-2 text-center text-sm font-medium text-black"
-                                >
+                                <p className="inline-flex items-center shadow-xl rounded-lg px-4 py-2 text-center text-sm font-medium text-black">
                                     jerssey no.{player.jersseyNumber}
                                 </p>
                             </div>

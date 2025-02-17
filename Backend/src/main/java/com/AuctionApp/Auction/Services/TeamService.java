@@ -43,6 +43,12 @@ public class TeamService {
         Optional<Auction> auction = auctionRepository.findById(auctionId);
         if(auction.isPresent()){
             Auction getAuction = auction.get();
+
+            if(getAuction.getTeamSize() <= getAuction.getTeams().size()){
+                throw new CustomException("You have to upgrade your plan!",HttpStatus.BAD_REQUEST,"purhcase team");
+            }
+
+
             Team team = new Team(Generate.generateId(),newTeam.getTeamName(),newTeam.getShortName(),getAuction.getPointsPerTeam(),getAuction.getReserve(),getAuction.getPointsPerTeam() - getAuction.getReserve(),0,auction.get().getNoneCategoryPlayerRequired() * auction.get().getBaseBid());
 
             List<Category> auctionCategories = getAuction.getCategories();

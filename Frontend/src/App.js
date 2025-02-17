@@ -25,6 +25,7 @@ import NotFound from './componets/NotFound'
 import LiveAuction from './componets/AuctionPanel/LiveAuction'
 import { getRole } from './utils/JwtConfig'
 import AdminPage from './pages/AdminPage'
+import Pricing from './componets/Pricing'
 
 
 
@@ -80,12 +81,13 @@ const App = () => {
             <Route path='/auction/join-auction' element={<JoinAuction />} />
             <Route path='/auction/auction-categories' element={<AuctionCategories />} />
             <Route path='/auction/category-form' element={<CategoryForm />} />
+            <Route path='/pricing' element={<Pricing/>}/>
           </Route>
           <Route path="/auction-dashboard/*" element={<AuctionPanel />} />
         </Route>
 
         <Route path="/live/auction/:auctionId" element={<LiveAuction />} />
-         <Route path='/admin/*' element={<AdminPage />} />
+        <Route path='/admin/*' element={<AdminPage />} />
         <Route path='*' element={<NotFound />} />
 
       </Routes>

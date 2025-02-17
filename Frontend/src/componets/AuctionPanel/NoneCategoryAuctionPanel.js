@@ -125,11 +125,6 @@ const NoneCategoryAuctionPanel = ({ players, auctionData, teams, category, fetch
         setMaxBid(team.totalPoints - finalReserve);
 
 
-
-
-
-
-
         let baseBid = auction?.baseBid;
         let bidIncreaseBy = auction?.bidIncreaseBy;
 

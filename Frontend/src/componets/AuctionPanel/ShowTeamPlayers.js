@@ -5,10 +5,10 @@ import { messageContext } from '../../context/MessageContext';
 import { ImCross } from "react-icons/im";
 import LoadingBar from '../LoadingBar';
 
-const ShowTeamPlayers = ({ fetchAuctionPlayers, fetchAuctionTeam, category }) => {
+const ShowTeamPlayers = ({ fetchAuctionPlayers, fetchAuctionTeam }) => {
 
     const location = useLocation();
-    const { teamId, auctionData, teamName } = location.state;
+    const { teamId, auctionData, teamName,noneCategoryPlayerBought } = location.state;
 
     const [loading, setLoading] = useState(false);
 
@@ -52,9 +52,10 @@ const ShowTeamPlayers = ({ fetchAuctionPlayers, fetchAuctionTeam, category }) =>
 
     }
 
+
     return (
         <>
-            {teamPlayers ? <div className='w-[100vw] h-[90vh] bg-white/20 backdrop-blur-2xl overflow-scroll scrollbar-hide rounded-xl'>
+            {teamPlayers ? <div className='flex flex-col w-[100vw] h-[90vh] bg-white/20 backdrop-blur-2xl overflow-scroll scrollbar-hide rounded-xl'>
                 <div className="w-full  h-[30vh] px-20 text-white flex flex-col items-center justify-center">
                     <h1 className='text-[10vh] font-serif'>{auctionData.auctionName.toUpperCase()}</h1>
                     <h1 className='text-[5vh] font-serif text-black bg-yellow-200 px-3 rounded-sm'>{teamName} players</h1>
