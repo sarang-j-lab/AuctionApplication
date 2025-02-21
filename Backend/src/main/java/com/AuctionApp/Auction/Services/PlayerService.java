@@ -8,13 +8,15 @@ import com.AuctionApp.Auction.repositories.AuctionRepository;
 import com.AuctionApp.Auction.repositories.CategoryRepository;
 import com.AuctionApp.Auction.repositories.PlayerRepository;
 import com.AuctionApp.Auction.repositories.UserRepository;
+import com.AuctionApp.Auction.Component.ExcelHelper;
 import com.AuctionApp.Auction.util.Generate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -31,6 +33,8 @@ public class PlayerService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+
 
     private final Random random = new Random();
     private String generateId() {
@@ -66,7 +70,6 @@ public class PlayerService {
                 newPlayer.getTShirtSize(),
                 newPlayer.getTrouserSize(),
                 newPlayer.getPlayerStyle(),
-//                false,
                 Status.PENDING,
                 auction.get().getCounter()
         );
@@ -188,7 +191,23 @@ public class PlayerService {
             }
         }
         throw new CustomException("Something went wrong please try again",HttpStatus.BAD_REQUEST,"Something went wrong please try again");
-
-
     }
+
+    public void save(MultipartFile file,String auctionId) throws IOException {
+        Optional<Auction> auction = auctionRepository.findById(auctionId);
+        if(auction.isPresent()){
+            try{
+                ExcelHelper helper = new ExcelHelper(auction.get().getCategories());
+                List<Player> players = helper.convertExcelToListOfPlayers(file.getInputStream());
+                playerRepository.saveAll(players);
+                auction.get().getAuctionPlayers().addAll(players);
+                auctionRepository.save(auction.get());
+            }catch(Exception e){
+                throw new CustomException(e.getMessage(),HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+            }
+        }else{
+            throw new CustomException("Auction not found!",HttpStatus.BAD_REQUEST,"ERROR");
+        }
+    }
+
 }

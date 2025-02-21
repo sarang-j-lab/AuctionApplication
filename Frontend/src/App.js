@@ -18,14 +18,15 @@ import AuctionCategories from './componets/AuctionComponets/Category/AuctionCate
 import CategoryForm from './componets/AuctionComponets/Category/CategoryForm'
 import Main from './componets/Main'
 import JoinAuction from './componets/JoinAuction'
-import Panel from './componets/AuctionPanel/CategoryAuctionPanel'
 import Menu from './componets/Menu'
 import AuctionPanel from './pages/AuctionPanel'
 import NotFound from './componets/NotFound'
-import LiveAuction from './componets/AuctionPanel/LiveAuction'
-import { getRole } from './utils/JwtConfig'
+import LiveAuction from './componets/AuctionPanel/LiveAuctionComponents/LiveAuction'
 import AdminPage from './pages/AdminPage'
 import Pricing from './componets/Pricing'
+import LiveAuctionTeams from './componets/AuctionPanel/LiveAuctionComponents/LiveAuctionTeams'
+import LiveAuctionPlayers from './componets/AuctionPanel/LiveAuctionComponents/LiveAuctionPlayers'
+import BulkPlayerAdd from './componets/AuctionComponets/Player/BulkPlayerAdd'
 
 
 
@@ -76,6 +77,7 @@ const App = () => {
             <Route path='/auction/auction-details' element={<AuctionDetail />} />
             <Route path='/auction/auction-teams' element={<AuctionTeams />} />
             <Route path='/auction/auction-players' element={<AuctionPlayers />} />
+            <Route path='/auction/bulk-player-add' element={<BulkPlayerAdd/>}/>
             <Route path='/auction/team-form' element={<TeamForm />} />
             <Route path='/auction/player-form' element={<PlayerForm />} />
             <Route path='/auction/join-auction' element={<JoinAuction />} />
@@ -86,7 +88,8 @@ const App = () => {
           <Route path="/auction-dashboard/*" element={<AuctionPanel />} />
         </Route>
 
-        <Route path="/live/auction/:auctionId" element={<LiveAuction />} />
+        <Route path="/live/auction/*" element={<LiveAuction />} />
+
         <Route path='/admin/*' element={<AdminPage />} />
         <Route path='*' element={<NotFound />} />
 

@@ -1,6 +1,5 @@
 import { Link, Navigate, Route, Routes, useNavigate } from "react-router-dom"
-import Panel from "../componets/AuctionPanel/CategoryAuctionPanel"
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useEffect,  useState } from "react";
 import axiosApi from "../utils/axiosApi";
 import { messageContext } from "../context/MessageContext";
 import ShowTeams from "../componets/AuctionPanel/ShowTeams";
@@ -10,6 +9,8 @@ import LoadingBar from "../componets/LoadingBar";
 import CategoryAuctionPanel from "../componets/AuctionPanel/CategoryAuctionPanel";
 import NoneCategoryAuctionPanel from "../componets/AuctionPanel/NoneCategoryAuctionPanel";
 import ShowTeamPlayers from "../componets/AuctionPanel/ShowTeamPlayers";
+import { Client } from "@stomp/stompjs"
+import SockJS from "sockjs-client"
 
 const AuctionPanel = () => {
 
@@ -23,6 +24,8 @@ const AuctionPanel = () => {
   const [teams, setTeams] = useState(null);
   const [players, setPlayers] = useState(null);
   const { setErrorMessage } = useContext(messageContext);
+  const [stompClient, setStompClient] = useState(null)
+
 
   useEffect(() => {
 
@@ -30,6 +33,24 @@ const AuctionPanel = () => {
     fetchAuctionPlayers();
     fetchAuctionData();
   }, [])
+
+  useEffect(() => {
+    const client = new Client({
+      webSocketFactory: () => new SockJS("http://localhost:8080/ws-auction"),
+      reconnectDelay: 5000,
+      onConnect: () => {
+        console.log("connected");
+      }
+    });
+
+
+    client.activate();
+    setStompClient(client)
+
+    return () => {
+      client.deactivate();
+    };
+  }, []);
 
   const fetchAuctionData = async () => {
     try {
@@ -89,8 +110,8 @@ const AuctionPanel = () => {
         </div>
         <Routes>
 
-          {category ? <Route path="/" element={<CategoryAuctionPanel fetchAuctionPlayers={fetchAuctionPlayers} setPlayers={setPlayers} category={category} teams={teams} players={players} auctionData={auctionData} fetchAuctionTeam={fetchAuctionTeam} />} />
-            : <Route path="/" element={<NoneCategoryAuctionPanel fetchAuctionPlayers={fetchAuctionPlayers} category={category} teams={teams} players={players} auctionData={auctionData} fetchAuctionTeam={fetchAuctionTeam} />} />}
+          {category ? <Route path="/" element={<CategoryAuctionPanel stompClient={stompClient} fetchAuctionPlayers={fetchAuctionPlayers} setPlayers={setPlayers} category={category} teams={teams} players={players} auctionData={auctionData} fetchAuctionTeam={fetchAuctionTeam} />} />
+            : <Route path="/" element={<NoneCategoryAuctionPanel stompClient={stompClient} fetchAuctionPlayers={fetchAuctionPlayers} category={category} teams={teams} players={players} auctionData={auctionData} fetchAuctionTeam={fetchAuctionTeam} />} />}
           <Route path="/teams" element={<ShowTeams teams={teams} auctionData={auctionData} />} />
           <Route path="/categories" element={<ShowCategories categories={categories} setCategory={setCategory} auctionData={auctionData} setPlayers={setPlayers} fetchAuctionPlayers={fetchAuctionPlayers} />} />
           <Route path="/players" element={<ShowPlayers players={players} categories={categories} auctionData={auctionData} fetchAuctionPlayers={fetchAuctionPlayers} />} />

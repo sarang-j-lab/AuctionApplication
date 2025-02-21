@@ -1,19 +1,18 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import { useParams } from 'react-router-dom';
-import { messageContext } from '../../context/MessageContext';
+import { Link, Routes, useParams } from 'react-router-dom';
+import { messageContext } from '../../../context/MessageContext';
 import axios from 'axios';
 import Confetti from 'react-confetti'
 import { Fireworks } from "fireworks-js";
+
 
 const textShadow = {
     textShadow: "10px 10px 15px rgba(0, 0, 0, 2)"
 }
 
-
-const LiveAuction = () => {
-
+const LiveAuctionPanel = () => {
     const fireworksRef = useRef(null);
 
     const { auctionId } = useParams();
@@ -93,8 +92,15 @@ const LiveAuction = () => {
     return (
         <>
             <div className="h-screen w-screen bg-center bg-contain flex  text-white flex-col" style={{ backgroundImage: 'url("https://cdn.vectorstock.com/i/500p/56/47/cricket-stadium-wallpaper-vector-20455647.jpg")', }}>
+                {/* <div className="z-10 p-3  bg-white/20 backdrop-blur-md border border-white/30 text-xl text-white text-center flex justify-between items-center rounded-xl px-10" >
 
-                <div className="h-screen w-full  rounded-xl flex flex-col">
+                    <div className="flex flex-row gap-6 z-10">
+                        {[{ title: "Panel", path: "/auction-dashboard" }, { title: "Teams", path: "/live/auction/teams" }, { title: "Players", path: "/live/auction/players" }].map(({ title, path }, i) => (
+                            <Link to={path} key={i} className="border font-thin px-2 py-1  hover:backdrop-blur-2xl hover:text-gray-800 rounded-lg duration-500 transition-all ">{title}</Link>
+                        ))}
+                    </div>
+                </div> */}
+                <div className="h-[87vh] w-full  rounded-xl flex flex-col">
                     {sold && <Confetti width={window.innerWidth} height={window.innerHeight} />}
 
                     {auctionData && <div className="flex flex-col justify-center mt-10 self-center font-serif  bg-black  px-8 text-[40px]    items-center text-sky-200 border-2 rounded-lg border-sky-200 shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#08f,0_0_15px_#08f,0_0_30px_#08f]">
@@ -131,7 +137,6 @@ const LiveAuction = () => {
                                     <div className="font-serif ml-10 text-lg">Balance: {bid?.team?.totalPoints.toLocaleString()}</div>
                                     <div className="font-serif ml-10 text-lg">Reserve: {bid?.team.reserve.toLocaleString()}</div>
                                     <div className="font-serif ml-10 text-lg">Max bid: {(bid?.team?.maxBid).toLocaleString()}</div>
-                                    <div className="font-serif ml-10 text-lg">P.  4</div>
                                 </div>
                             </div>}
                         </div>
@@ -143,4 +148,4 @@ const LiveAuction = () => {
     )
 }
 
-export default LiveAuction
+export default LiveAuctionPanel

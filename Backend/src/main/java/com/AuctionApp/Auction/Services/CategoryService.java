@@ -52,6 +52,10 @@ public class CategoryService {
         throw new CustomException("Auction not found", HttpStatus.BAD_REQUEST,"auction not found with this id");
     }
 
+    public Optional<Category> findCategoryById(String categoryId){
+        return categoryRepository.findById(categoryId);
+    }
+
 
 
 

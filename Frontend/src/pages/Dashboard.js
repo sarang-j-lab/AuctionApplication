@@ -19,6 +19,7 @@ import Panel from '../componets/AuctionPanel/CategoryAuctionPanel'
 import Main from '../componets/Main'
 import Navbar from '../componets/Navbar'
 import Footer from '../componets/Footer'
+import BulkPlayerAdd from '../componets/AuctionComponets/Player/BulkPlayerAdd'
 
 
 
@@ -59,6 +60,7 @@ const Dashboard = () => {
           <Route path='/auction/auction-details' element={<AuctionDetail />} />
           <Route path='/auction/auction-teams' element={<AuctionTeams />} />
           <Route path='/auction/auction-players' element={<AuctionPlayers />} />
+          <Route path='/auction/bulk-player-add' element={<BulkPlayerAdd/>}/>
           <Route path='/auction/team-form' element={<TeamForm />} />
           <Route path='/auction/player-form' element={<PlayerForm />} />
           <Route path='/auction/join-auction' element={<JoinAuction />} />

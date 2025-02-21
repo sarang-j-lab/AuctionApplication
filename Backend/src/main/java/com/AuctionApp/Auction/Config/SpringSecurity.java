@@ -21,6 +21,9 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -40,8 +43,6 @@ public class SpringSecurity  {
             return  http.csrf(AbstractHttpConfigurer::disable)
                     .cors(cors -> {})
                     .authorizeHttpRequests(request ->
-
-
                             request
                                     .requestMatchers("/admin/**").hasAuthority("ADMIN")
                                     .requestMatchers("/user/login","/user/user-registration","/ws-auction/**","/auction/get-auction/*").permitAll()

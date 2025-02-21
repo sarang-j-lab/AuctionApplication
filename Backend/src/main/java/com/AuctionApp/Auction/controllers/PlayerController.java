@@ -1,16 +1,18 @@
 package com.AuctionApp.Auction.controllers;
 
-import com.AuctionApp.Auction.DTO.AuctionDTO;
 import com.AuctionApp.Auction.DTO.PlayerDTO;
 import com.AuctionApp.Auction.Services.PlayerService;
 import com.AuctionApp.Auction.entites.Player;
+import com.AuctionApp.Auction.Component.ExcelHelper;
 import jakarta.validation.Valid;
+import org.springframework.aop.BeforeAdvice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -42,15 +44,27 @@ public class PlayerController {
                  return new ResponseEntity<>("Player modified successfully",HttpStatus.OK);
         }
 
-//        @DeleteMapping("/delete-player/{playerId}")
-//        public ResponseEntity<String> deletePlayer(@PathVariable String playerId){
-//                playerService.delete(playerId);
-//                return ResponseEntity.ok("Player deleted successfully");
-//        }
+
+
         @DeleteMapping("/delete-player/{playerId}/{auctionId}")
         public ResponseEntity<String> deleteUserAsPlayer(@PathVariable String playerId,@PathVariable String auctionId){
                 playerService.deletePlayer(playerId,auctionId);
                 return ResponseEntity.ok("Player deleted successfully");
         }
+
+        @PostMapping("/player-file-upload/{auctionId}")
+        public ResponseEntity<?> upload(@RequestParam("file")MultipartFile file, @PathVariable String auctionId) throws IOException {
+                if(file.getContentType() == null){
+                        return new ResponseEntity<>("File in not present!",HttpStatus.BAD_REQUEST);
+                }
+                if(ExcelHelper.checkExcelFormat(file)){
+                        playerService.save(file,auctionId);
+                        return ResponseEntity.ok().body("File uploaded");
+                }else{
+                        return new ResponseEntity<>("Only .xlsx file format is allowed", HttpStatus.BAD_REQUEST);
+                }
+        }
+
+
 
 }

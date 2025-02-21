@@ -1,21 +1,18 @@
-import { useContext, useDebugValue, useEffect, useRef, useState } from "react"
+import { useContext,  useEffect, useRef, useState } from "react"
 import { messageContext } from "../../context/MessageContext"
-import { Client } from "@stomp/stompjs"
-import SockJS from "sockjs-client"
+
 import axiosApi from "../../utils/axiosApi"
 import Confetti from 'react-confetti'
 import { Fireworks } from "fireworks-js";
-import Timer from "../Timer"
 
 const textShadow = {
     textShadow: "10px 10px 15px rgba(0, 0, 0, 2)"
 }
 
-const NoneCategoryAuctionPanel = ({ players, auctionData, teams, category, fetchAuctionPlayers, fetchAuctionTeam }) => {
+const NoneCategoryAuctionPanel = ({ stompClient,players, auctionData, teams,  fetchAuctionPlayers, fetchAuctionTeam }) => {
     const auction = JSON.parse(localStorage.getItem("auction"));
     const fireworksRef = useRef(null);
     const [sold, setSold] = useState(false)
-    const [stompClient, setStompClient] = useState(null)
     const [showPanel, setShowPanel] = useState(true);
 
     const [count, setCount] = useState(0)
@@ -33,25 +30,6 @@ const NoneCategoryAuctionPanel = ({ players, auctionData, teams, category, fetch
 
 
 
-
-    useEffect(() => {
-
-
-        const client = new Client({
-            webSocketFactory: () => new SockJS("http://localhost:8080/ws-auction"),
-            reconnectDelay: 5000,
-            onConnect: () => {
-                console.log("connected");
-            }
-        });
-
-        client.activate();
-        setStompClient(client)
-
-        return () => {
-            client.deactivate();
-        };
-    }, []);
 
 
     useEffect(() => {

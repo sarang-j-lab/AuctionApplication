@@ -20,7 +20,6 @@ public class Player {
     @Id
     private String playerId;
 
-//    private String playerPic;
 
     private String playerName;
 
@@ -43,10 +42,6 @@ public class Player {
 
     private String isUser;
 
-//    private boolean isSold;
-//
-//    private boolean isUnsold;
-
     private Status status;
 
     @ManyToOne
@@ -66,7 +61,6 @@ public class Player {
         this.tShirtSize = tShirtSize;
         this.trouserSize = trouserSize;
         this.playerStyle = playerStyle;
-//        this.isSold = isSold;
         this.status = status;
         this.formNo = formNo;
     }

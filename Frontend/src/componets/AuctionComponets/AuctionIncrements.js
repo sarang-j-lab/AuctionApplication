@@ -40,9 +40,9 @@ const AuctionIncrements = () => {
             <div className='mx-auto xl:w-[25vw] sm:w-full flex justify-center flex-col items-center rounded-lg border-1 shadow-lg py-5 px-6'>
                 <h1>Additional increments</h1>
                 {auction.additionalIncrements.length > 0 &&
-                    auction.additionalIncrements.map((increm,i) => (
+                    auction.additionalIncrements.map((increm,index) => (
                         <>
-                            {!loading ? <div key={i} className='flex flex-row gap-2 justify-evenly items-center text-sm mt-1 '>
+                            {!loading ? <div key={index} className='flex flex-row gap-2 justify-evenly items-center text-sm mt-1 '>
                                 <p>Increment: {increm.increment}</p>
                                 <p>After: {increm.after}</p>
                                 <button id={auction.auctionId} value={increm.id} onClick={deleteAuctionIncrement} className='border-2 px-1 self-end hover:bg-red-400 hover:border-red-400'>X</button>

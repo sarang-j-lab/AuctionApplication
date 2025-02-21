@@ -61,7 +61,7 @@ const CategoryForm = () => {
             <form className="max-w-lg mx-auto" id={categoryData.categoryId} onSubmit={handleSubmits}>
                 {!isEditForm ? <span className='text-[10px]  font-bold '>Carefully fill the details category Base bid and Min player cannot be edited! You have recreate cateogry.</span> : <span className='text-[10px]  font-bold '>Base bid and min player cannot be edited you have recreate category.</span>}
                 <div className="mb-5">
-                    <label htmlFor="categoryName" class="block mb-2 text-sm font-medium dark:text-gray">Category name</label>
+                    <label htmlFor="categoryName" className="block mb-2 text-sm font-medium dark:text-gray">Category name</label>
                     <input autoComplete="off" onChange={(e) => { setCategoryData({ ...categoryData, "categoryName": e.target.value.toUpperCase() }) }} value={categoryData.categoryName} type="text" id='categoryName' className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="Ex. Golden" required />
                 </div>
 
