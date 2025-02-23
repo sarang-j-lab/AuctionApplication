@@ -3,11 +3,11 @@ import AuctionCard from './AuctionCard';
 
 import { useContext } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { RouteToprevBtn } from '../Button';
+import { RouteToprevBtn } from '../Component/Button.js';
 
 import axiosApi from '../../utils/axiosApi';
 import { messageContext } from '../../context/MessageContext';
-import LoadingBar from '../LoadingBar';
+import LoadingBar from '../Component/LoadingBar.js';
 
 const MyAuction = () => {
   window.scrollTo(0, 0);

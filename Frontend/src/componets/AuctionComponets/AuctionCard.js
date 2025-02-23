@@ -23,8 +23,8 @@ const AuctionCard = ({ userAuctions }) => {
               <div className="px-4  max-w-sm w-full bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all">
                 <div className="relative">
                   <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQS7F4V3klZ8k3LfeBAlAjfowXlYeCIStejVA&s"
-                    alt="Product"
+                    src="/auctionimage.jpg"
+                    alt="Auction"
                     className="w-full h-52 object-cover"
                   />
                   <span className="absolute top-3 right-3 bg-black text-white px-3 py-1 rounded-full text-sm font-medium">

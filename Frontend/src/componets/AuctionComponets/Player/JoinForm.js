@@ -1,5 +1,5 @@
-import { BlueButton } from "../../Button";
-import { RouteToprevBtn } from "../../Button";
+
+import { RouteToprevBtn,BlueButton } from "../../Component/Button.js";
 import { useNavigate } from 'react-router-dom';
 import axiosApi from "../../../utils/axiosApi";
 import { useContext } from "react";

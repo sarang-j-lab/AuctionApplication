@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { RouteToprevBtn } from '../../Button';
+import { RouteToprevBtn } from '../../Component/Button.js';
 import { messageContext } from '../../../context/MessageContext';
 import axiosApi from '../../../utils/axiosApi';
 

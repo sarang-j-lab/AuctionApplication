@@ -214,7 +214,7 @@ const NoneCategoryAuctionPanel = ({ stompClient,players, auctionData, teams,  fe
                 {sold && <Confetti width={window.innerWidth} height={window.innerHeight} />}
                 <div className="flex flex-col justify-center mt-10 self-center font-serif  bg-black  px-8 text-[40px]    items-center text-sky-200 border-2 rounded-lg border-sky-200 shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#08f,0_0_15px_#08f,0_0_30px_#08f]">
                     <p className="self-center">{auctionData.auctionName.toUpperCase()}</p>
-                    <p className="w-1/2 text-[25px] px-8 self-center rounded-lg text-wrap">Players Auction</p>
+                    <p className="w-full text-[25px] px-8 self-center rounded-lg text-wrap">Players Auction</p>
                 </div>
                 <div className="h-[80vh] flex gap-2">
                     <div className="w-1/3 h-full flex items-end ">

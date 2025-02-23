@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import Confirmation from '../../Confirmation';
-import { RouteToprevBtn } from '../../Button';
+import Confirmation from '../../Component/Confirmation.js';
+import { RouteToprevBtn } from '../../Component/Button.js';
 import { messageContext } from '../../../context/MessageContext';
 import axiosApi from '../../../utils/axiosApi';
 

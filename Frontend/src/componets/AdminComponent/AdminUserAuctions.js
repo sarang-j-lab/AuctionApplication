@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axiosApi from '../../utils/axiosApi';
 import { messageContext } from '../../context/MessageContext';
-import { RouteToprevBtn } from '../Button';
+import { RouteToprevBtn } from '../Component/Button.js';
 
 const AdminUserAuctions = () => {
     const { userId } = useParams();

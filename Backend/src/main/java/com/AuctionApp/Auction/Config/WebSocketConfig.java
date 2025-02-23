@@ -1,11 +1,11 @@
 package com.AuctionApp.Auction.Config;
 
+import com.AuctionApp.Auction.controllers.PanelController;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -13,12 +13,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry){
-        registry.addEndpoint("/ws-auction") // WebSocket endpoint
-                .setAllowedOrigins("http://localhost:3000") // Allow React frontend
-                .withSockJS(); // Enable SockJS for fallback
-    }
+        @Override
+        public void registerStompEndpoints(StompEndpointRegistry registry){
+            registry.addEndpoint("/ws-auction") // WebSocket endpoint
+                    .setAllowedOrigins("http://localhost:3000")
+                    .setAllowedOriginPatterns("*") // Allow React frontend
+                    .withSockJS(); // Enable SockJS for fallback
+        }
+
 
 
     @Override

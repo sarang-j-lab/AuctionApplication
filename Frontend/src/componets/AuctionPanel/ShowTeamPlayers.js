@@ -3,7 +3,7 @@ import { useLocation, useParams } from 'react-router-dom'
 import axiosApi from '../../utils/axiosApi';
 import { messageContext } from '../../context/MessageContext';
 import { ImCross } from "react-icons/im";
-import LoadingBar from '../LoadingBar';
+import LoadingBar from "../Component/LoadingBar.js"
 
 const ShowTeamPlayers = ({ fetchAuctionPlayers, fetchAuctionTeam }) => {
 

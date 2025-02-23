@@ -4,8 +4,8 @@ import { CiCalendarDate } from "react-icons/ci";
 import { BiCategory } from "react-icons/bi";
 import { TiGroupOutline } from "react-icons/ti";
 import { BiSolidCricketBall } from "react-icons/bi";
-import { RouteToprevBtn } from '../Button';
-import Confirmation from '../Confirmation';
+import { RouteToprevBtn } from '../Component/Button.js';
+import Confirmation from '../Component/Confirmation.js';
 import PopupForm from './PopupForm';
 import { messageContext } from '../../context/MessageContext';
 import AuctionIncrements from './AuctionIncrements';
@@ -109,7 +109,7 @@ const AuctionDetail = () => {
           </div>
         </div>
         <div className='flex flex-col justify-center items-center'>
-          <button onClick={() => navigate("/auction-dashboard", { state: { auctionId: auction.auctionId } })} value={auction.auctionId} className=" flex justify-center mb-5 items-center space-x-5 w-full xl:w-3/4 self-center lg:w-full  sm:w-full px-6 py-2  border-2 rounded-lg bg-blue-600 hover:bg-blue-800 text-white">
+          <button onClick={() => navigate("/auction-dashboard")} value={auction.auctionId} className=" flex justify-center mb-5 items-center space-x-5 w-full xl:w-3/4 self-center lg:w-full  sm:w-full px-6 py-2  border-2 rounded-lg bg-blue-600 hover:bg-blue-800 text-white">
             <span className='text-lg'> Conduct Auction</span> <FaArrowRightToBracket size={"22px"} />
           </button>
           <span className='my-4 shadow-xl bg-white px-4 py-2 rounded-lg'> Share live link : <Link className='text-blue-500' target='_blank' to={`http://localhost:3000/live/auction/${auction.auctionId}`}>{`http://localhost:3000/live/auction/${auction.auctionId}`}</Link></span>

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class PanelController {
 
         @Autowired
@@ -72,149 +72,167 @@ public class PanelController {
         @Transactional
         @PostMapping("/panel/noneCategory-sold/{auctionId}")
         public ResponseEntity<String> onSold(@RequestBody BidDTO bidDTO, @PathVariable String auctionId){
-                Optional<Player> player = playerRepository.findById(bidDTO.getPlayer());
-                Optional<Team> team = teamRepository.findById(bidDTO.getTeam());
-                Optional<Auction> auction = auctionRepository.findById(auctionId);
-                if(bidDTO.getCategory() == null && team.isPresent() && player.isPresent() && auction.isPresent()){
-                        team.get().setTotalPoints(team.get().getTotalPoints() - bidDTO.getAmount());
-                        team.get().setNoneCategoryPlayerBought(team.get().getNoneCategoryPlayerBought() + 1);
+                Optional<Player> playerOpt = playerRepository.findById(bidDTO.getPlayer());
+                Optional<Team> teamOpt = teamRepository.findById(bidDTO.getTeam());
+                Optional<Auction> auctionOpt = auctionRepository.findById(auctionId);
 
-
-                        if(team.get().getNoneCategoryPlayerBought() <= auction.get().getNoneCategoryPlayerRequired()){
-                                team.get().setReserve(team.get().getReserve() - auction.get().getBaseBid());
-                                team.get().setNoneCategoryPlayerReserve(team.get().getNoneCategoryPlayerReserve() - auction.get().getBaseBid());
-                        }
-
-                        team.get().setMaxBid(team.get().getTotalPoints() - team.get().getReserve());
-
-                        player.get().setStatus(Status.SOLD);
-                        Bid savedBid = bidService.saveBid(new Bid(Generate.generateId(),player.get().getPlayerId(),team.get().getTeamId(),bidDTO.getAmount(),null));
-                        player.get().setBid(savedBid);
-                        playerRepository.save(player.get());
-
-                        team.get().getTeamPlayers().add(player.get());
-
-
-
-                        teamRepository.save(team.get());
-                        String destination = "/live/sold/" + auctionId;
-                        messagingTemplate.convertAndSend(destination,"Player Sold successfully!");
-                     return ResponseEntity.ok().body("player sold successfully");
-                }else{
+                if(bidDTO.getCategory() != null || teamOpt.isEmpty() || playerOpt.isEmpty() || auctionOpt.isEmpty()){
                     return ResponseEntity.ok("null");
                 }
-        }
 
+                Player player = playerOpt.get();
+                Team team = teamOpt.get();
+                Auction auction = auctionOpt.get();
+
+                team.setTotalPoints(team.getTotalPoints() - bidDTO.getAmount());
+                team.setNoneCategoryPlayerBought(team.getNoneCategoryPlayerBought() + 1);
+
+                if(team.getNoneCategoryPlayerBought() <= auction.getNoneCategoryPlayerRequired()){
+                    int baseBid = auction.getBaseBid();
+                    team.setReserve(team.getReserve() - baseBid);
+                    team.setNoneCategoryPlayerReserve(team.getNoneCategoryPlayerReserve() - baseBid);
+                }
+                team.setMaxBid(team.getTotalPoints() - team.getReserve());
+
+                player.setStatus(Status.SOLD);
+                Bid savedBid = bidService.saveBid(new Bid(Generate.generateId(),player.getPlayerId(),team.getTeamId(),bidDTO.getAmount(),null));
+                player.setBid(savedBid);
+                playerRepository.save(player);
+
+                team.getTeamPlayers().add(player);
+                teamRepository.save(team);
+
+                messagingTemplate.convertAndSend("/live/sold/" + auctionId, "Player Sold successfully!");
+                return ResponseEntity.ok("Player sold successfully");
+        }
 
         @Transactional
         @PostMapping("/panel/category-sold/{auctionId}")
-        public ResponseEntity<String> onCategorySold(@RequestBody BidDTO bidDTO,@PathVariable String auctionId){
-                Optional<Category> category = categoryRepository.findById(bidDTO.getCategory());
-                Optional<Team> team = teamRepository.findById(bidDTO.getTeam());
-                Optional<Player> player = playerRepository.findById(bidDTO.getPlayer());
-                if(category.isPresent() && team.isPresent() && player.isPresent()){
-                        CategoryRequirements categoryRequirement = null;
-                        for(CategoryRequirements categoryRequ:team.get().getPlayerRequirement()){
-                                if(categoryRequ.getCategory().equals(bidDTO.getCategory())){
-                                        categoryRequirement = categoryRequ;
-                                        break;
-                                }
-                        }
-                        if(categoryRequirement != null){
-                                       categoryRequirement.setBought(categoryRequirement.getBought() + 1);
-                                       team.get().setTotalPoints(team.get().getTotalPoints() - bidDTO.getAmount());
-                                       if(categoryRequirement.getBought() <= categoryRequirement.getPlayerRequired()){
-                                               categoryRequirement.setReserve(categoryRequirement.getReserve() - category.get().getBaseBid());
-                                               team.get().setReserve(team.get().getReserve() - category.get().getBaseBid());
-                                       }
-                                       team.get().setMaxBid(team.get().getTotalPoints() - team.get().getReserve());
-                                       Bid savedBid = bidService.saveBid(new Bid(Generate.generateId(),player.get().getPlayerId(),team.get().getTeamId(),bidDTO.getAmount(),bidDTO.getCategory()));
-                                       player.get().setStatus(Status.SOLD);
-                                       player.get().setBid(savedBid);
-                                       playerRepository.save(player.get());
-                                       team.get().getTeamPlayers().add(player.get());
-                                       teamRepository.save(team.get());
-                                       String destination = "/live/sold/" + auctionId;
-                                       messagingTemplate.convertAndSend(destination,"Player Sold successfully!");
-                            return ResponseEntity.ok().body("player sold successfully");
-                        }
-                        throw new CustomException("Something went wrong please try again",HttpStatus.BAD_REQUEST,"Error");
-                }
-            throw new CustomException("Something went wrong please try again",HttpStatus.BAD_REQUEST,"Error");
+        public ResponseEntity<String> onCategorySold(@RequestBody BidDTO bidDTO, @PathVariable String auctionId) {
+            Optional<Category> categoryOpt = categoryRepository.findById(bidDTO.getCategory());
+            Optional<Team> teamOpt = teamRepository.findById(bidDTO.getTeam());
+            Optional<Player> playerOpt = playerRepository.findById(bidDTO.getPlayer());
+
+            if (categoryOpt.isEmpty() || teamOpt.isEmpty() || playerOpt.isEmpty()) {
+                throw new CustomException("Something went wrong please try again", HttpStatus.BAD_REQUEST, "Error");
+            }
+
+            Category category = categoryOpt.get();
+            Team team = teamOpt.get();
+            Player player = playerOpt.get();
+
+            CategoryRequirements categoryRequirement = team.getPlayerRequirement().stream()
+                    .filter(req -> req.getCategory().equals(bidDTO.getCategory()))
+                    .findFirst()
+                    .orElseThrow(() -> new CustomException("Category requirement not found", HttpStatus.BAD_REQUEST, "Error"));
+
+            categoryRequirement.setBought(categoryRequirement.getBought() + 1);
+            team.setTotalPoints(team.getTotalPoints() - bidDTO.getAmount());
+
+            if (categoryRequirement.getBought() <= categoryRequirement.getPlayerRequired()) {
+                int baseBid = category.getBaseBid();
+                categoryRequirement.setReserve(categoryRequirement.getReserve() - baseBid);
+                team.setReserve(team.getReserve() - baseBid);
+            }
+
+            team.setMaxBid(team.getTotalPoints() - team.getReserve());
+
+            Bid savedBid = bidService.saveBid(new Bid(Generate.generateId(), player.getPlayerId(), team.getTeamId(), bidDTO.getAmount(), bidDTO.getCategory()));
+            player.setStatus(Status.SOLD);
+            player.setBid(savedBid);
+            playerRepository.save(player);
+
+            team.getTeamPlayers().add(player);
+            teamRepository.save(team);
+
+            messagingTemplate.convertAndSend("/live/sold/" + auctionId, "Player Sold successfully!");
+            return ResponseEntity.ok("Player sold successfully");
         }
 
         @PutMapping("/reauction-category-player")
-        public ResponseEntity<String> reauctionCategoryPlayer(@RequestBody Bid bid){
-            Optional<Player> player = playerRepository.findById(bid.getPlayer());
-            Optional<Team> team = teamRepository.findById(bid.getTeam());
-            Optional<Category> category = categoryRepository.findById(bid.getCategory());
-            if(player.isPresent() && team.isPresent() && category.isPresent()){
-                CategoryRequirements cateRequ = null;
-                for(CategoryRequirements categoryRequ : team.get().getPlayerRequirement()){
-                    if(categoryRequ.getCategory().equals(bid.getCategory())){
-                        cateRequ = categoryRequ;
-                        break;
-                    }
-                }
-                if(cateRequ != null){
-                    cateRequ.setBought(cateRequ.getBought() - 1);
-                    team.get().getTeamPlayers().remove(player.get());
-                    team.get().setTotalPoints(team.get().getTotalPoints() + bid.getAmount());
-                    if(cateRequ.getBought() < cateRequ.getPlayerRequired()){
-                        cateRequ.setReserve(cateRequ.getReserve() + category.get().getBaseBid());
-                        team.get().setReserve(team.get().getReserve() + category.get().getBaseBid());
-                    }
-                    team.get().setMaxBid(team.get().getTotalPoints() - team.get().getReserve());
-                    player.get().setStatus(Status.PENDING);
-                    player.get().setBid(null);
-                    bidService.deleteBid(bid.getId());
+        public ResponseEntity<String> reauctionCategoryPlayer(@RequestBody Bid bid) {
+            Optional<Player> playerOpt = playerRepository.findById(bid.getPlayer());
+            Optional<Team> teamOpt = teamRepository.findById(bid.getTeam());
+            Optional<Category> categoryOpt = categoryRepository.findById(bid.getCategory());
 
-
-                    teamRepository.save(team.get());
-                    playerRepository.save(player.get());
-                    return ResponseEntity.ok("Player can be re-auction now!");
-                }else{
-                    throw new CustomException("Category not found!",HttpStatus.BAD_REQUEST,"error");
-                }
+            if (playerOpt.isEmpty() || teamOpt.isEmpty() || categoryOpt.isEmpty()) {
+                throw new CustomException("Something went wrong please try again!!", HttpStatus.BAD_REQUEST, "error");
             }
-            throw new CustomException("Something went wrong please try again!!",HttpStatus.BAD_REQUEST,"error");
+
+            Player player = playerOpt.get();
+            Team team = teamOpt.get();
+            Category category = categoryOpt.get();
+
+            CategoryRequirements categoryRequirement = team.getPlayerRequirement().stream()
+                    .filter(req -> req.getCategory().equals(bid.getCategory()))
+                    .findFirst()
+                    .orElseThrow(() -> new CustomException("Category not found!", HttpStatus.BAD_REQUEST, "error"));
+
+            categoryRequirement.setBought(categoryRequirement.getBought() - 1);
+            team.getTeamPlayers().remove(player);
+            team.setTotalPoints(team.getTotalPoints() + bid.getAmount());
+
+            if (categoryRequirement.getBought() < categoryRequirement.getPlayerRequired()) {
+                int baseBid = category.getBaseBid();
+                categoryRequirement.setReserve(categoryRequirement.getReserve() + baseBid);
+                team.setReserve(team.getReserve() + baseBid);
+            }
+
+            team.setMaxBid(team.getTotalPoints() - team.getReserve());
+            player.setStatus(Status.PENDING);
+            player.setBid(null);
+
+            bidService.deleteBid(bid.getId());
+            teamRepository.save(team);
+            playerRepository.save(player);
+
+            return ResponseEntity.ok("Player can be re-auctioned now!");
         }
 
 
         @Transactional
         @PutMapping("/reauction-none-category-player/{auctionId}")
-        public ResponseEntity<String> reauctionNoneCategoryPlayer(@RequestBody Bid bid,@PathVariable String auctionId){
-                Optional<Player> player = playerRepository.findById(bid.getPlayer());
-                Optional<Team> team = teamRepository.findById(bid.getTeam());
-                Optional<Auction> auction = auctionRepository.findById(auctionId);
-                if(team.isPresent() && player.isPresent() && auction.isPresent()){
-                        team.get().setNoneCategoryPlayerBought(team.get().getNoneCategoryPlayerBought() - 1);
-                        team.get().getTeamPlayers().remove(player.get());
-                        team.get().setTotalPoints(team.get().getTotalPoints() + bid.getAmount());
-                        if(team.get().getNoneCategoryPlayerBought() < auction.get().getNoneCategoryPlayerRequired()){
-                                team.get().setReserve(team.get().getReserve() + auction.get().getBaseBid());
-                                team.get().setNoneCategoryPlayerReserve(team.get().getNoneCategoryPlayerReserve() + auction.get().getBaseBid());
-                        }
-                        team.get().setMaxBid(team.get().getTotalPoints() - team.get().getReserve());
-//                        player.get().setSold(false);
-                        player.get().setStatus(Status.PENDING);
-                        player.get().setBid(null);
-                        bidService.deleteBid(bid.getId());
+        public ResponseEntity<String> reauctionNoneCategoryPlayer(@RequestBody Bid bid, @PathVariable String auctionId) {
+        Optional<Player> playerOpt = playerRepository.findById(bid.getPlayer());
+        Optional<Team> teamOpt = teamRepository.findById(bid.getTeam());
+        Optional<Auction> auctionOpt = auctionRepository.findById(auctionId);
 
-
-                        teamRepository.save(team.get());
-                        playerRepository.save(player.get());
-
-                        return ResponseEntity.ok("Player can be re-auction now");
-                }
-                throw new CustomException("Something went wrong please try again",HttpStatus.BAD_REQUEST,"Missing credencials");
+        if (playerOpt.isEmpty() || teamOpt.isEmpty() || auctionOpt.isEmpty()) {
+            throw new CustomException("Something went wrong please try again", HttpStatus.BAD_REQUEST, "Missing credentials");
         }
 
+        Player player = playerOpt.get();
+        Team team = teamOpt.get();
+        Auction auction = auctionOpt.get();
+
+        team.setNoneCategoryPlayerBought(team.getNoneCategoryPlayerBought() - 1);
+        team.getTeamPlayers().remove(player);
+        team.setTotalPoints(team.getTotalPoints() + bid.getAmount());
+
+        if (team.getNoneCategoryPlayerBought() < auction.getNoneCategoryPlayerRequired()) {
+            int baseBid = auction.getBaseBid();
+            team.setReserve(team.getReserve() + baseBid);
+            team.setNoneCategoryPlayerReserve(team.getNoneCategoryPlayerReserve() + baseBid);
+        }
+
+        team.setMaxBid(team.getTotalPoints() - team.getReserve());
+        player.setStatus(Status.PENDING);
+        player.setBid(null);
+
+        bidService.deleteBid(bid.getId());
+        teamRepository.save(team);
+        playerRepository.save(player);
+
+        return ResponseEntity.ok("Player can be re-auctioned now");
+    }
+
+
+
+
         @PutMapping("/add-unsold-player/{auctionId}")
-        public ResponseEntity<String> addUnsoldPlayer(@RequestBody Player player,@PathVariable String auctionId){
+            public ResponseEntity<String> addUnsoldPlayer(@RequestBody Player player,@PathVariable String auctionId){
                 Optional<Auction> auction = auctionRepository.findById(auctionId);
                 if(auction.isPresent() && player != null){
-//                        player.setUnsold(true);
                     player.setStatus(Status.UNSOLD);
                         playerRepository.save(player);
                         auction.get().getUnsoldPlayers().add(player);
@@ -232,7 +250,6 @@ public class PanelController {
                 Optional<Auction> auction = auctionRepository.findById(auctionId);
                 if(auction.isPresent()){
                         for(Player player:auction.get().getUnsoldPlayers()){
-//                                player.setUnsold(false);
                                 player.setStatus(Status.PENDING);
                                 playerRepository.save((player));
                         }

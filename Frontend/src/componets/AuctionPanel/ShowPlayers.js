@@ -58,12 +58,12 @@ const ShowPlayers = ({ auctionData, fetchAuctionPlayers, categories }) => {
 
   const handleCategoryChange = (event)=>{
     if(event?.target?.value === ""){
-      setShowUnsold(true);
+      setShowUnsold(false);
       const categoryPlayers = copyPlayers.filter((player)=> player?.categoryId === null);
       setPlayers(categoryPlayers);
       return;
     }
-    setShowUnsold(true);
+    setShowUnsold(false);
     const categoryPlayers = copyPlayers.filter((player)=> player?.categoryId?.categoryId === event?.target?.value);
     setPlayers(categoryPlayers);
   }

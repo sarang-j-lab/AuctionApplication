@@ -5,7 +5,7 @@ import { messageContext } from "../context/MessageContext";
 import ShowTeams from "../componets/AuctionPanel/ShowTeams";
 import ShowPlayers from "../componets/AuctionPanel/ShowPlayers";
 import ShowCategories from "../componets/AuctionPanel/ShowCategories";
-import LoadingBar from "../componets/LoadingBar";
+import LoadingBar from "../componets/Component/LoadingBar.js";
 import CategoryAuctionPanel from "../componets/AuctionPanel/CategoryAuctionPanel";
 import NoneCategoryAuctionPanel from "../componets/AuctionPanel/NoneCategoryAuctionPanel";
 import ShowTeamPlayers from "../componets/AuctionPanel/ShowTeamPlayers";
@@ -36,7 +36,9 @@ const AuctionPanel = () => {
 
   useEffect(() => {
     const client = new Client({
-      webSocketFactory: () => new SockJS("http://localhost:8080/ws-auction"),
+      webSocketFactory: () => new SockJS("http://localhost:8080/ws-auction",null,{
+          withCredentials: true,
+      }),
       reconnectDelay: 5000,
       onConnect: () => {
         console.log("connected");
@@ -92,7 +94,7 @@ const AuctionPanel = () => {
 
   return (
     <>
-      {auctionData && teams && players ? <div className="h-screen w-screen bg-center bg-contain flex  text-white flex-col" style={{ backgroundImage: 'url("https://cdn.vectorstock.com/i/500p/56/47/cricket-stadium-wallpaper-vector-20455647.jpg")', }}>
+      {auctionData && teams && players ? <div className="h-screen w-screen bg-center bg-contain flex  text-white flex-col" style={{ backgroundImage: 'url("/auctionpanelimage.jpg")', }}>
         <div className="z-10 w-screen h-[10vh] bg-white/20 backdrop-blur-md border border-white/30 text-xl text-white text-center flex justify-between items-center rounded-xl px-10" >
           <div className="flex flex-row gap-4 items-center">
             <Link to={"/"} className=" flex border font-thin px-2 py-1  hover:backdrop-blur-2xl hover:text-gray-800 rounded-lg duration-500 transition-all ">

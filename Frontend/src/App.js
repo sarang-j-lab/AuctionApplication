@@ -2,11 +2,11 @@ import { useContext, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Authentication from './pages/Authentication'
 import { messageContext } from './context/MessageContext'
-import { ErrorToast, SuccessToast } from './componets/Toast'
+import { ErrorToast, SuccessToast } from "../src/componets/Component/Toast.js"
 
 import ProtectedRoutes from './pages/ProtectedRoutes'
-import UserProfilePage from './componets/UserProfilePage'
-import EditProfileForm from './componets/EditProfileForm'
+import UserProfilePage from './componets/UserComponent/UserProfilePage.js'
+import EditProfileForm from './componets/UserComponent/EditProfileForm.js'
 import AuctionForm from './componets/AuctionComponets/AuctionForm'
 import MyAuction from './componets/AuctionComponets/MyAuction'
 import AuctionDetail from './componets/AuctionComponets/AuctionDetail'
@@ -16,17 +16,19 @@ import TeamForm from './componets/AuctionComponets/Team/TeamForm'
 import PlayerForm from './componets/AuctionComponets/Player/PlayerForm'
 import AuctionCategories from './componets/AuctionComponets/Category/AuctionCategories'
 import CategoryForm from './componets/AuctionComponets/Category/CategoryForm'
-import Main from './componets/Main'
-import JoinAuction from './componets/JoinAuction'
-import Menu from './componets/Menu'
+import Main from './componets/Component/Main.js'
+import JoinAuction from './componets/AuctionComponets/JoinAuction.js'
+import Menu from './componets/Component/Menu.js'
 import AuctionPanel from './pages/AuctionPanel'
-import NotFound from './componets/NotFound'
+import NotFound from './componets/Component/NotFound.js'
 import LiveAuction from './componets/AuctionPanel/LiveAuctionComponents/LiveAuction'
 import AdminPage from './pages/AdminPage'
-import Pricing from './componets/Pricing'
-import LiveAuctionTeams from './componets/AuctionPanel/LiveAuctionComponents/LiveAuctionTeams'
-import LiveAuctionPlayers from './componets/AuctionPanel/LiveAuctionComponents/LiveAuctionPlayers'
+import Pricing from './componets/Component/Pricing.js'
 import BulkPlayerAdd from './componets/AuctionComponets/Player/BulkPlayerAdd'
+import { Feather } from 'lucide-react'
+import Features from './componets/Component/Features.js'
+import Navbar from './componets/Component/Navbar.js'
+import AuctionPanelMenu from './pages/AuctionPanelMenu.js'
 
 
 
@@ -77,14 +79,16 @@ const App = () => {
             <Route path='/auction/auction-details' element={<AuctionDetail />} />
             <Route path='/auction/auction-teams' element={<AuctionTeams />} />
             <Route path='/auction/auction-players' element={<AuctionPlayers />} />
-            <Route path='/auction/bulk-player-add' element={<BulkPlayerAdd/>}/>
+            <Route path='/auction/bulk-player-add' element={<BulkPlayerAdd />} />
             <Route path='/auction/team-form' element={<TeamForm />} />
             <Route path='/auction/player-form' element={<PlayerForm />} />
             <Route path='/auction/join-auction' element={<JoinAuction />} />
             <Route path='/auction/auction-categories' element={<AuctionCategories />} />
             <Route path='/auction/category-form' element={<CategoryForm />} />
-            <Route path='/pricing' element={<Pricing/>}/>
+            <Route path='/pricing' element={<Pricing />} />
+            <Route path='/features' element={<Features />} />
           </Route>
+          <Route path='/Auction-menu' element={<AuctionPanelMenu />} />
           <Route path="/auction-dashboard/*" element={<AuctionPanel />} />
         </Route>
 

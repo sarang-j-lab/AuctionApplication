@@ -77,27 +77,19 @@ const CategoryAuctionPanel = ({ stompClient,players, auctionData, teams, categor
 
 
         let noneCategoryReserve = team.noneCategoryPlayerReserve;
-        let categoryReserve = team?.playerRequirement.map((requirement) => {
-            return requirement?.reserve
-        }).reduce((acc, num) => acc + num);
+        let categoryReserve = team?.playerRequirement.map((requirement) => { return requirement?.reserve }).reduce((acc, num) => acc + num);
 
 
-        let categoryRequir = team?.playerRequirement.filter((requirement) => {
-            return requirement?.category === category?.categoryId
-        })[0];
 
+        const categoryRequir = team?.playerRequirement.find(req => req?.category === category?.categoryId);
 
-        if (categoryRequir.bought === categoryRequir.maxPlayerRequired) {
+        if (!categoryRequir || categoryRequir.bought >= categoryRequir.maxPlayerRequired) {
             setErrorMessage("This team's limit is full to buy from this category");
             return;
         }
 
-
-        let finalReserve = noneCategoryReserve + categoryReserve;
-
-        if (categoryRequir.reserve >= category?.baseBid) {
-            finalReserve = noneCategoryReserve + (categoryReserve - category.baseBid);
-        }
+       
+        let finalReserve = noneCategoryReserve + categoryReserve - (categoryRequir.reserve >= category?.baseBid ? category.baseBid : 0);
         setReserve(finalReserve);
         setMaxBid(team.totalPoints - finalReserve);
 
@@ -105,8 +97,8 @@ const CategoryAuctionPanel = ({ stompClient,players, auctionData, teams, categor
 
         let baseBid = category?.baseBid
         let bidIncreaseBy = category?.increment
-
         const increments = category?.categoryAdditionalIncrements;
+
         increments.sort((a, b) => a.after - b.after);
 
         for (let index = 0; index < increments.length; index++) {
@@ -134,6 +126,8 @@ const CategoryAuctionPanel = ({ stompClient,players, auctionData, teams, categor
         }
 
     }
+
+
     const cancleBid = () => {
         if (stompClient && stompClient.connected) {
             stompClient.publish({
@@ -212,11 +206,11 @@ const CategoryAuctionPanel = ({ stompClient,players, auctionData, teams, categor
     return (
 
         <>
-            <div className="h-[90vh] w-full  rounded-xl flex flex-col z-10  overflow-y-scroll scrollbar-hide">
+            <div className="h-[90vh] w-full  rounded-xl flex flex-col z-10">
                 {sold && <Confetti width={window.innerWidth} height={window.innerHeight} />}
                 <div className="flex flex-col justify-center mt-10 self-center font-serif  bg-black  px-8 text-[40px] items-center text-sky-200 border-2 rounded-lg border-sky-200 shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#08f,0_0_15px_#08f,0_0_30px_#08f]">
                     <p >{auctionData.auctionName.toUpperCase()}</p>
-                    <p className="w-1/2 text-[25px] px-8 self-center rounded-lg text-wrap">Players Auction</p>
+                    <p className="w-full text-[25px] px-8 self-center rounded-lg text-wrap">Players Auction</p>
                 </div>
                 <div className="self-center bg-yellow-400 px-3 py-2 text-black">{category.categoryName} Player </div>
                 <div className="h-[80vh] flex gap-2 " >
@@ -273,7 +267,7 @@ const CategoryAuctionPanel = ({ stompClient,players, auctionData, teams, categor
                     </div>}
                 </div>
             </div>
-            <div ref={fireworksRef} className="absolute inset-0 z-0"></div>
+            <div ref={fireworksRef} className="absolute inset-0 z-0 w-[90vw] h-[90vh]"></div>
         </>
     )
 }

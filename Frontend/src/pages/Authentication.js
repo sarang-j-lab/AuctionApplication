@@ -2,8 +2,8 @@ import { useState } from 'react'
 import Signup from '../componets/Authentication/Signup.js'
 import Signin from '../componets/Authentication/SignIn.js'
 import { Navigate } from 'react-router-dom'
-import Navbar from '../componets/Navbar.js'
-import Footer from '../componets/Footer.js'
+import Navbar from '../componets/Component/Navbar.js'
+import Footer from '../componets/Component/Footer.js'
 
 const Authentication = () => {
 

@@ -1,11 +1,11 @@
 import { use, useContext, useEffect, useState } from 'react'
-import { RouteToprevBtn } from '../../Button';
+import { RouteToprevBtn } from '../../Component/Button';
 import { Navigate, useNavigate } from 'react-router-dom';
-import Confirmation from '../../Confirmation';
+import Confirmation from '../../Component/Confirmation';
 import PopupForm from '../PopupForm';
 import { messageContext } from '../../../context/MessageContext';
 import axiosApi from '../../../utils/axiosApi';
-import LoadingBar from '../../LoadingBar';
+import LoadingBar from '../../Component/LoadingBar.js';
 
 const AuctionCategories = () => {
     window.scrollTo(0, 0);

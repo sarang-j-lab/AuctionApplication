@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import axiosApi from '../../utils/axiosApi'
 import { messageContext } from '../../context/MessageContext';
 import { useNavigate } from 'react-router-dom';
-import { RouteToprevBtn } from '../Button';
-import Confirmation from '../Confirmation';
+import { RouteToprevBtn } from '../Component/Button.js';
+import Confirmation from '../Component/Confirmation.js';
 
 const AdminAllUsers = () => {
 

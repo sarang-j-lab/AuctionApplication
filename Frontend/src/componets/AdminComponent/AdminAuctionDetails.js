@@ -1,14 +1,12 @@
 import React, { useContext, useState } from 'react'
 import { CiCalendarDate } from 'react-icons/ci'
-import { FaArrowRightToBracket } from 'react-icons/fa6'
-import AuctionIncrements from '../AuctionComponets/AuctionIncrements'
 import { TiGroupOutline } from 'react-icons/ti'
 import { BiCategory, BiSolidCricketBall } from 'react-icons/bi'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { RouteToprevBtn } from '../Button'
+import { RouteToprevBtn } from '../Component/Button'
 import axiosApi from '../../utils/axiosApi'
 import { messageContext } from '../../context/MessageContext'
-import Confirmation from '../Confirmation'
+import Confirmation from '../Component/Confirmation.js'
 
 const AdminAucitonDetails = () => {
 

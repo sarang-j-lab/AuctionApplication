@@ -3,7 +3,7 @@ import { useContext, useState } from 'react'
 import { messageContext } from '../../context/MessageContext';
 import axiosApi from '../../utils/axiosApi';
 import { Navigate } from 'react-router-dom';
-import LoadingBar from "../LoadingBar.js";
+import LoadingBar from "../Component/LoadingBar.js";
 
 const AuctionIncrements = () => {
 
