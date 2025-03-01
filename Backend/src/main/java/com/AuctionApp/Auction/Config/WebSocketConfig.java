@@ -14,7 +14,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         @Override
         public void registerStompEndpoints(StompEndpointRegistry registry){
             registry.addEndpoint("/ws-auction") // WebSocket endpoint
-                    .setAllowedOrigins("http://localhost:3000")
+                    .setAllowedOrigins("https://auction-application.vercel.app")
                     .setAllowedOriginPatterns("*") // Allow React frontend
                     .withSockJS(); // Enable SockJS for fallback
         }
