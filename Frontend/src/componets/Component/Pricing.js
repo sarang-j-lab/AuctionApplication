@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 const Pricing = () => {
 
@@ -12,19 +12,21 @@ const Pricing = () => {
     const bottomRef = useRef();
 
     const scrollToBottom = () => {
-        // window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-      };
-      
 
-      
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        window.scroll(0, 0)
+    }, [])
+
 
     return (
         <div className='w-3/4 flex flex-col'>
             <div className='xl:w-full lg:w-full grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2  gap-5 sm:grid-cols-1 sm:w-screen'>
                 {
-                    pricing.map((item) => (
-                        <div className=' bg-white shadow-xl rounded-xl w-60 h-60'>
+                    pricing.map((item,i) => (
+                        <div key={i} className=' bg-white shadow-xl rounded-xl w-60 h-60 '>
                             <div className='h-1/3  rounded-xl flex flex-col'>
                                 <p className='mx-6 mt-10 text-gray-700 text-lg'>{item.title}</p>
                                 <p className='ml-6 text-sm text-gray-500'>{item.description}</p>
@@ -32,7 +34,7 @@ const Pricing = () => {
                             <div className='flex flex-col justify-center items-center mt-2'>
                                 <p className='text-3xl text-gray-800  font-bold'>{item.price} ₹</p>
                                 <p className='mt-2'>Total teams - upto {item.teams}</p>
-                                <button onClick={()=> scrollToBottom()} className='w-3/4 mt-4 flex justify-center mb-5 items-center space-x-5  xl:w-3/4 self-center lg:w-full  sm:w-full px-6 py-2  border-2 rounded-lg border-purple-600 bg-purple-600 hover:bg-purple-800 text-white'>{item.btnText}</button>
+                                <button onClick={() => scrollToBottom()} className='w-3/4 mt-4 flex justify-center mb-5 items-center space-x-5  xl:w-3/4 self-center lg:w-full  sm:w-full px-6 py-2  border-2 rounded-lg border-purple-600 bg-purple-600 hover:bg-purple-800 text-white'>{item.btnText}</button>
                             </div>
                         </div>
                     ))

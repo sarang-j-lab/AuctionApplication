@@ -10,7 +10,7 @@ import CategoryWisePlayers from "./CategoryWisePlayers";
 
 
 export function AuctionPlayers() {
-    
+
     const navigate = useNavigate()
     const [players, setPlayers] = useState([])
     const { setSuccessMessage, setErrorMessage } = useContext(messageContext);
@@ -97,7 +97,7 @@ export function AuctionPlayers() {
             </div>
 
 
-            {categories.length > 0 && <CategoryWisePlayers categories={categories} setPlayers={setPlayers} fetchData={fetchData} />}
+            {<CategoryWisePlayers categories={categories} setPlayers={setPlayers} fetchData={fetchData} />}
 
             {/* <------------ player card------------------------> */}
             <div className="mx-4 my-4 xl:w-[65vw] lg:w-[60vw] md:w-[60vw] sm:w-[70vw] grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2  gap-10 mr-4 bg-white  rounded-xl">

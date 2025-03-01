@@ -1,10 +1,9 @@
 
 import { useContext, useState } from 'react'
-import { RiAuctionFill } from "react-icons/ri";
 import { Link, useNavigate } from 'react-router-dom';
 import UserProfileDropdown from '../UserComponent/UserProfileDropDown.js';
 import { messageContext } from '../../context/MessageContext.js';
-
+import { BiSolidCricketBall } from "react-icons/bi";
 
 const Navbar = () => {
 
@@ -34,8 +33,8 @@ const Navbar = () => {
                     {/* App name and logo */}
                     <div className="flex-shrink-0 w-25">
                         <div className="flex gap-2  justify-center items-center">
-                            <p className='text-xl'>TrueAuction</p>
-                            <RiAuctionFill size={25} />
+                            <p className='text-2xl'>CricBids</p>
+                            <BiSolidCricketBall size={25} />
                         </div>
                     </div>
 
@@ -54,10 +53,10 @@ const Navbar = () => {
 
 
                     {/* Navbar items in full size */}
-                    <div className="hidden lg:flex lg:items-center lg:ml-auto lg:space-x-10">
+                    <div className="hidden lg:flex lg:items-center lg:ml-auto lg:space-x-10 mr-5">
 
-                        <p title="" onClick={() => navigate("/features")} className="cursor-pointer text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">How to use it!</p>
-                        <p title="" onClick={() => navigate("/pricing")} className="cursor-pointer text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">Pricing</p>
+                        <p title="" onClick={() => navigate("/how-to-use")} className="cursor-pointer text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">How to use it?</p>
+                        <p title="" onClick={() => navigate("/pricing")} className="mr-5 cursor-pointer text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">Pricing</p>
                     </div>
                     <div>
                         {/* <button onClick={handleLogout} className="items-center justify-center hidden px-4 py-3 ml-10 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md lg:inline-flex hover:bg-blue-700 focus:bg-blue-700" role="button"> Logout</button> */}
@@ -72,7 +71,7 @@ const Navbar = () => {
                     <div className="flow-root ">
                         <ul className="flex flex-col px-6 -my-2 space-y-1">
                             <li  className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">How to use it!</li>
-                            <li onClick={() => navigate("/pricing")} className="cursor-pointer text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">Pricing</li>
+                            <li onClick={() => navigate("/pricing")} className="mr-5 cursor-pointer text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">Pricing</li>
                         </ul>
                     </div>
                 </nav>}

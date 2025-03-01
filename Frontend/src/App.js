@@ -25,10 +25,9 @@ import LiveAuction from './componets/AuctionPanel/LiveAuctionComponents/LiveAuct
 import AdminPage from './pages/AdminPage'
 import Pricing from './componets/Component/Pricing.js'
 import BulkPlayerAdd from './componets/AuctionComponets/Player/BulkPlayerAdd'
-import { Feather } from 'lucide-react'
-import Features from './componets/Component/Features.js'
-import Navbar from './componets/Component/Navbar.js'
+
 import AuctionPanelMenu from './pages/AuctionPanelMenu.js'
+import HowToUse from './componets/Component/HowToUser.js'
 
 
 
@@ -86,7 +85,7 @@ const App = () => {
             <Route path='/auction/auction-categories' element={<AuctionCategories />} />
             <Route path='/auction/category-form' element={<CategoryForm />} />
             <Route path='/pricing' element={<Pricing />} />
-            <Route path='/features' element={<Features />} />
+            <Route path='/how-to-use' element={<HowToUse />} />
           </Route>
           <Route path='/Auction-menu' element={<AuctionPanelMenu />} />
           <Route path="/auction-dashboard/*" element={<AuctionPanel />} />

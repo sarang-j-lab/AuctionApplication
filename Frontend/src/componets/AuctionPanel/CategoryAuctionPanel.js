@@ -77,7 +77,7 @@ const CategoryAuctionPanel = ({ stompClient,players, auctionData, teams, categor
 
 
         let noneCategoryReserve = team.noneCategoryPlayerReserve;
-        let categoryReserve = team?.playerRequirement.map((requirement) => { return requirement?.reserve }).reduce((acc, num) => acc + num);
+        let categoryReserve = team?.playerRequirement.map((requirement) => { return requirement?.reserve }).reduce((acc, num) => acc + num,0);
 
 
 
@@ -164,7 +164,9 @@ const CategoryAuctionPanel = ({ stompClient,players, auctionData, teams, categor
                 setBid({ player: null, team: null, amount: 0, category: null });
                 setSold(false);
                 setShowPanel(true);
-                fireworksRef.current.removeChild(fireworksRef.current.firstChild);
+                if(fireworksRef.current){
+                    fireworksRef.current.removeChild(fireworksRef.current.firstChild);
+                }
                 fireworks.stop();
             }, 5000);
             try {

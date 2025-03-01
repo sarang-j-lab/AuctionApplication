@@ -15,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -91,6 +92,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
+
+    @Transactional
+    public User getUserByRole(Role role){
+        return userRepository.findByRole(role);
+    }
 
 
     public User update(String userId, UserDTO user) {

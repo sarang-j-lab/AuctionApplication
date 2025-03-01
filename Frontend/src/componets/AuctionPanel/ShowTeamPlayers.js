@@ -8,7 +8,7 @@ import LoadingBar from "../Component/LoadingBar.js"
 const ShowTeamPlayers = ({ fetchAuctionPlayers, fetchAuctionTeam }) => {
 
     const location = useLocation();
-    const { teamId, auctionData, teamName,noneCategoryPlayerBought } = location.state;
+    const { teamId, auctionData, teamName,noneCategoryPlayerBought,playerRequirement } = location.state;
 
     const [loading, setLoading] = useState(false);
 
@@ -26,6 +26,7 @@ const ShowTeamPlayers = ({ fetchAuctionPlayers, fetchAuctionTeam }) => {
         }
     }
 
+    console.log(playerRequirement);
 
 
 
@@ -53,6 +54,7 @@ const ShowTeamPlayers = ({ fetchAuctionPlayers, fetchAuctionTeam }) => {
     }
 
 
+
     return (
         <>
             {teamPlayers ? <div className='flex flex-col w-[100vw] h-[90vh] bg-white/20 backdrop-blur-2xl overflow-scroll scrollbar-hide rounded-xl'>
@@ -60,7 +62,7 @@ const ShowTeamPlayers = ({ fetchAuctionPlayers, fetchAuctionTeam }) => {
                     <h1 className='text-[10vh] font-serif'>{auctionData.auctionName.toUpperCase()}</h1>
                     <h1 className='text-[5vh] font-serif text-black bg-yellow-200 px-3 rounded-sm'>{teamName} players</h1>
                 </div>
-
+              
                 {!loading ? <div className='w-full grid grid-cols-3  p-10  gap-7 gap-y-11'>
                     {teamPlayers.map((player) => (
                         <div key={player.playerId} className='h-[21vh]  bg-white rounded-xl text-black flex flex-col items-center'>

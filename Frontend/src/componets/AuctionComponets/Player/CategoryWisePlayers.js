@@ -39,7 +39,7 @@ const CategoryWisePlayers = ({ setPlayers,categories,fetchData }) => {
     return (
         <div className='xl:w-[65vw] lg:w-[60vw] md:w-[60vw] sm:w-[70vw] shadow-lg rounded-xl mx-4  flex space-y-4 justify-evenly  items-center px-4 py-2  flex-col lg:flex-row md:flex-col sm:flex-col '>
 
-            {categories.length > 0 && <div className="mb-4 mt-3 flex flex-row justify-center items-center gap-3 border-r-2 w-1/2 ">
+            { <div className="mb-4 mt-3 flex flex-row justify-center items-center gap-3 border-r-2 w-1/2 ">
                 <form onSubmit={handleCategorySearch} className="mb-4 flex flex-row justify-center items-center gap-3">
                     <label htmlFor="category" className="block text-gray-700 text-sm font-medium">
                         Categories

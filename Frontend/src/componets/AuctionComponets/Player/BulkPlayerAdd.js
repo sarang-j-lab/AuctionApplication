@@ -2,13 +2,15 @@ import React, { useContext, useState } from 'react'
 import { FaDownload } from "react-icons/fa6";
 import { messageContext } from '../../../context/MessageContext';
 import axiosApi from '../../../utils/axiosApi';
+import { RouteToprevBtn } from '../../Component/Button';
+import { useNavigate } from 'react-router-dom';
 
 const BulkPlayerAdd = () => {
     const fileURL = "/sampleplayerlist.xlsx"
     const [file, setFile] = useState(null);
     const { setErrorMessage, setSuccessMessage } = useContext(messageContext);
     const auction = JSON.parse(localStorage.getItem("auction"))
-
+    const navigate = useNavigate();
 
     const handleFileChange = (event) => {
         const selectedFile = event?.target?.files[0];
@@ -87,6 +89,7 @@ const BulkPlayerAdd = () => {
                     </form>
                 </div>
             </div>
+                <RouteToprevBtn onClick={()=>navigate('/auction/auction-players')}/>
         </div>
     )
 }

@@ -37,7 +37,7 @@ const AuctionPanel = () => {
   useEffect(() => {
     const client = new Client({
       webSocketFactory: () => new SockJS("http://localhost:8080/ws-auction",null,{
-          withCredentials: true,
+        withCredentials: true,
       }),
       reconnectDelay: 5000,
       onConnect: () => {
@@ -105,16 +105,17 @@ const AuctionPanel = () => {
             </Link>
           </div>
           <div className="flex flex-row gap-6 z-10">
-            {[{ title: "Panel", path: "/auction-dashboard" }, { title: "Teams", path: "/auction-dashboard/teams" }, { title: "Players", path: "/auction-dashboard/players" }, { title: "Categories", path: "/auction-dashboard/categories" }].map(({ title, path }, i) => (
+            {[{ title: "Panel", path: "/auction-dashboard" }, { title: "Teams", path: "/auction-dashboard/teams" }, { title: "Players", path: "/auction-dashboard/players" }].map(({ title, path }, i) => (
               <Link to={path} key={i} className="border font-thin px-2 py-1  hover:backdrop-blur-2xl hover:text-gray-800 rounded-lg duration-500 transition-all ">{title}</Link>
             ))}
+              {categories.length > 0 && <Link to={"/auction-dashboard/categories"}  className="border font-thin px-2 py-1  hover:backdrop-blur-2xl hover:text-gray-800 rounded-lg duration-500 transition-all ">Categories</Link>}
           </div>
         </div>
         <Routes>
 
           {category ? <Route path="/" element={<CategoryAuctionPanel stompClient={stompClient} fetchAuctionPlayers={fetchAuctionPlayers} setPlayers={setPlayers} category={category} teams={teams} players={players} auctionData={auctionData} fetchAuctionTeam={fetchAuctionTeam} />} />
             : <Route path="/" element={<NoneCategoryAuctionPanel stompClient={stompClient} fetchAuctionPlayers={fetchAuctionPlayers} category={category} teams={teams} players={players} auctionData={auctionData} fetchAuctionTeam={fetchAuctionTeam} />} />}
-          <Route path="/teams" element={<ShowTeams teams={teams} auctionData={auctionData} />} />
+          <Route path="/teams" element={<ShowTeams categories={categories} teams={teams} auctionData={auctionData} />} />
           <Route path="/categories" element={<ShowCategories categories={categories} setCategory={setCategory} auctionData={auctionData} setPlayers={setPlayers} fetchAuctionPlayers={fetchAuctionPlayers} />} />
           <Route path="/players" element={<ShowPlayers players={players} categories={categories} auctionData={auctionData} fetchAuctionPlayers={fetchAuctionPlayers} />} />
           <Route path="/show-team-players" element={<ShowTeamPlayers category={category} fetchAuctionPlayers={fetchAuctionPlayers} fetchAuctionTeam={fetchAuctionTeam} />} />

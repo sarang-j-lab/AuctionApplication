@@ -1,14 +1,18 @@
-import { RiAuctionFill } from "react-icons/ri";
-
+import {  useNavigate } from "react-router-dom";
+import { BiSolidCricketBall } from "react-icons/bi";
 const Footer = () => {
+    const navigate = useNavigate();
+
+
+    
     return (
         <section className="bg-gray-50 sm:pt-16 lg:pt-4">
             <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
                 <div className="grid grid-cols-2 md:col-span-3 lg:grid-cols-6 gap-y-16 gap-x-12">
                     <div className="col-span-2 md:col-span-3 lg:col-span-2 lg:pr-8">
                         <div  className="flex gap-2  justify-center items-center">
-                            <p className='text-xl'>TrueAuction</p>
-                            <RiAuctionFill size={25} />
+                            <p className='text-xl'>CricBids</p>
+                            <BiSolidCricketBall size={25} />
                         </div>
                         <p className="text-base leading-relaxed text-gray-600 mt-7">Experience the thrill of cricket auctions on our platform! Create tournaments, build teams, and bid for players. Whether you're an individual fan or a tournament organizer, join us to showcase your strategy and passion for cricket .</p>
 
@@ -66,15 +70,11 @@ const Footer = () => {
                             </li>
 
                             <li>
-                                <p className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Features</p>
+                                <p onClick={()=>{navigate('/how-to-use')}} className="cursor-pointer flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> How to use?</p>
                             </li>
 
                             <li>
-                                <p className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Works </p>
-                            </li>
-
-                            <li>
-                                <p className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Career </p>
+                                <p onClick={()=>{navigate('/pricing')}} className="cursor-pointer flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Pricing </p>
                             </li>
                         </ul>
                     </div>

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-
+import {useEffect} from 'react'
 import { RiAuctionFill } from "react-icons/ri"
 import { BiDollar } from "react-icons/bi";//my auction
 import { BiMaleSign } from "react-icons/bi";//join auction
@@ -28,7 +28,7 @@ const menu = [
   },
   {
     title: "Auction Panel",
-    description: "Join auction by auction ID.",
+    description: "Auction panel menu, shown all auctions!",
     icon: <BiDollar />,
     path: "/Auction-menu"
   }
@@ -36,7 +36,9 @@ const menu = [
 
 
 const Menu = () => {
-  window.scrollTo(0, 0);
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, [])
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6 rounded-lg p-5 w-full  lg:w-3/4">
@@ -51,7 +53,7 @@ const Menu = () => {
         ))
       }
 
-     </div>
+    </div>
   )
 }
 

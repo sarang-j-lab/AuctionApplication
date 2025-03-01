@@ -2,6 +2,7 @@ import  { useContext, useState } from 'react';
 import axiosApi from '../../utils/axiosApi';
 import { messageContext } from "../../context/MessageContext.js"
 import { Navigate, useNavigate } from 'react-router-dom';
+import { RouteToprevBtn } from '../Component/Button.js';
 
 const EditProfileForm = () => {
 
@@ -111,7 +112,8 @@ const EditProfileForm = () => {
           </div>
 
           {/* Submit Button */}
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+            <RouteToprevBtn onClick={()=> navigate("/auction/user-profile")}/>
             <button
               type="submit"
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"

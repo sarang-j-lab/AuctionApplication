@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const SideMenu = () => {
 
-    const menu = [{ title: "Home", path: "/" }, { title: "Self Auction", path: "/auction/my-auction" }, { title: "join Auction", path: "/auction/join-auction" }, { title: "New Auction", path: "/auction/auction-form" }, { title: "Auction Panel", path: "/Auction-menu" }]
+    const menu = [{ title: "Home", path: "/" }, { title: "Self Auction", path: "/auction/my-auction" }, { title: "Join Auction", path: "/auction/join-auction" }, { title: "New Auction", path: "/auction/auction-form" }, { title: "Auction Panel", path: "/Auction-menu" }]
 
     return (
         <div className="m-2 w-full h-full  sm:w-full md:w-full lg:w-[20vw] xl:w-[22vw]  rounded-lg border-gray-300 shadow-2xl py-5">

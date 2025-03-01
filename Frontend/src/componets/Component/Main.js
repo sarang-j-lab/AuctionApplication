@@ -7,7 +7,6 @@ import SideMenu from './SideMenu'
 
 const Main = () => {
     window.scrollTo(0, 0);
-    const menu = [{ title: "Home", path: "/" }, { title: "Self Auction", path: "/auction/my-auction" }, { title: "join Auction", path: "/auction/join-auction" }, { title: "New Auction", path: "/auction/auction-form" }, { title: "Auction Panel", path: "/auction/auction-panel" }]
 
     return (
         <>

@@ -15,7 +15,7 @@ import { FaArrowRightToBracket } from "react-icons/fa6";
 
 
 const AuctionDetail = () => {
-  window.scrollTo(0, 0);
+
 
   // -- constants
   const navigate = useNavigate()
@@ -28,6 +28,9 @@ const AuctionDetail = () => {
   const auction = JSON.parse(localStorage.getItem("auction"))
 
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
 
 
 

@@ -1,4 +1,4 @@
-import { useContext,  useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { messageContext } from "../../context/MessageContext"
 
 import axiosApi from "../../utils/axiosApi"
@@ -9,7 +9,7 @@ const textShadow = {
     textShadow: "10px 10px 15px rgba(0, 0, 0, 2)"
 }
 
-const NoneCategoryAuctionPanel = ({ stompClient,players, auctionData, teams,  fetchAuctionPlayers, fetchAuctionTeam }) => {
+const NoneCategoryAuctionPanel = ({ stompClient, players, auctionData, teams, fetchAuctionPlayers, fetchAuctionTeam }) => {
     const auction = JSON.parse(localStorage.getItem("auction"));
     const fireworksRef = useRef(null);
     const [sold, setSold] = useState(false)
@@ -79,7 +79,9 @@ const NoneCategoryAuctionPanel = ({ stompClient,players, auctionData, teams,  fe
         let maxPlayerOfCategory = team.playerRequirement.map((requi) => {
             return requi.playerRequired
         })
-        let maxPlayerCanBuyOfNoneCategory = auction.maxPlayerPerTeam - maxPlayerOfCategory.reduce((acc, num) => acc + num);
+
+
+        let maxPlayerCanBuyOfNoneCategory = auction.maxPlayerPerTeam - maxPlayerOfCategory.reduce((acc, num) => acc + num, 0);
 
         if (maxPlayerCanBuyOfNoneCategory === team.noneCategoryPlayerBought) {
             setErrorMessage("This team's limit is full to buy from this none category player");
@@ -91,7 +93,8 @@ const NoneCategoryAuctionPanel = ({ stompClient,players, auctionData, teams,  fe
             return requirement?.reserve
         })
 
-        let finalReserve = reserve.reduce((acc, num) => acc + num);
+        let finalReserve = reserve.reduce((acc, num) => acc + num, 0);
+
 
 
 
@@ -160,9 +163,9 @@ const NoneCategoryAuctionPanel = ({ stompClient,players, auctionData, teams,  fe
                     "Content-Type": "application/json",
                 }
             })
-           
+
             setSold(true);
-            
+
             const fireworks = new Fireworks(fireworksRef.current, { speed: 2, particles: 150, opacity: 0.7, });
             fireworks.start();
             setTimeout(() => {
@@ -170,7 +173,9 @@ const NoneCategoryAuctionPanel = ({ stompClient,players, auctionData, teams,  fe
                 setCurrentPlayer(null)
                 setCurrentTeam(null)
                 setBid({ player: null, team: null, amount: 0, category: null });
-                fireworksRef.current.removeChild(fireworksRef.current.firstChild);
+                if(fireworksRef.current){
+                    fireworksRef.current.removeChild(fireworksRef.current.firstChild);
+                }
                 setSold(false);
                 fireworks.stop();
             }, 5000);

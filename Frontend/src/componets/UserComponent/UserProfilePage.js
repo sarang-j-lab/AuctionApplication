@@ -1,10 +1,11 @@
 import { useContext } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { messageContext } from "../../context/MessageContext.js"
+import { RouteToprevBtn } from '../Component/Button.js';
 
 const UserProfilePage = () => {
   // Sample user data (can be fetched from an API or state)
-
+  const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -48,8 +49,9 @@ const UserProfilePage = () => {
         </div>
 
         {/* Edit Profile Button (Optional) */}
-        <div className="mt-8 flex justify-center">
-          <Link to={"/auction/edit-profile"} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
+        <div className="mt-8 flex justify-between items-center">
+          <RouteToprevBtn onClick={()=> navigate("/")}/>
+          <Link to={"/auction/edit-profile"} className="h-fit px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
             Edit Profile
           </Link>
         </div>
