@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://auction-application.vercel.appmv")  // Frontend origin
+                        .allowedOrigins("https://auction-application.vercel.app","http://localhost:3000")  // Frontend origin
                         .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS")
                         .allowedHeaders("Authorization", "Content-Type","Access-Control-Allow-Origin")
                         .allowCredentials(true);
