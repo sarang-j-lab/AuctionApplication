@@ -3,7 +3,7 @@ import  { useContext, useState } from 'react'
 import { RiAuctionFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import { messageContext } from '../../context/MessageContext';
-
+const API_URL = process.env.REACT_APP_API_URL
 const Signup = ({ setSignIn }) => {
 
     const navigate = useNavigate();
@@ -29,7 +29,7 @@ const Signup = ({ setSignIn }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8080/user/user-registration",
+            const response = await axios.post(`${API_URL}/user/user-registration`,
                 formData,
                 {
                     headers: {

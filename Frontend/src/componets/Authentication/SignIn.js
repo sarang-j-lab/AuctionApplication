@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { RiAuctionFill } from "react-icons/ri";
 import { messageContext } from "../../context/MessageContext";
+const API_URL = process.env.REACT_APP_API_URL
 
 
 const Signin = ({ setSignIn }) => {
@@ -14,7 +15,7 @@ const Signin = ({ setSignIn }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8080/user/login",
+            const response = await axios.post(`${API_URL}/user/login`,
                 { mobileNo, password },
                 {
                     headers: {
