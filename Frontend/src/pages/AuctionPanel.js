@@ -12,6 +12,8 @@ import ShowTeamPlayers from "../componets/AuctionPanel/ShowTeamPlayers";
 import { Client } from "@stomp/stompjs"
 import SockJS from "sockjs-client"
 
+const API_URL = process.env.REACT_APP_API_URL
+
 const AuctionPanel = () => {
 
   const navigate = useNavigate();
