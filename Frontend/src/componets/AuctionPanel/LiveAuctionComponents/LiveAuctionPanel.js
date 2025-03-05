@@ -6,7 +6,7 @@ import { messageContext } from '../../../context/MessageContext';
 import axios from 'axios';
 import Confetti from 'react-confetti'
 import { Fireworks } from "fireworks-js";
-
+const API_URL = process.env.REACT_APP_API_URL
 
 const textShadow = {
     textShadow: "10px 10px 15px rgba(0, 0, 0, 2)"
@@ -25,7 +25,7 @@ const LiveAuctionPanel = () => {
     const user = JSON.parse(localStorage.getItem("user"))
     const token = user?.token
     const client = new Client({
-        webSocketFactory: () => new SockJS("http://localhost:8080/ws-auction"),
+        webSocketFactory: () => new SockJS(`${API_URL}/ws-auction`),
         connectHeaders: {
             Authorization: `Bearer ${token}`,  // Send JWT in headers
         },
@@ -81,7 +81,7 @@ const LiveAuctionPanel = () => {
 
     const fetchAuction = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/auction/get-auction/${auctionId}`)
+            const response = await axios.get(`${API_URL}/auction/get-auction/${auctionId}`)
             setAuctionData(response?.data);
         } catch (error) {
             setErrorMessage(error?.response?.data?.message || "Something went wrong");
