@@ -38,7 +38,7 @@ const AuctionPanel = () => {
 
   useEffect(() => {
     const client = new Client({
-      webSocketFactory: () => new SockJS("http://localhost:8080/ws-auction",null,{
+      webSocketFactory: () => new SockJS(`${API_URL}/ws-auction`,null,{
         withCredentials: true,
       }),
       reconnectDelay: 5000,
