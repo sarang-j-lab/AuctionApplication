@@ -115,7 +115,7 @@ const AuctionDetail = () => {
           <button onClick={() => navigate("/auction-dashboard")} value={auction.auctionId} className=" flex justify-center mb-5 items-center space-x-5 w-full xl:w-3/4 self-center lg:w-full  sm:w-full px-6 py-2  border-2 rounded-lg bg-blue-600 hover:bg-blue-800 text-white">
             <span className='text-lg'> Conduct Auction</span> <FaArrowRightToBracket size={"22px"} />
           </button>
-          <span className='my-4 shadow-xl bg-white px-4 py-2 rounded-lg'> Share live link : <Link className='text-blue-500' target='_blank' to={`http://localhost:3000/live/auction/${auction.auctionId}`}>{`http://localhost:3000/live/auction/${auction.auctionId}`}</Link></span>
+          <span className='my-4 shadow-xl bg-white px-4 py-2 rounded-lg'> Share live link : <Link className='text-blue-500' target='_blank' to={`https://auction-application.vercel.app/live/auction/${auction.auctionId}`}>{`https://auction-application.vercel.app/live/auction/${auction.auctionId}`}</Link></span>
           {auction.additionalIncrements.length > 0 && <AuctionIncrements />}
         </div>
 
