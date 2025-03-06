@@ -1,9 +1,10 @@
 
-import { RouteToprevBtn,BlueButton } from "../../Component/Button.js";
+import { RouteToprevBtn, BlueButton } from "../../Component/Button.js";
 import { useNavigate } from 'react-router-dom';
 import axiosApi from "../../../utils/axiosApi";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { messageContext } from "../../../context/MessageContext";
+import LoadingBar from "../../Component/LoadingBar.js";
 
 
 const auctionFields = [
@@ -17,7 +18,8 @@ const JoinForm = ({ categories, playerData, setPlayerData, purpose }) => {
     const auction = JSON.parse(localStorage.getItem("auction"));
     const user = JSON.parse(localStorage.getItem("user"));
     const { setErrorMessage, setSuccessMessage } = useContext(messageContext);
-    
+    const [loading, setLoading] = useState(false);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setPlayerData({ ...playerData, [name]: value === "" ? null : value });
@@ -25,9 +27,10 @@ const JoinForm = ({ categories, playerData, setPlayerData, purpose }) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-    
+
         try {
-                await axiosApi.post(`/join-auction/${auction.id}/${user?.user?.userId}`, playerData, {
+            setLoading(true)
+            await axiosApi.post(`/join-auction/${auction.id}/${user?.user?.userId}`, playerData, {
                 headers: {
                     "Content-Type": "application/json",
                 }
@@ -41,9 +44,11 @@ const JoinForm = ({ categories, playerData, setPlayerData, purpose }) => {
                     serverError = value
                 }
                 setErrorMessage(serverError);
-            }else {
+            } else {
                 setErrorMessage("Something went wrong! please try again")
             }
+        }finally{
+            setLoading(false)
         }
     }
 
@@ -147,10 +152,14 @@ const JoinForm = ({ categories, playerData, setPlayerData, purpose }) => {
                         </select>
                     </div>}
                 </div>
-
+                {loading && <LoadingBar />}
                 <div className="flex flex-row justify-between items-center">
                     <RouteToprevBtn onClick={() => navigate("/")} />
-                    <BlueButton>Join</BlueButton>
+                    <button
+                        disabled={loading}
+                        type="submit"
+                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
+                    >Join</button>
                 </div>
             </form>
         </>

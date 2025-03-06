@@ -1,8 +1,9 @@
-import { useContext } from "react";
-import { RouteToprevBtn,BlueButton } from "../../Component/Button.js";
+import { useContext, useState } from "react";
+import { RouteToprevBtn, BlueButton } from "../../Component/Button.js";
 import { Navigate, useNavigate } from 'react-router-dom';
 import { messageContext } from "../../../context/MessageContext";
 import axiosApi from "../../../utils/axiosApi";
+import LoadingBar from "../../Component/LoadingBar.js";
 
 
 const auctionFields = [
@@ -17,6 +18,7 @@ const Form = ({ categories, setPlayerData, playerData, purpose }) => {
     const navigate = useNavigate();
     const auction = JSON.parse(localStorage.getItem('auction'));
     const { setSuccessMessage, setErrorMessage } = useContext(messageContext);
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -27,7 +29,7 @@ const Form = ({ categories, setPlayerData, playerData, purpose }) => {
     const handleForm = async (event) => {
         event.preventDefault();
 
-        if(!auction){
+        if (!auction) {
             setErrorMessage('Auction not found!')
             return;
         }
@@ -35,7 +37,7 @@ const Form = ({ categories, setPlayerData, playerData, purpose }) => {
         const isEditForm = playerData.playerId;
         const url = isEditForm ? `/edit-auction-player/${playerData.playerId}` : `/add-auction/${auction.auctionId}`;
         const method = isEditForm ? "put" : "post";
-
+        setLoading(true);
         try {
             await axiosApi({
                 method,
@@ -57,10 +59,12 @@ const Form = ({ categories, setPlayerData, playerData, purpose }) => {
             } else {
                 setErrorMessage("Something went wrong! please try again")
             }
+        } finally {
+            setLoading(false)
         }
     }
 
-    if(!auction){
+    if (!auction) {
         setErrorMessage("Auction not found!")
         return <Navigate to={"/"} />
     }
@@ -155,8 +159,11 @@ const Form = ({ categories, setPlayerData, playerData, purpose }) => {
 
             </div>
             <div className="flex flex-row justify-between items-center">
+                {loading && <LoadingBar/>}
                 <RouteToprevBtn onClick={() => navigate("/auction/auction-players")} />
-                {purpose === "Add player" ? <BlueButton>Submit</BlueButton> : <BlueButton>Edit</BlueButton>}
+                {purpose === "Add player" ? 
+                <button type="submit" disabled={loading} className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">Submit</button> 
+                : <button type="submit" disabled={loading} className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">Edit</button>}
             </div>
         </form>
     )

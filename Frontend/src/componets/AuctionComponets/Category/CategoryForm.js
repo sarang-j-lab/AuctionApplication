@@ -3,6 +3,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { RouteToprevBtn } from '../../Component/Button.js';
 import { messageContext } from '../../../context/MessageContext';
 import axiosApi from '../../../utils/axiosApi';
+import LoadingBar from '../../Component/LoadingBar.js';
 
 const CategoryForm = () => {
     window.scrollTo(0, 0);
@@ -17,7 +18,7 @@ const CategoryForm = () => {
         "baseBid": "",
         "increment": ""
     })
-
+    const [loading, setLoading] = useState(false);
     const auction = JSON.parse(localStorage.getItem("auction"));
     const isEditForm = categoryData.categoryId;
 
@@ -35,7 +36,7 @@ const CategoryForm = () => {
         const url = isEditForm ? `/update-auction-category/${event.target.id}` : `/create-auction-category/${auction.auctionId}`;
 
         const method = isEditForm ? "put" : "post";
-
+        setLoading(true)
         try {
             await axiosApi({
                 method,
@@ -46,7 +47,9 @@ const CategoryForm = () => {
             setSuccessMessage(isEditForm ? "Category edited successfully!" : "Category created successfully!")
             navigate("/auction/auction-categories")
         } catch (e) {
-            setErrorMessage(e.response.data.message || "Something went wrong! please try again.");
+            setErrorMessage(e?.response?.data?.message || "Something went wrong! please try again.");
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -84,8 +87,8 @@ const CategoryForm = () => {
                     <input autoComplete="off" onChange={(e) => { setCategoryData({ ...categoryData, "increment": e.target.value }) }} value={categoryData.increment} type="number" id="increment" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder='Ex. 1000' required />
                 </div>
 
-
-                <button type="submit" value={categoryData.categoryId} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{categoryData.categoryId ? "Edit category" : "Create Category"}</button>
+                {loading && <LoadingBar/>}
+                <button disabled={loading} type="submit" value={categoryData.categoryId} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{categoryData.categoryId ? "Edit category" : "Create Category"}</button>
             </form>
             <RouteToprevBtn onClick={() => navigate("/auction/auction-categories")} />
         </div>

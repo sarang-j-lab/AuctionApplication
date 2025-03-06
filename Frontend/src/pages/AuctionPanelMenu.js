@@ -43,6 +43,7 @@ const AuctionPanelMenu = () => {
         <>
             <div className="h-screen w-screen bg-center bg-contain flex flex-col text-white p-10 gap-10" style={{ backgroundImage: 'url("/auctionpanelimage.jpg")', }}>
             <h1 className='bg-white/20 backdrop-blur-md flex justify-center font-serif text-[4vw] py-4 rounded-lg'>{user?.user?.name}'s Auctions</h1>
+            {loading && <LoadingBar/>}
                 {userAuctions && <div className='flex gap-10'>
                     {userAuctions.map((auction) => (
                         <div onClick={() => selectAuction(auction)} className='cursor-pointer bg-white/20 backdrop-blur-md w-[30vw] h-[20vh] hover:w-[35vw] hover:h-[25vh] transition-all duration-500 rounded-xl flex flex-col'>

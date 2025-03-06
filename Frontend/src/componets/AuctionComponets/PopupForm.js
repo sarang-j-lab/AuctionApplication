@@ -1,18 +1,19 @@
-import  {  useContext, useState } from "react";
+import { useContext, useState } from "react";
 import axiosApi from "../../utils/axiosApi";
 import { messageContext } from "../../context/MessageContext";
 import { Navigate } from "react-router-dom";
+import LoadingBar from "../Component/LoadingBar";
 
-const PopupForm = ({ purpose, id,setId, setIsOpen,fetchCategories}) => {
+const PopupForm = ({ purpose, id, setId, setIsOpen, fetchCategories }) => {
 
 
   const [incrementData, setIncrementData] = useState({
     increment: "",
     after: ""
   })
-  const {setSuccessMessage,setErrorMessage} = useContext(messageContext);
+  const { setSuccessMessage, setErrorMessage } = useContext(messageContext);
   const auction = JSON.parse(localStorage.getItem("auction"));
-
+  const [loading, setLoading] = useState(false);
 
   // Close popup
   const closePopup = () => {
@@ -44,10 +45,11 @@ const PopupForm = ({ purpose, id,setId, setIsOpen,fetchCategories}) => {
    */
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
     const url = purpose === "auctionIncrement" ? `/auction/add-increments/${auction.auctionId}` : `/add-category-increments/${id}`;
 
     try {
+      setLoading(true)
       const response = await axiosApi({
         method: "post", url, data: incrementData, headers: {
           "Content-Type": "application/json",
@@ -55,35 +57,34 @@ const PopupForm = ({ purpose, id,setId, setIsOpen,fetchCategories}) => {
       })
 
       if (purpose === "auctionIncrement") {
-
-          setSuccessMessage("Additional increments added in auction successfully!")
-          const updatedAuction = response?.data;
-          localStorage.setItem("auction", JSON.stringify({ ...auction, additionalIncrements: updatedAuction.additionalIncrements }));
-          setIncrementData({ increment: "", after: "" })
-          setIsOpen(false);
-
+        setSuccessMessage("Additional increments added in auction successfully!")
+        const updatedAuction = response?.data;
+        localStorage.setItem("auction", JSON.stringify({ ...auction, additionalIncrements: updatedAuction.additionalIncrements }));
+        setIncrementData({ increment: "", after: "" })
+        setIsOpen(false);
       } else {
-          fetchCategories();
-          setId(0);
-          setIncrementData({ increment: "", after: "" })
-          setIsOpen(false);
-          setSuccessMessage("Category increment added successfully!")
+        fetchCategories();
+        setId(0);
+        setIncrementData({ increment: "", after: "" })
+        setIsOpen(false);
+        setSuccessMessage("Category increment added successfully!")
       }
 
     } catch (error) {
       setErrorMessage(error?.response?.data?.message || "Something went wrong! please try again.");
+    } finally {
+      setLoading(false)
     }
   }
 
 
-    if(!auction){
-      setErrorMessage("Auction not found!")
-      return <Navigate  to={"/"}/>
-    }
+  if (!auction) {
+    setErrorMessage("Auction not found!")
+    return <Navigate to={"/"} />
+  }
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
         <div className="bg-white p-6 rounded-lg shadow-lg w-96">
 
@@ -118,7 +119,8 @@ const PopupForm = ({ purpose, id,setId, setIsOpen,fetchCategories}) => {
               <button type="button" onClick={closePopup} className="px-4 py-2 text-sm text-gray-600 border rounded-lg hover:bg-gray-100">
                 Close
               </button>
-              <button type="submit" className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+              {loading && <LoadingBar />}
+              <button disabled={loading} type="submit" className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700">
                 Submit
               </button>
             </div>

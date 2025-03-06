@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import { messageContext } from '../../../context/MessageContext'
 import axiosApi from "../../../utils/axiosApi";
+import LoadingBar from "../../Component/LoadingBar";
 
 const TeamForm = () => {
     window.scrollTo(0, 0);
@@ -9,7 +10,7 @@ const TeamForm = () => {
     const location = useLocation();
     const newTeamForm = location.state.newTeamForm;
     const initialTeamData = location.state.team || { teamName: "", shortName: "" };
-
+    const [loading,setLoading] = useState(false);
     const [teamData, setTeamData] = useState(initialTeamData);
 
 
@@ -37,7 +38,7 @@ const TeamForm = () => {
             : `/edit-team/${teamData.teamId}`;
 
         const method = newTeamForm ? "post" : "put";
-
+        setLoading(true)
         try {
             await axiosApi({
                 method,
@@ -49,6 +50,8 @@ const TeamForm = () => {
             setSuccessMessage(newTeamForm ? "Team added successfully!" : "Team edited successfully!");
         } catch (e) {
             setErrorMessage(e.response?.data?.message || "Something went wrong! Please try again.");
+        }finally{
+            setLoading(false)
         }
     };
 
@@ -99,13 +102,13 @@ const TeamForm = () => {
                 </div>
 
 
-
-                <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                {loading && <LoadingBar/>}
+                <button disabled={loading} type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                     {newTeamForm ? "Create Team" : "Save Changes"}
                 </button>
             </form>
 
-            <button onClick={() => navigate("/auction/auction-teams")} className="mt-4 w-full text-blue-700 border border-blue-700 hover:bg-blue-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+            <button  onClick={() => navigate("/auction/auction-teams")} className="mt-4 w-full text-blue-700 border border-blue-700 hover:bg-blue-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                 Cancel
             </button>
         </div>

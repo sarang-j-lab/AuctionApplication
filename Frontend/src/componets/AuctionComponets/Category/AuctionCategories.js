@@ -15,6 +15,7 @@ const AuctionCategories = () => {
     const { setSuccessMessage, setErrorMessage } = useContext(messageContext);
     const auction = JSON.parse(localStorage.getItem("auction"));
     const [loading, setLoading] = useState(false);
+    const [categoryLoading,setCategoryLoading] = useState(false)
 
     const [confirmation, setConfirmation] = useState(false);
     const [selectedCategoryId, setSelectedCategoryId] = useState(0)
@@ -31,10 +32,13 @@ const AuctionCategories = () => {
             return;
         }
         try {
+            setCategoryLoading(true)
             const response = await axiosApi.get(`/show-auction-category/${auction?.auctionId}`);
             setCategories(response?.data);
         } catch (e) {
             setErrorMessage(e?.response?.data?.message || "Something went wrong! please try again.");
+        }finally{
+            setCategoryLoading(false);
         }
     }
 
@@ -52,6 +56,7 @@ const AuctionCategories = () => {
 
     const deleteCategory = async () => {
         try {
+            setCategoryLoading(true)
             await axiosApi.delete(`/delete-auction-category/${selectedCategoryId}/${auction.auctionId}`);
             setConfirmation(false);
             setCategories((prev) => prev.filter(category => category.categoryId !== selectedCategoryId));
@@ -64,6 +69,8 @@ const AuctionCategories = () => {
             } else {
                 setErrorMessage(e.response.data.message || "Something went wrong! please try again.");
             }
+        }finally{
+            setCategoryLoading(false)
         }
     }
 
@@ -76,13 +83,15 @@ const AuctionCategories = () => {
         const { id, value } = e.target
         try {
             setLoading(true);
+            setCategoryLoading(true)
             await axiosApi.delete(`/delete-category-increment/${id}/${value}`)
             fetchCategories();
             setSuccessMessage("Increment deleted successfully!")
-            setLoading(false);
         } catch (e) {
-            setLoading(false);
             setErrorMessage(e.response.data.message || "Something went wrong! please try again.")
+        }finally{
+            setLoading(false);
+            setCategoryLoading(false);
         }
     }
 
@@ -97,12 +106,12 @@ const AuctionCategories = () => {
             {isOpen && <PopupForm purpose={"categoryIncrement"} id={selectedCategoryId} setId={setSelectedCategoryId} setIsOpen={setIsOpen} fetchCategories={fetchCategories} />}
             {confirmation && <Confirmation setConfirmation={setConfirmation} setId={setSelectedCategoryId} deleteFun={deleteCategory} />}
 
-
             <div className='xl:w-[65vw] lg:w-[60vw] text-xl md:w-full sm:w-full shadow-lg rounded-xl mx-4  flex space-y-4 justify-center items-center px-4 py-2  flex-col lg:flex-row md:flex-row sm:flex-col '>
                 <h1 className='text-xs text-blue-600 md:text-lg lg:text-2xl sm:text-xs mx-auto'>{auction.auctionName.toUpperCase()}<span className='text-xs ml-3 lg:text-xl sm:text-xs'>Categories</span></h1>
 
                 <button onClick={addCateogry} className='rounded-md border text-sm p-2 mx-auto hover:bg-blue-600 hover:text-white '>Add Category</button>
             </div>
+            {categoryLoading && <LoadingBar/>}
 
             <div className=" my-4 xl:w-[65vw] lg:w-[60vw] md:w-full sm:w-full grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2  gap-10 mr-2 bg-white  rounded-xl">
                 {categories.length !== 0 ? categories.map((category) => (
@@ -119,15 +128,15 @@ const AuctionCategories = () => {
                             </p>
                         </div>
                         <div className="mt-4 flex space-x-2 lg:mt-6">
-                            <button onClick={() => { editCategory(category) }}
+                            <button disabled={categoryLoading} onClick={() => { editCategory(category) }}
                                 className="inline-flex border-2 border-blue-500 bg-blue-500 hover:bg-blue-600 items-center shadow-xl rounded-lg px-4 py-2 text-center text-sm font-medium text-white">
                                 Edit
                             </button>
-                            <button onClick={popUp} value={category.categoryId}
+                            <button disabled={categoryLoading} onClick={popUp} value={category.categoryId}
                                 className="inline-flex text-xs border-1 border-blue-500 bg-blue-500 hover:bg-blue-600  items-center shadow-xl rounded-lg px-1 py-2 text-center  font-medium text-white">
                                 Add increment
                             </button>
-                            <button onClick={deleteConfirmation} value={category.categoryId}
+                            <button disabled={categoryLoading} onClick={deleteConfirmation} value={category.categoryId}
                                 className="inline-flex border-2 border-red-500 bg-red-500 hover:bg-red-600  items-center shadow-xl rounded-lg px-4 py-2 text-center text-sm font-medium text-white">
                                 Delete
                             </button>

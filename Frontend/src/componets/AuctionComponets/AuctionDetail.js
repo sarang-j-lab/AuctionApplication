@@ -11,6 +11,7 @@ import { messageContext } from '../../context/MessageContext';
 import AuctionIncrements from './AuctionIncrements';
 import axiosApi from '../../utils/axiosApi';
 import { FaArrowRightToBracket } from "react-icons/fa6";
+import LoadingBar from '../Component/LoadingBar.js';
 
 
 
@@ -26,6 +27,7 @@ const AuctionDetail = () => {
   const { setSuccessMessage, setErrorMessage } = useContext(messageContext);
   const [isOpen, setIsOpen] = useState(false);
   const auction = JSON.parse(localStorage.getItem("auction"))
+  const [loading,setLoading] = useState(false);
 
 
   useEffect(() => {
@@ -44,11 +46,13 @@ const AuctionDetail = () => {
   //if you confirm deleted from confimation component than this fun will deleted auction of selectAuctionId .
   const deleteAuction = async (e) => {
     try {
+      setLoading(true)
       await axiosApi.delete(`/auction/delete-auction/${selectedAuctionId}`);
       setSelectedAuctionId(0);
       setSuccessMessage("Auction deleted successfully!")
       navigate("/auction/my-auction")
     } catch (error) {
+      setLoading(false)
       setErrorMessage("Something went wrong! please try again.")
     }
   }
@@ -65,7 +69,7 @@ const AuctionDetail = () => {
     <div className='w-full flex flex-col space-y-5 lg:w-3/4 sm:w-full'>
       {isOpen && <PopupForm setId={(r) => { }} purpose={"auctionIncrement"} setIsOpen={setIsOpen} />}
       {confirmation && <Confirmation setId={setSelectedAuctionId} deleteFun={deleteAuction} setConfirmation={setConfirmation} />}
-
+      {loading && <LoadingBar/>}
       <>
         <h1 className='text-2xl text-blue-400 mx-auto lg:text-4xl sm:text-2xl'>Auction Details</h1>
         <div className="bg-white shadow-lg rounded-lg lg:max-w-2xl xl:max-w-3xl  w-[70vw] sm:w-[70vw]  mx-auto p-3 space-y-6 md:space-y-4">
@@ -105,7 +109,7 @@ const AuctionDetail = () => {
                 className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                 Add increment
               </button>
-              <button value={auction.auctionId} onClick={deleteConfirmation} className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+              <button value={auction.auctionId} disabled={loading} onClick={deleteConfirmation} className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
                 Delete
               </button>
             </div>

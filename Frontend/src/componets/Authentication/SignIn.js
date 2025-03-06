@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { RiAuctionFill } from "react-icons/ri";
 import { messageContext } from "../../context/MessageContext";
+import LoadingBar from "../Component/LoadingBar";
 const API_URL = process.env.REACT_APP_API_URL
 
 
@@ -9,12 +10,13 @@ const Signin = ({ setSignIn }) => {
 
     const [mobileNo, setMobileNo] = useState("");
     const [password, setPassword] = useState("");
-
+    const [loading,setLoading] = useState(false)
     const { setSuccessMessage, setErrorMessage } = useContext(messageContext);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        try {
+        try { 
+            setLoading(true);
             const response = await axios.post(`${API_URL}/user/login`,
                 { mobileNo, password },
                 {
@@ -35,6 +37,8 @@ const Signin = ({ setSignIn }) => {
             } else {
                 setErrorMessage("An error occured! please try again");
             }
+        }finally{
+            setLoading(false);
         }
     };
 
@@ -94,13 +98,14 @@ const Signin = ({ setSignIn }) => {
                     </div>
 
                     {/* Submit Button */}
-                    <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    {loading && <LoadingBar/>}
+                    <button disabled={loading} type="submit" className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         Login
                     </button>
                 </form>
                 <div className="text-sm text-center text-gray-600">
                     Don’t have an account?{" "}
-                    <button onClick={() => { setSignIn(false) }} className="text-blue-500 hover:underline">
+                    <button  onClick={() => { setSignIn(false) }} className="text-blue-500 hover:underline">
                         Sign up
                     </button>
                 </div>

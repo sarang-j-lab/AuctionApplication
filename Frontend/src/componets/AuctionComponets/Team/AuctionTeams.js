@@ -4,6 +4,7 @@ import Confirmation from '../../Component/Confirmation.js';
 import { RouteToprevBtn } from '../../Component/Button.js';
 import { messageContext } from '../../../context/MessageContext';
 import axiosApi from '../../../utils/axiosApi';
+import LoadingBar from '../../Component/LoadingBar.js';
 
 const AuctionTeams = () => {
     window.scrollTo(0, 0);
@@ -12,9 +13,10 @@ const AuctionTeams = () => {
     const navigate = useNavigate();
 
     // States
-    const [auctionTeams, setAuctionTeams] = useState([]);
+    const [auctionTeams, setAuctionTeams] = useState(null);
     const [confirmation, setConfirmation] = useState(false);
     const [selectedTeamId, setSelectedTeamId] = useState(null);
+    const [loading,setLoading] = useState(false);
 
 
     const auction = JSON.parse(localStorage.getItem("auction"))
@@ -25,10 +27,13 @@ const AuctionTeams = () => {
     useEffect(() => {
         const fetchAuctionTeams = async () => {
             try {
+                setLoading(true)
                 const response = await axiosApi.get(`/auction-teams/${auction?.auctionId}`);
                 setAuctionTeams(response.data);
             } catch (error) {
                 setErrorMessage(error.response?.data?.message || 'Failed to fetch teams. Please try again.');
+            }finally{
+                setLoading(false)
             }
         };
         fetchAuctionTeams();
@@ -57,13 +62,15 @@ const AuctionTeams = () => {
 
     // Delete a team
     const deleteTeam = async () => {
-        try {
+        try { 
+            setLoading(true)
             await axiosApi.delete(`/delete-team/${selectedTeamId}`);
             setSuccessMessage('Team deleted successfully!');
             setAuctionTeams((prevTeams) => prevTeams.filter((team) => team.teamId !== selectedTeamId));
         } catch (error) {
             setErrorMessage(error.response?.data?.message || 'Failed to delete team. Please try again.');
         } finally {
+            setLoading(false)
             setConfirmation(false);
             setSelectedTeamId(null);
         }
@@ -88,9 +95,10 @@ const AuctionTeams = () => {
                     </button>
                 </div>}
                 {/* Teams Section */}
-                {auctionTeams.length > 0 ? (
+                {loading && <LoadingBar/>}
+                {auctionTeams  && (
                     <div className="mt-5 mx-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-                        {auctionTeams.map((team) => (
+                        {auctionTeams.length > 0 ? auctionTeams.map((team) => (
                             <div
                                 key={team.teamId}
                                 className="border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out rounded-lg overflow-hidden hover:scale-105 transform"
@@ -111,16 +119,14 @@ const AuctionTeams = () => {
                                     <button onClick={() => editTeam(team)} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition-colors duration-300 ease-in-out mr-2">
                                         Edit
                                     </button>
-                                    <button onClick={() => confirmDeletion(team.teamId)} className="bg-transparent border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white transition-colors duration-300 ease-in-out">
+                                    <button onClick={() => confirmDeletion(team.teamId)} disabled={loading} className="bg-transparent border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white transition-colors duration-300 ease-in-out">
                                         Delete
                                     </button>
                                 </div>
                             </div>
-                        ))}
+                        )) : <div className="text-xl ml-10 mt-5 ">Oops! There are no teams in this auction.</div> }
                     </div>
-                ) : (
-                    <div className="text-xl ml-10 mt-5">Oops! There are no teams in this auction.</div>
-                )}
+                ) }
 
                 {/* Navigation Button */}
                 <RouteToprevBtn onClick={() => navigate('/auction/auction-details')} />

@@ -7,16 +7,18 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { messageContext } from "../../../context/MessageContext";
 import axiosApi from "../../../utils/axiosApi";
 import CategoryWisePlayers from "./CategoryWisePlayers";
+import LoadingBar from "../../Component/LoadingBar.js";
 
 
 export function AuctionPlayers() {
 
     const navigate = useNavigate()
-    const [players, setPlayers] = useState([])
+    const [players, setPlayers] = useState(null)
     const { setSuccessMessage, setErrorMessage } = useContext(messageContext);
     const [id, setId] = useState(0);
     const [categories, setCategories] = useState([]);
     const auction = JSON.parse(localStorage.getItem('auction'));
+    const [loading,setLoading] = useState(false);
 
 
     const [confirmation, setConfirmation] = useState(false);
@@ -41,18 +43,22 @@ export function AuctionPlayers() {
             return;
         }
         try {
+            setLoading(true);
             const response = await axiosApi.get(`/auction-player/${auction?.auctionId}`)
-            const replacedCategoryIdPlayers = response.data.map((player) => {
-                return player.categoryId !== null ? { ...player, "categoryId": player.categoryId.categoryId } : { ...player, [player.categoryId]: null }
+            const replacedCategoryIdPlayers = response?.data.map((player) => {
+                return player?.categoryId !== null ? { ...player, "categoryId": player?.categoryId?.categoryId } : { ...player, [player.categoryId]: null }
             });
             setPlayers(replacedCategoryIdPlayers);
         } catch (err) {
-            setErrorMessage(err.response.data.message || "Failed to load players! please try again.")
+            setErrorMessage(err?.response?.data?.message || "Failed to load players! please try again.")
+        }finally{
+            setLoading(false)
         }
     }
 
     const deletePlayer = async () => {
         try {
+            setLoading(true)
             await axiosApi.delete(`/delete-player/${id}/${auction?.auctionId}`)
             setId(0);
             setConfirmation(false)
@@ -60,7 +66,9 @@ export function AuctionPlayers() {
             setSuccessMessage("Player deleted successfully!")
         } catch (err) {
             console.log(err)
-            setErrorMessage(err.response.data.message || "Something went wrong! please try again.");
+            setErrorMessage(err?.response?.data?.message || "Something went wrong! please try again.");
+        }finally{
+            setLoading(false);
         }
     }
 
@@ -100,8 +108,9 @@ export function AuctionPlayers() {
             {<CategoryWisePlayers categories={categories} setPlayers={setPlayers} fetchData={fetchData} />}
 
             {/* <------------ player card------------------------> */}
-            <div className="mx-4 my-4 xl:w-[65vw] lg:w-[60vw] md:w-[60vw] sm:w-[70vw] grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2  gap-10 mr-4 bg-white  rounded-xl">
-                {players.length !== 0 ? players.map((player) => (
+                {loading && <LoadingBar/>}
+           {players && <div className="mx-4 my-4 xl:w-[65vw] lg:w-[60vw] md:w-[60vw] sm:w-[70vw] grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2  gap-10 mr-4 bg-white  rounded-xl">
+                {players ? players.map((player) => (
                     <div key={player.playerId} className="w-full bg-white border-2 rounded-xl">
                         <span className="p-2 rounded-2xl bg-blue-900 text-white">Form no.{player.formNo}</span>
                         <div className="flex flex-col items-center pb-5">
@@ -128,7 +137,7 @@ export function AuctionPlayers() {
                                 >
                                     Edit
                                 </button>
-                                <button onClick={deleteConfirmation} value={player.playerId}
+                                <button onClick={deleteConfirmation} value={player.playerId} disabled={loading}
                                     className="inline-flex border-2 border-red-500 bg-red-500 hover:bg-red-600  items-center shadow-xl rounded-lg px-4 py-2 text-center text-sm font-medium text-white"
                                 >
                                     Delete
@@ -137,7 +146,7 @@ export function AuctionPlayers() {
                         </div>
                     </div>
                 )) : <p className="text-xl ml-10 mt-5">There is no player in this auction.</p>}
-            </div>
+            </div>}
 
             <RouteToprevBtn onClick={() => navigate("/auction/auction-details")} />
         </div >

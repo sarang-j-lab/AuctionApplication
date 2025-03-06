@@ -1,13 +1,13 @@
 import axios from 'axios';
 import  { useContext, useState } from 'react'
 import { RiAuctionFill } from 'react-icons/ri';
-import { useNavigate } from 'react-router-dom';
 import { messageContext } from '../../context/MessageContext';
+import LoadingBar from '../Component/LoadingBar';
 const API_URL = process.env.REACT_APP_API_URL
 const Signup = ({ setSignIn }) => {
 
-    const navigate = useNavigate();
-
+    
+    const [loading,setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -29,6 +29,7 @@ const Signup = ({ setSignIn }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
+            setLoading(true);
             const response = await axios.post(`${API_URL}/user/user-registration`,
                 formData,
                 {
@@ -48,6 +49,8 @@ const Signup = ({ setSignIn }) => {
             } else {
                 setErrorMessage("An error occurred. Please try again later.");
             }
+        }finally{
+            setLoading(false);
         }
     };
 
@@ -107,9 +110,10 @@ const Signup = ({ setSignIn }) => {
                         <button type="submit" className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                             Sign Up
                         </button>
+                        {loading && <LoadingBar/>}
                         <p className="text-sm text-center text-gray-600 mt-5">
                             Already have an account then!{" "}
-                            <button onClick={() => { setSignIn(true) }} className="text-blue-500 hover:underline">
+                            <button disabled={loading} onClick={() => { setSignIn(true) }} className="text-blue-500 hover:underline">
                                 Sign In
                             </button>
                         </p>

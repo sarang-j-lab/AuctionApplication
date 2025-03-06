@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { messageContext } from "../../context/MessageContext";
 import axiosApi from "../../utils/axiosApi";
+import LoadingBar from "../Component/LoadingBar";
 
 /**
  * a NewAuctionForm component renders a form to create a new auction.
@@ -50,7 +51,7 @@ const AuctionForm = () => {
   const { setSuccessMessage, setErrorMessage } = useContext(messageContext);
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate()
-
+  const [loading,setLoading] = useState(false);
 
   const auctionFields = !isEditing ? [
     { label: "Auction Name", name: "auctionName", type: "text", placeholder: "Ex.  indian premier league", },
@@ -115,6 +116,7 @@ const AuctionForm = () => {
     }
     const url = isEditing ? `/auction/edit-auction/${auction.auctionId}` : `/auction/new-auction/${user?.user?.userId}`;
     const method = auction.auctionId ? "put" : "post";
+    setLoading(true);
     try {
       const response = await axiosApi({
         method, url,
@@ -124,15 +126,18 @@ const AuctionForm = () => {
         }
       })
       if (isEditing) {
+        setLoading(false); 
         const updatedAuction = response?.data
-        localStorage.setItem("auction", JSON.stringify({ additionalIncrements: updatedAuction.additionalIncrements, auctionId: updatedAuction.auctionId, auctionName: updatedAuction.auctionName, auctionDate: updatedAuction.auctionDate, auctionTime: updatedAuction.auctionTime, baseBid: updatedAuction.baseBid, bidIncreaseBy: updatedAuction.bidIncreaseBy, maxPlayerPerTeam: updatedAuction.maxPlayerPerTeam, minPlayerPerTeam: updatedAuction.minPlayerPerTeam, pointsPerTeam: updatedAuction.pointsPerTeam, reserve: updatedAuction.reserve, season: updatedAuction.season }))
+        localStorage.setItem("auction", JSON.stringify({ additionalIncrements: updatedAuction?.additionalIncrements, auctionId: updatedAuction?.auctionId, auctionName: updatedAuction?.auctionName, auctionDate: updatedAuction?.auctionDate, auctionTime: updatedAuction?.auctionTime, baseBid: updatedAuction?.baseBid, bidIncreaseBy: updatedAuction?.bidIncreaseBy, maxPlayerPerTeam: updatedAuction?.maxPlayerPerTeam, minPlayerPerTeam: updatedAuction?.minPlayerPerTeam, pointsPerTeam: updatedAuction?.pointsPerTeam, reserve: updatedAuction?.reserve, season: updatedAuction?.season }))
         setSuccessMessage("Auction edited successfully!")
         navigate("/auction/auction-details");
       } else {
+        setLoading(false); 
         navigate("/")
         setSuccessMessage("Form submitted successfully!");
       }
     } catch (error) {
+      setLoading(false); 
       if (error?.response) {
         let serverError = "";
         for (const [key, value] of Object.entries(error?.response?.data)) {
@@ -189,8 +194,10 @@ const AuctionForm = () => {
             </label>
           </div>
         </div>
+        {loading && <LoadingBar/>}
         <button
           type="submit"
+          disabled={loading}
           className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
         >
           {auction.auctionId ? "Save Changes" : "Create Auction"}
