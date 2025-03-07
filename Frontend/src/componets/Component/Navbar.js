@@ -70,7 +70,7 @@ const Navbar = () => {
                 {block && <nav className="pt-4 pb-6 bg-white border border-gray-200 rounded-md shadow-md lg:hidden">
                     <div className="flow-root ">
                         <ul className="flex flex-col px-6 -my-2 space-y-1">
-                            <li  className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">How to use it!</li>
+                            <li onClick={() => navigate("/how-to-use")} className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">How to use it!</li>
                             <li onClick={() => navigate("/pricing")} className="mr-5 cursor-pointer text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">Pricing</li>
                         </ul>
                     </div>
