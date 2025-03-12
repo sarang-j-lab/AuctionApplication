@@ -63,7 +63,7 @@ const Signup = ({ setSignIn }) => {
                 <div className='flex flex-row justify-between'>
 
                     <div title="" className="flex gap-2 ">
-                        <p className='text-xl'>TrueAuction</p>
+                        <p className='text-xl'>CricBids</p>
                         <RiAuctionFill size={25} />
                     </div>
                     <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
