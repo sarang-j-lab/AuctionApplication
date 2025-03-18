@@ -8,9 +8,10 @@ import LoadingBar from "../Component/LoadingBar.js"
 const ShowTeamPlayers = ({ fetchAuctionPlayers, fetchAuctionTeam }) => {
 
     const location = useLocation();
-    const { teamId, auctionData, teamName,noneCategoryPlayerBought,playerRequirement } = location.state;
+    const { teamId, auctionData, teamName,playerRequirement } = location.state;
 
     const [loading, setLoading] = useState(false);
+    const [initialPlayerLoading,setIntialPlayerLoading] = useState(false);
 
     const [teamPlayers, setTeamPlayers] = useState(null);
     const { setErrorMessage, setSuccessMessage } = useContext(messageContext);
@@ -19,14 +20,16 @@ const ShowTeamPlayers = ({ fetchAuctionPlayers, fetchAuctionTeam }) => {
     }, [])
     const fetchTeamPlayer = async () => {
         try {
+            setLoading(true)
             const response = await axiosApi.get(`/show-team-players/${teamId}`)
             setTeamPlayers(response?.data);
         } catch (error) {
             setErrorMessage(error?.response?.data?.message || "Failed to fetch team player please try again.");
+        }finally{
+            setLoading(false)
         }
     }
 
-    console.log(playerRequirement);
 
 
 
@@ -57,6 +60,7 @@ const ShowTeamPlayers = ({ fetchAuctionPlayers, fetchAuctionTeam }) => {
 
     return (
         <>
+        {loading && <LoadingBar/>}
             {teamPlayers ? <div className='flex flex-col w-[100vw] h-[90vh] bg-white/20 backdrop-blur-2xl overflow-scroll scrollbar-hide rounded-xl'>
                 <div className="w-full  h-[30vh] px-20 text-white flex flex-col items-center justify-center">
                     <h1 className='text-[10vh] font-serif'>{auctionData.auctionName.toUpperCase()}</h1>

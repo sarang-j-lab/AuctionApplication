@@ -4,6 +4,7 @@ import { messageContext } from "../../context/MessageContext"
 import axiosApi from "../../utils/axiosApi"
 import Confetti from 'react-confetti'
 import { Fireworks } from "fireworks-js";
+import LoadingBar from "../Component/LoadingBar";
 
 const textShadow = {
     textShadow: "10px 10px 15px rgba(0, 0, 0, 2)"
@@ -24,7 +25,7 @@ const CategoryAuctionPanel = ({ stompClient,players, auctionData, teams, categor
     const [maxBid, setMaxBid] = useState(null);
     const [reserve, setReserve] = useState(null)
 
-
+    const [loading, setLoading] = useState(false);
     const { setErrorMessage, setSuccessMessage } = useContext(messageContext);
 
     const [time, setTime] = useState(10);
@@ -148,6 +149,7 @@ const CategoryAuctionPanel = ({ stompClient,players, auctionData, teams, categor
         }
         setTime(0)
         try {
+            setLoading(true)
             await axiosApi.post(`/panel/category-sold/${auction.auctionId}`, { player: bid.player.playerId, team: bid.team.teamId, amount: bid.amount, category: bid.category }, {
                 headers: {
                     "Content-Type": "application/json",
@@ -181,9 +183,12 @@ const CategoryAuctionPanel = ({ stompClient,players, auctionData, teams, categor
         } catch (error) {
             setShowPanel(true);
             setErrorMessage(error?.response?.data?.message || "Bid is not executed! please try again.")
+        }finally{
+            setLoading(false)
         }
     }
     const onUnsold = async () => {
+        setShowPanel(false);
         if (bid.team !== null || bid.amount > 0) {
             setErrorMessage("The player can't remain unsold after a bid is executed.")
             return;
@@ -194,13 +199,17 @@ const CategoryAuctionPanel = ({ stompClient,players, auctionData, teams, categor
         }
 
         try {
+            setLoading(true)
             const response = await axiosApi.put(`/add-unsold-player/${auctionData.auctionId}`, currentPlayer, {
                 headers: { "Content-Type": "application/json" },
             })
+            setShowPanel(true);
             setSuccessMessage(response?.data);
             setCurrentPlayer(null);
         } catch (error) {
             setErrorMessage(error?.response?.data?.message || "Failed to unsold player pleae try again!");
+        }finally{
+            setLoading(false);
         }
 
     }
@@ -209,6 +218,7 @@ const CategoryAuctionPanel = ({ stompClient,players, auctionData, teams, categor
 
         <>
             <div className="h-[90vh] w-full  rounded-xl flex flex-col z-10">
+                {loading && <LoadingBar />}
                 {sold && <Confetti width={window.innerWidth} height={window.innerHeight} />}
                 <div className="flex flex-col justify-center mt-10 self-center font-serif  bg-black  px-8 text-[40px] items-center text-sky-200 border-2 rounded-lg border-sky-200 shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#08f,0_0_15px_#08f,0_0_30px_#08f]">
                     <p >{auctionData.auctionName.toUpperCase()}</p>

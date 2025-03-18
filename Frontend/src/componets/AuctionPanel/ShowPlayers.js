@@ -1,7 +1,7 @@
-import React, { use, useContext, useDeferredValue, useEffect, useState } from 'react'
+import React, {  useContext, useEffect, useState } from 'react'
 import axiosApi from '../../utils/axiosApi'
 import { messageContext } from '../../context/MessageContext'
-import { Link } from 'react-router-dom'
+import LoadingBar from "../Component/LoadingBar.js";
 
 const ShowPlayers = ({ auctionData, fetchAuctionPlayers, categories }) => {
 
@@ -9,6 +9,7 @@ const ShowPlayers = ({ auctionData, fetchAuctionPlayers, categories }) => {
   const [copyPlayers, setCopyPlayers] = useState(null);
   const [showUnsold, setShowUnsold] = useState(false)
   const { setErrorMessage, setSuccessMessage } = useContext(messageContext);
+  const [loading,setLoading] = useState(false);
 
   useEffect(() => {
 
@@ -17,26 +18,31 @@ const ShowPlayers = ({ auctionData, fetchAuctionPlayers, categories }) => {
 
   const AuctionPlayer = async () => {
     try {
+      setLoading(true);
       setShowUnsold(false)
       const response = await axiosApi.get(`/auction-player/${auctionData.auctionId}`);
       setPlayers(response?.data);
       setCopyPlayers(response?.data);
     } catch (error) {
       setErrorMessage(error?.response?.data?.message || "Failed to fetch players");
+    }finally{
+      setLoading(false);
     }
   }
 
-  console.log(players)
 
   const reauctionUnsolds = async () => {
     try {
       setShowUnsold(false)
+      setLoading(true);
       await axiosApi.put(`/reauction-unsold/${auctionData.auctionId}`)
       setSuccessMessage("Unsold player added Re-auction!");
       AuctionPlayer();
       fetchAuctionPlayers();
     } catch (error) {
       setErrorMessage(error?.response?.data?.message || "Please try again!")
+    }finally{
+      setLoading(false);
     }
   }
 
@@ -70,7 +76,8 @@ const ShowPlayers = ({ auctionData, fetchAuctionPlayers, categories }) => {
 
   return (
     <>
-      {players ? <div className='w-[100vw] h-[90vh] bg-white/20 backdrop-blur-2xl overflow-scroll scrollbar-hide rounded-xl'>
+    {loading && <LoadingBar/> }
+      {players  ? <div className='w-[100vw] h-[90vh] bg-white/20 backdrop-blur-2xl overflow-scroll scrollbar-hide rounded-xl'>
         <div className="w-full  h-[30vh] px-20 text-white flex flex-col items-center justify-center">
           <h1 className='text-[10vh] font-serif'>{auctionData.auctionName.toUpperCase()}</h1>
           <h1 className='text-[7vh] font-serif text-black bg-yellow-200 px-3 rounded-sm'>Players</h1>

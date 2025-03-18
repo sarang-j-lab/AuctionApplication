@@ -47,7 +47,6 @@ const BulkPlayerAdd = () => {
 
         setFile(selectedFile);
     }
-    console.log(file)
 
     const handleFileSubmit = async (event) => {
         event.preventDefault();

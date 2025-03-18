@@ -4,6 +4,7 @@ import { messageContext } from "../../context/MessageContext"
 import axiosApi from "../../utils/axiosApi"
 import Confetti from 'react-confetti'
 import { Fireworks } from "fireworks-js";
+import LoadingBar from "../Component/LoadingBar.js"
 
 const textShadow = {
     textShadow: "10px 10px 15px rgba(0, 0, 0, 2)"
@@ -23,7 +24,7 @@ const NoneCategoryAuctionPanel = ({ stompClient, players, auctionData, teams, fe
     const [maxBid, setMaxBid] = useState(null);
     const [reserve, setReserve] = useState(null)
 
-
+    const [loading, setLoading] = useState(false);
     const { setErrorMessage, setSuccessMessage } = useContext(messageContext);
 
     const [time, setTime] = useState(10);
@@ -158,6 +159,7 @@ const NoneCategoryAuctionPanel = ({ stompClient, players, auctionData, teams, fe
         }
         setTime(0)
         try {
+            setLoading(true);
             await axiosApi.post(`/panel/noneCategory-sold/${auction.auctionId}`, { player: bid.player.playerId, team: bid.team.teamId, amount: bid.amount, category: null }, {
                 headers: {
                     "Content-Type": "application/json",
@@ -173,7 +175,7 @@ const NoneCategoryAuctionPanel = ({ stompClient, players, auctionData, teams, fe
                 setCurrentPlayer(null)
                 setCurrentTeam(null)
                 setBid({ player: null, team: null, amount: 0, category: null });
-                if(fireworksRef.current){
+                if (fireworksRef.current) {
                     fireworksRef.current.removeChild(fireworksRef.current.firstChild);
                 }
                 setSold(false);
@@ -187,11 +189,14 @@ const NoneCategoryAuctionPanel = ({ stompClient, players, auctionData, teams, fe
         } catch (error) {
             setShowPanel(true);
             setErrorMessage(error?.response?.data?.message || "Bid is not executed! please try again.")
+        } finally {
+            setLoading(false);
         }
 
     }
 
     const onUnsold = async () => {
+        setShowPanel(false)
         if (bid.team !== null || bid.amount > 0) {
             setErrorMessage("The player can't remain unsold after a bid is executed.")
             return;
@@ -201,6 +206,7 @@ const NoneCategoryAuctionPanel = ({ stompClient, players, auctionData, teams, fe
             return;
         }
         try {
+            setLoading(true);
             const response = await axiosApi.put(`/add-unsold-player/${auctionData.auctionId}`, currentPlayer, {
                 headers: { "Content-Type": "application/json" },
             })
@@ -209,6 +215,9 @@ const NoneCategoryAuctionPanel = ({ stompClient, players, auctionData, teams, fe
             setCurrentPlayer(null);
         } catch (error) {
             setErrorMessage(error?.response?.data?.message || "Failed to unsold player pleae try again!");
+        } finally {
+            setShowPanel(true)
+            setLoading(false);
         }
     }
 
@@ -216,6 +225,7 @@ const NoneCategoryAuctionPanel = ({ stompClient, players, auctionData, teams, fe
 
         <>
             <div className="h-[90vh] w-full  rounded-xl flex flex-col z-10">
+                {loading && <LoadingBar />}
                 {sold && <Confetti width={window.innerWidth} height={window.innerHeight} />}
                 <div className="flex flex-col justify-center mt-10 self-center font-serif  bg-black  px-8 text-[40px]    items-center text-sky-200 border-2 rounded-lg border-sky-200 shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#08f,0_0_15px_#08f,0_0_30px_#08f]">
                     <p className="self-center">{auctionData.auctionName.toUpperCase()}</p>
