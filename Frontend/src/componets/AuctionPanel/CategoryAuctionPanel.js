@@ -10,6 +10,7 @@ const textShadow = {
     textShadow: "10px 10px 15px rgba(0, 0, 0, 2)"
 }
 
+
 const CategoryAuctionPanel = ({ stompClient,players, auctionData, teams, category, setPlayers, fetchAuctionTeam}) => {
     const auction = JSON.parse(localStorage.getItem("auction"));
     const fireworksRef = useRef(null);
